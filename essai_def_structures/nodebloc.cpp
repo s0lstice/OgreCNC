@@ -5,39 +5,21 @@
 NodeBloc::NodeBloc(NodeBloc * parent) : Bloc(parent)
 {
     listeFils = NULL;
+    bloc = NULL;
 }
 
 /*Avec arguments*/
-NodeBloc::NodeBloc(QVector<Bloc*> * listeFilsNoeud, NodeBloc * parent) : Bloc(parent)
+NodeBloc::NodeBloc(QVector<Bloc*> * listeFilsNoeud, Bloc * blocNoeud, NodeBloc * parent) : Bloc(parent)
 {
     listeFils = listeFilsNoeud;
+    bloc = blocNoeud;
 }
 
-/*De recopie*/
-/*NodeBloc::NodeBloc(const NodeBloc& copyNodeBloc) : Bloc(copyNodeBloc.noeudPere)
-{*/
-    /*Recopie des paramètres hérités de Bloc*/
-    /*this->hauteur = copyNodeBloc.hauteur;
-    this->longueur = copyNodeBloc.longueur;
-    this->largeur = copyNodeBloc.largeur;
-    this->etat = copyNodeBloc.etat;
-    this->noeudPere = copyNodeBloc.noeudPere;*/
-
-    /*Recopie des attributs spécifiques à un noeud*/
-    //this->listeFils = new QVector<Bloc*>;
-    /*for(int i = 0; i < copyNodeBloc.listeFils->size(); i++)
-    {
-        this->listeFils->append(copyNodeBloc.listeFils->data()[i]);
-    }*/
-
-    /*Bloc tmp;
-    for(int i = 0; i < copyNodeBloc.listeFils->size(); i++)
-    {
-        tmp = new Bloc(copyNodeBloc.listeFils->data()[i]);
-        this->listeFils->append(&tmp);
-    }
-
-}*/
+NodeBloc::NodeBloc(Bloc & blocNoeud)
+{
+    bloc = &blocNoeud;
+    listeFils = NULL;
+}
 
 /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
 void NodeBloc::destroyListeFils()

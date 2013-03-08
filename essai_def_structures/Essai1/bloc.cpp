@@ -25,6 +25,17 @@ Bloc::Bloc(float hauteurBloc, float longueurBloc, float largeurBloc, enumEtat et
     noeudPere = noeudPereBloc;
 }
 
+/*De recopie*/
+/*Bloc::Bloc(const Bloc& copyBloc)
+{
+    this->hauteur = copyBloc.hauteur;
+    this->longueur = copyBloc.longueur;
+    this->largeur = copyBloc.largeur;
+    this->etat = copyBloc.etat;
+    this->visible = copyBloc.visible;
+    this->noeudPere = new NodeBloc(copyBloc.noeudPere);
+}*/
+
 /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
 void Bloc::destroyNoeudPere()
 {
