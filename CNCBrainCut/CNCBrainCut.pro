@@ -61,8 +61,8 @@ win32 {
 
 HEADERS += \
     sources/ogrewidget.h \
-    sources/MainWindow.h \
-    sources/Coordinate3DModifier.h
+    sources/Coordinate3DModifier.h \
+    sources/vue3d.h
 
 SOURCES += \
     sources/ogrewidget.cpp \
