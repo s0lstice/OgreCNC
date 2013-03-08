@@ -10,6 +10,17 @@
 *.dll
 *.dylib
 
+# ogre3d
+ogre.cfg
+ogre.log
+resources.cfg
+plugins.cfg
+
+# dir
+config/
+Release/
+Debug/
+
 # Qt-es
 
 *.pro.user
