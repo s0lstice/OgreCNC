@@ -12,6 +12,14 @@ public:
     OgreWidget(QWidget *parent = 0);
     ~OgreWidget();
 
+    inline Ogre::SceneManager *getSceneManager(){
+        return ogreSceneManager;
+    }
+
+    inline Ogre::Camera *getCamera(){
+        return ogreCamera;
+    }
+
 public slots:
     void setBackgroundColor(QColor c);
     void setCameraPosition(const Ogre::Vector3 &pos);

@@ -60,10 +60,14 @@ win32 {
 
 
 HEADERS += \
-    sources/ogrewidget.h \
-    sources/Coordinate3DModifier.h \
-    sources/vue3d.h
+    sources/vue/OgreWidget/ogrewidget.h \
+    sources/vue/OgreWidget/Coordinate3DModifier.h \
+    sources/vue/OgreWidget/vue3d.h \
+    sources/modele/point3d.h \
+    sources/modele/ogre/pavet.h
 
 SOURCES += \
-    sources/ogrewidget.cpp \
-    sources/main.cpp
+    sources/vue/OgreWidget/ogrewidget.cpp \
+    sources/main.cpp \
+    sources/modele/point3d.cpp \
+    sources/modele/ogre/pavet.cpp

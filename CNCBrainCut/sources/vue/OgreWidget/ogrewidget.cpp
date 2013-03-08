@@ -1,6 +1,7 @@
 #include "ogrewidget.h"
 
 #include <QtGui/QX11Info>
+#include "../../modele/ogre/pavet.h"
 
 const QPoint     OgreWidget::invalidMousePoint(-1,-1);
 const Ogre::Real OgreWidget::turboModifier(10);
@@ -71,7 +72,7 @@ void OgreWidget::keyPressEvent(QKeyEvent *e)
 		keyCoordModificationMapping[Qt::Key_Q] 		  = Ogre::Vector3(-5, 0, 0);
 		keyCoordModificationMapping[Qt::Key_D] 		  = Ogre::Vector3( 5, 0, 0);
 		keyCoordModificationMapping[Qt::Key_PageUp]   = Ogre::Vector3( 0, 5, 0);
-		keyCoordModificationMapping[Qt::Key_PageDown] = Ogre::Vector3( 0,-5, 0);
+        keyCoordModificationMapping[Qt::Key_PageDown] = Ogre::Vector3( 0,-5, 0);
 		
 		mappingInitialised = true;
 	}
@@ -328,4 +329,9 @@ void OgreWidget::createScene()
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
 
     ogreSceneManager->setSkyDome(true, "CloudySky", 5, 8);
+
+    Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
+    mNode->setPosition(0,0,0);
+    mNode->attachObject(Pavet(QString("Cube"), QString("ground"), Point3d(10,70,50)).objet);
+
 }
