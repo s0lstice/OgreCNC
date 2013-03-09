@@ -1,14 +1,16 @@
 #include <QtGui>
 
-#include "vue3d.h"
+#include "controleur/controleurmain.h"
+#include "vue/OgreWidget/vue3d.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    vue3d window;
+    ControleurMain controleur;
 
-    window.show();
+    /*vue3d window3d;
+    window3d.show();*/
 
     return app.exec();
 }

@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
+QT += opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -58,16 +59,29 @@ win32 {
     }
 }
 
-
 HEADERS += \
     sources/vue/OgreWidget/ogrewidget.h \
     sources/vue/OgreWidget/Coordinate3DModifier.h \
     sources/vue/OgreWidget/vue3d.h \
     sources/modele/point3d.h \
-    sources/modele/ogre/pavet.h
+    sources/modele/ogre/pavet.h \
+    sources/modele/ogre/ogrebloc.h \
+    sources/modele/bloc/nodebloc.h \
+    sources/modele/bloc/bloc.h \
+    sources/controleur/controleurbloc.h \
+    sources/controleur/controleurmain.h \
+    sources/modele/modelemain.h \
+    sources/vue/vuemain.h
 
 SOURCES += \
     sources/vue/OgreWidget/ogrewidget.cpp \
     sources/main.cpp \
     sources/modele/point3d.cpp \
-    sources/modele/ogre/pavet.cpp
+    sources/modele/ogre/pavet.cpp \
+    sources/modele/ogre/ogrebloc.cpp \
+    sources/modele/bloc/nodebloc.cpp \
+    sources/modele/bloc/bloc.cpp \
+    sources/controleur/controleurbloc.cpp \
+    sources/controleur/controleurmain.cpp \
+    sources/modele/modelemain.cpp \
+    sources/vue/vuemain.cpp

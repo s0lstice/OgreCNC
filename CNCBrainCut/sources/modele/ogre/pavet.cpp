@@ -3,46 +3,48 @@
 #include <QPoint>
 #include <QString>
 
-Pavet::Pavet(QString name, QString matName, Point3d dimention) : dimention(dimention), name(name), matName(matName)
+Pavet::Pavet(QString name, QString matName, Point3d  * dimention) : dimention(dimention), name(name), matName(matName)
 {
     objet = new Ogre::ManualObject(name.toStdString());
-
     update();
+}
+Pavet::~Pavet(){
+    delete dimention;
 }
 
 void Pavet::update(){
 
     objet->begin(matName.toStdString(), Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
-    objet->position(- dimention.x/2, + dimention.y/2, + dimention.z/2);
+    objet->position(- dimention->x/2, + dimention->y/2, + dimention->z/2);
     objet->colour(Ogre::ColourValue(0.0f,1.0f,0.0f,1.0f));
     objet->textureCoord(0.0, 1.0);
 
-    objet->position(- dimention.x/2, - dimention.y/2, + dimention.z/2);
+    objet->position(- dimention->x/2, - dimention->y/2, + dimention->z/2);
     objet->colour(Ogre::ColourValue(1.0f,1.0f,0.0f,1.0f));
     objet->textureCoord(1.0, 1.0);
 
-    objet->position(+ dimention.x/2, - dimention.y/2, + dimention.z/2);
+    objet->position(+ dimention->x/2, - dimention->y/2, + dimention->z/2);
     objet->colour(Ogre::ColourValue(1.0f,0.0f,0.0f,1.0f));
     objet->textureCoord(1.0, 0.0);
 
-    objet->position(+ dimention.x/2, + dimention.y/2, + dimention.z/2);
+    objet->position(+ dimention->x/2, + dimention->y/2, + dimention->z/2);
     objet->colour(Ogre::ColourValue(0.0f,0.0f,0.0f,1.0f));
     objet->textureCoord(0.0, 0.0);
 
-    objet->position(- dimention.x/2, + dimention.y/2, - dimention.z/2);
+    objet->position(- dimention->x/2, + dimention->y/2, - dimention->z/2);
     objet->colour(Ogre::ColourValue(0.0f,1.0f,1.0f,1.0f));
     objet->textureCoord(0.0, 1.0);
 
-    objet->position(- dimention.x/2, - dimention.y/2, - dimention.z/2);
+    objet->position(- dimention->x/2, - dimention->y/2, - dimention->z/2);
     objet->colour(Ogre::ColourValue(1.0f,1.0f,1.0f,1.0f));
     objet->textureCoord(1.0, 1.0);
 
-    objet->position(+ dimention.x/2, - dimention.y/2, - dimention.z/2);
+    objet->position(+ dimention->x/2, - dimention->y/2, - dimention->z/2);
     objet->colour(Ogre::ColourValue(1.0f,0.0f,1.0f,1.0f));
     objet->textureCoord(1.0, 0.0);
 
-    objet->position(+ dimention.x/2, + dimention.y/2, - dimention.z/2);
+    objet->position(+ dimention->x/2, + dimention->y/2, - dimention->z/2);
     objet->colour(Ogre::ColourValue(0.0f,0.0f,1.0f,1.0f));
     objet->textureCoord(0.0, 0.0);
 

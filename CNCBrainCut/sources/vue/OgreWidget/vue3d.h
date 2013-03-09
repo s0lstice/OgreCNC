@@ -10,8 +10,7 @@ class vue3d : public QMdiSubWindow
 Q_OBJECT
 
 public:
-    vue3d()
-    :ogreWidget(0)
+    vue3d(QWidget * parent = NULL) : QMdiSubWindow(parent), ogreWidget(0)
     {
         ogreWidget = new OgreWidget(this);
 
@@ -32,29 +31,29 @@ public:
     }
 /*
 private:
-    void createActionMenus()
-    {
-        QAction *closeAct = new QAction("Quitter", this);
-        connect(closeAct, SIGNAL(triggered()), this, SLOT(close()));
+void createActionMenus()
+{
+QAction *closeAct = new QAction("Quitter", this);
+connect(closeAct, SIGNAL(triggered()), this, SLOT(close()));
 
-        QAction *changeColorAct = new QAction("Changer la couleur de fond", this);
-        connect(changeColorAct, SIGNAL(triggered()), this, SLOT(chooseBgColor()));
+QAction *changeColorAct = new QAction("Changer la couleur de fond", this);
+connect(changeColorAct, SIGNAL(triggered()), this, SLOT(chooseBgColor()));
 
-        QMenu *menu = menuBar()->addMenu("Divers");
-        menu->addAction(changeColorAct);
-        menu->addAction(closeAct);
-    }
+QMenu *menu = menuBar()->addMenu("Divers");
+menu->addAction(changeColorAct);
+menu->addAction(closeAct);
+}
 
-    void createDockWidget()
-    {
-        QDockWidget *camPosDock = new QDockWidget("Camera Position", this);
-        camPosDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-        camPosDock->setFeatures(QDockWidget::DockWidgetMovable |
-                                QDockWidget::DockWidgetFloatable);
-        camPosDock->setWidget(camPosModifier);
+void createDockWidget()
+{
+QDockWidget *camPosDock = new QDockWidget("Camera Position", this);
+camPosDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+camPosDock->setFeatures(QDockWidget::DockWidgetMovable |
+QDockWidget::DockWidgetFloatable);
+camPosDock->setWidget(camPosModifier);
 
-        addDockWidget(Qt::NoDockWidgetArea, camPosDock);
-    }
+addDockWidget(Qt::NoDockWidgetArea, camPosDock);
+}
 */
 private slots:
     void chooseBgColor()

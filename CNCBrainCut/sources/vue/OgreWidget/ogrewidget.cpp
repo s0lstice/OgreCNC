@@ -1,13 +1,15 @@
 #include "ogrewidget.h"
 
 #include <QtGui/QX11Info>
+#include <QGLWidget>
+
 #include "../../modele/ogre/pavet.h"
 
 const QPoint     OgreWidget::invalidMousePoint(-1,-1);
 const Ogre::Real OgreWidget::turboModifier(10);
 
 OgreWidget::OgreWidget(QWidget *parent)
-:QWidget(parent),
+:QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
 ogreRoot(0), ogreSceneManager(0), ogreRenderWindow(0), ogreViewport(0),
 ogreCamera(0), oldPos(invalidMousePoint), selectedNode(0)
 {
@@ -332,6 +334,5 @@ void OgreWidget::createScene()
 
     Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
     mNode->setPosition(0,0,0);
-    mNode->attachObject(Pavet(QString("Cube"), QString("ground"), Point3d(10,70,50)).objet);
-
+    mNode->attachObject(Pavet(QString("Cube"), QString("BaseWhiteNoLighting"), new Point3d(10,70,50)).objet);
 }

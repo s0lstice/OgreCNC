@@ -10,11 +10,12 @@
 class Pavet
 {
 public:
-    Pavet(QString name,QString matName, Point3d dimention);
+    Pavet(QString name,QString matName, Point3d * dimention);
+    ~Pavet();
     void update();
 
     Ogre::ManualObject * objet;
-    Point3d dimention;
+    Point3d * dimention;
     QString name;
     QString matName;
 };

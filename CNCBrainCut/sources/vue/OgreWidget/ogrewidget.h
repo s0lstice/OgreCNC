@@ -3,8 +3,9 @@
 
 #include <QtGui>
 #include <Ogre.h>
+#include <QGLWidget>
 
-class OgreWidget : public QWidget
+class OgreWidget : public QGLWidget
 {
     Q_OBJECT
     
