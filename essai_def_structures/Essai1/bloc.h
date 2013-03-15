@@ -34,6 +34,9 @@ public:
     /*Avec arguments*/
     Bloc(float hauteurBloc, float longueurBloc, float largeurBloc, enumEtat etatBloc = CHUTE, bool visibleBloc = 1, NodeBloc* noeudPereBloc = NULL);
 
+    /*De recopie*/
+    Bloc(const Bloc& copyBloc);
+
     /*Définition des accesseurs aux attributs privés*/
 
     /*Méthodes "Get"*/
