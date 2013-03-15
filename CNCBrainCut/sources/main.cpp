@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    ControleurMain controleur;
+    OgreCNC::ControleurMain controleur;
 
     /*vue3d window3d;
     window3d.show();*/

@@ -4,45 +4,91 @@
 #include <QString>
 #include <Ogre.h>
 
-class NodeBloc;
+namespace  OgreCNC {
 
-class Bloc
-{
-public:
-    enum Etat {UTILISE, PERTE, CHUTE};
-    enum Visible {VISIBLE, MASQUE};
+    class NodeBloc;
 
-    /*Dimensions d'un bloc (en mm) -- le volume n'est pas stocké comme attribut, mais un accesseur spécifique le calculera*/
-    float hauteur;
-    float longueur;
-    float largeur;
+    class Bloc
+    {
+    public:
+        enum Etat {UTILISE, PERTE, CHUTE};
+        enum Type {BLOC, NODE};
 
-    /*Etat du bloc*/
-    Etat utilisation;
+    protected:
+        /*Dimensions d'un bloc (en mm) -- le volume n'est pas stocké comme attribut, mais un accesseur spécifique le calculera*/
+        Ogre::Vector3 m_dimention; //longeur = x; hauteur = y; largeur = z
+        Ogre::Vector3 m_position; // position du centre de l'objet
 
-    /*Visibilité du bloc : vaut 0 si le bloc est invisible, et 1 sinon*/
-    Visible visible;
+        /*Pointeur vers le noeud parent -- pour le noeud racine, qui n'a pas de père, le pointeur vaut NULL*/
+        NodeBloc* m_parent;
 
-    /*Pointeur vers le noeud parent -- pour le noeud racine, qui n'a pas de père, le pointeur vaut NULL*/
-    NodeBloc* parent;
+        /*Etat du bloc*/
+        Etat m_etat;
 
-    /*identifiant et denomination*/
-    int id;
-    QString name;
+        /*Visibilité du bloc : vaut 0 si le bloc est invisible, et 1 sinon*/
+        Qt::CheckState m_visible;
 
-    /*Ogre*/
-    Ogre::ManualObject * bloc3d; //obet 3d
-    Ogre::SceneNode * nodeBloc3d; //noeud de l'obset 3d dans le scenemanangeur
-    QString matName; //nom du materiaux
-    int posx; //position du centre de l'objet en x
-    int posy; //position du centre de l'objet en y
-    int posz; //position du centre de l'objet en z
+        /*Type de bloc, boc (leaf) or node*/
+        Type m_type;
 
-    /*Constructeurs*/
+        /*identifiant et denomination*/
+        static int m_id;
+        QString m_name;
 
-    explicit Bloc(NodeBloc * parent = NULL);
-    ~Bloc();
-    void updateBloc3d();
-};
+        /*Ogre*/
+        Ogre::ManualObject * m_bloc3d; //obet 3d
+        Ogre::SceneNode * m_nodeBloc3d; //noeud de l'obset 3d dans le scenemanangeur
+        QString m_matName; //nom du materiaux
 
+
+    public:
+
+        /*Constructeurs*/
+        explicit Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc * m_parent = NULL);
+        Bloc(NodeBloc *parent);
+        ~Bloc();
+        void updateBloc3d();
+
+        inline Type getType(){
+            return m_type;
+        }
+
+        inline NodeBloc * getParent(){
+            return m_parent;
+        }
+
+        inline void setParent(NodeBloc * parent){
+            m_parent = parent;
+        }
+
+        inline Qt::CheckState getVisibilite(){
+            return m_visible;
+        }
+
+        inline void setVisibilite(Qt::CheckState state){
+            m_visible = state;
+        }
+
+        inline QString getName(){
+            return m_name;
+        }
+
+        inline void setName(QString name){
+            m_name = name;
+        }
+
+        inline int getId(){
+            return m_id;
+        }
+
+        inline Ogre::ManualObject * getBloc3d(){
+            return m_bloc3d;
+        }
+
+        inline void setNodeBloc3d(Ogre::SceneNode * node){
+            m_nodeBloc3d = node;
+        }
+    };
+
+}
 #endif // BLOC_H

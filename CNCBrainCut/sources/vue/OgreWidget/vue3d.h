@@ -5,66 +5,69 @@
 #include "Coordinate3DModifier.h"
 #include "ogrewidget.h"
 
-class vue3d : public QMdiSubWindow
-{
-Q_OBJECT
+namespace OgreCNC {
 
-public:
-    vue3d(QWidget * parent = NULL) : QMdiSubWindow(parent), ogreWidget(0)
+    class vue3d : public QMainWindow
     {
-        ogreWidget = new OgreWidget(this);
+    Q_OBJECT
 
-        camPosModifier = new Coordinate3DModifier(this);
+    public:
+        vue3d(QWidget * parent = NULL) : QMainWindow(parent), ogreWidget(0)
+        {
+            ogreWidget = new OgreWidget(this);
+
+            camPosModifier = new Coordinate3DModifier(this);
 
 
-        QVBoxLayout *layout = new QVBoxLayout(this);
-        layout->addWidget(ogreWidget);
+            QVBoxLayout *layout = new QVBoxLayout(this);
+            layout->addWidget(ogreWidget);
 
-        this->setLayout(layout);
-        this->resize(800, 600);
-        this->setWindowTitle("Simple example");
+            this->setLayout(layout);
+            this->resize(800, 600);
+            this->setWindowTitle("Simple example");
 
-        connect(camPosModifier, SIGNAL(coordinateChanged(const Ogre::Vector3&)),
-                ogreWidget, SLOT(setCameraPosition(const Ogre::Vector3&)));
-        connect(ogreWidget, SIGNAL(cameraPositionChanged(const Ogre::Vector3&)),
-                camPosModifier, SLOT(setNewCoordinate(const Ogre::Vector3&)));
-    }
-/*
-private:
-void createActionMenus()
-{
-QAction *closeAct = new QAction("Quitter", this);
-connect(closeAct, SIGNAL(triggered()), this, SLOT(close()));
-
-QAction *changeColorAct = new QAction("Changer la couleur de fond", this);
-connect(changeColorAct, SIGNAL(triggered()), this, SLOT(chooseBgColor()));
-
-QMenu *menu = menuBar()->addMenu("Divers");
-menu->addAction(changeColorAct);
-menu->addAction(closeAct);
-}
-
-void createDockWidget()
-{
-QDockWidget *camPosDock = new QDockWidget("Camera Position", this);
-camPosDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-camPosDock->setFeatures(QDockWidget::DockWidgetMovable |
-QDockWidget::DockWidgetFloatable);
-camPosDock->setWidget(camPosModifier);
-
-addDockWidget(Qt::NoDockWidgetArea, camPosDock);
-}
-*/
-private slots:
-    void chooseBgColor()
+            connect(camPosModifier, SIGNAL(coordinateChanged(const Ogre::Vector3&)),
+                    ogreWidget, SLOT(setCameraPosition(const Ogre::Vector3&)));
+            connect(ogreWidget, SIGNAL(cameraPositionChanged(const Ogre::Vector3&)),
+                    camPosModifier, SLOT(setNewCoordinate(const Ogre::Vector3&)));
+        }
+    /*
+    private:
+    void createActionMenus()
     {
-        QColor c = QColorDialog::getColor();
-        ogreWidget->setBackgroundColor(c);
+    QAction *closeAct = new QAction("Quitter", this);
+    connect(closeAct, SIGNAL(triggered()), this, SLOT(close()));
+
+    QAction *changeColorAct = new QAction("Changer la couleur de fond", this);
+    connect(changeColorAct, SIGNAL(triggered()), this, SLOT(chooseBgColor()));
+
+    QMenu *menu = menuBar()->addMenu("Divers");
+    menu->addAction(changeColorAct);
+    menu->addAction(closeAct);
     }
 
-private:
-    OgreWidget *ogreWidget;
-    Coordinate3DModifier *camPosModifier;
-};
+    void createDockWidget()
+    {
+    QDockWidget *camPosDock = new QDockWidget("Camera Position", this);
+    camPosDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    camPosDock->setFeatures(QDockWidget::DockWidgetMovable |
+    QDockWidget::DockWidgetFloatable);
+    camPosDock->setWidget(camPosModifier);
 
+    addDockWidget(Qt::NoDockWidgetArea, camPosDock);
+    }
+    */
+    private slots:
+        void chooseBgColor()
+        {
+            QColor c = QColorDialog::getColor();
+            ogreWidget->setBackgroundColor(c);
+        }
+
+    private:
+        OgreWidget *ogreWidget;
+        Coordinate3DModifier *camPosModifier;
+    };
+
+}
 #endif // MAINWINDOW_H

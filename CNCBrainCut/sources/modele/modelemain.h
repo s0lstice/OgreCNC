@@ -3,31 +3,41 @@
 
 #include <QObject>
 
-class ControleurMain;
-class VueMain;
+namespace OgreCNC{
+    class ControleurMain;
+    class VueMain;
+    class NodeBloc;
 
-class ModeleMain : public QObject
-{
-    Q_OBJECT
-public:
-    explicit ModeleMain(QObject *parent = 0);
-    
-    inline void setVue(VueMain * vue){
-        vue = vue;
-    }
+    class ModeleMain : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit ModeleMain(QObject *parent = 0);
+        ~ModeleMain();
 
-    inline void setControleur(ControleurMain * controleur){
-        controleur = controleur;
-    }
+        inline void setVue(VueMain * vue){
+            m_vue = vue;
+        }
 
-private:
-    ControleurMain * controleur;
-    VueMain * vue;
+        inline void setControleur(ControleurMain * controleur){
+            m_controleur = controleur;
+        }
 
-signals:
-    
-public slots:
-    
-};
+        inline NodeBloc * getTravailBoc(){
+            return m_RootTravailBlocs;
+        }
 
+    private:
+        ControleurMain * m_controleur;
+        VueMain * m_vue;
+
+        NodeBloc * m_RootTravailBlocs;
+
+
+    signals:
+
+    public slots:
+
+    };
+}
 #endif // MODELEMAIN_H

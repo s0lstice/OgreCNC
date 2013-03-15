@@ -4,45 +4,58 @@
 #include <QVector>
 #include "bloc.h"
 
-class NodeBloc : public Bloc
-{
+namespace OgreCNC {
 
-private:
-    /*Liste des noeuds fils issus de la découpe du noeud bloc*/
-    QVector<Bloc*> * listeFils;
-
-public:
-    /*Constructeurs*/
-
-    explicit NodeBloc(NodeBloc * parent = 0);
-
-    /*Définition des accesseurs aux attributs privés*/
-
-    /*Méthodes "Get"*/
-    inline QVector<Bloc*> * getListeFils()
+    class NodeBloc : public Bloc
     {
-        return listeFils;
-    }
 
-    /*Méthodes "Set"*/
-    inline void setListeFils(QVector<Bloc*> * listeFilsNoeud)
-    {
-        listeFils = listeFilsNoeud;
-    }
+    private:
+        /*Liste des noeuds fils issus de la découpe du noeud bloc*/
+        QVector<Bloc*> * m_listeFils;
+        Bloc * m_bloc; //bloc initial, avant dedoupe
 
-    inline void append(Bloc * bloc){
-        bloc->parent = this;
-        listeFils->append(bloc);
-    }
+    public:
+        /*Constructeurs*/
 
-    inline Bloc * at(int i){
-        return listeFils->at(i);
-    }
+        explicit NodeBloc(Bloc *bloc = 0, NodeBloc * parent = 0);
+        ~NodeBloc();
 
-    /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
-    void destroyListeFils();
-    ~NodeBloc();
+        /*Définition des accesseurs aux attributs privés*/
 
-};
+        /*Méthodes "Get"*/
+        inline QVector<Bloc*> * getListeFils()
+        {
+            return m_listeFils;
+        }
 
+        /*Méthodes "Set"*/
+        inline void setListeFils(QVector<Bloc*> * listeFilsNoeud)
+        {
+            m_listeFils = listeFilsNoeud;
+        }
+
+        inline void append(Bloc * bloc){
+            bloc->setParent(this);
+            m_listeFils->append(bloc);
+        }
+
+        inline Bloc * at(int i){
+            return m_listeFils->at(i);
+        }
+
+        /**
+         * @brief getInitialBloc
+         * @return Bloc, le bloc initial, avant la decoupe
+         */
+        inline Bloc * getInitialBloc(){
+            return m_bloc;
+        }
+
+        /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
+    private:
+        void destroyListeFils();
+
+    };
+
+}
 #endif // NODEBLOC_H

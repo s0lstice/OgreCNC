@@ -1,22 +1,22 @@
 #include "nodebloc.h"
 
+using namespace OgreCNC;
 /*Constructeurs*/
 
-NodeBloc::NodeBloc(NodeBloc * parent) : Bloc(parent)
+NodeBloc::NodeBloc( Bloc * bloc, NodeBloc * parent) : Bloc(parent)
 {
-    listeFils = NULL;
-}
-
-/*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
-void NodeBloc::destroyListeFils()
-{
-    qDeleteAll(listeFils->begin(),listeFils->end());
-    listeFils->clear();
-    delete listeFils;
-    listeFils = NULL;
+    m_bloc = bloc;
+    m_listeFils = new QVector<Bloc*>();
+    m_type = Bloc::NODE;
 }
 
 NodeBloc::~NodeBloc()
 {
-    destroyListeFils();
+    //destruction de la liste de fils
+    while(!m_listeFils->isEmpty()){
+        delete m_listeFils->back();
+        m_listeFils->pop_back();
+    }
+    delete m_listeFils;
+    m_listeFils = NULL;
 }

@@ -3,23 +3,32 @@
 
 #include <QWidget>
 
-class VueMain;
-class ModeleMain;
+namespace OgreCNC {
 
-class ControleurMain : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit ControleurMain(QWidget *parent = 0);
-    
-private:
-    VueMain * vue;
-    ModeleMain * modele;
+    class VueMain;
+    class ModeleMain;
+    class ControleurBloc;
 
-signals:
+    class ControleurMain : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit ControleurMain(QWidget *parent = 0);
 
-public slots:
-    
-};
+    private:
+        VueMain * m_vue;
+        ModeleMain * m_modele;
 
+        ControleurBloc * m_gestionBloc;
+
+
+        void initConnections();
+
+    signals:
+
+    public slots:
+
+    };
+
+}
 #endif // CONTROLEURMAIN_H

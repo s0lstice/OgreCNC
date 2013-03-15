@@ -3,7 +3,9 @@
 #include <QtGui/QX11Info>
 #include <QGLWidget>
 
-#include "../../modele/ogre/pavet.h"
+#include "../../modele/bloc/bloc.h"
+
+using namespace OgreCNC;
 
 const QPoint     OgreWidget::invalidMousePoint(-1,-1);
 const Ogre::Real OgreWidget::turboModifier(10);
@@ -331,8 +333,16 @@ void OgreWidget::createScene()
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
 
     ogreSceneManager->setSkyDome(true, "CloudySky", 5, 8);
+}
 
-    Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
-    mNode->setPosition(0,0,0);
-    mNode->attachObject(Pavet(QString("Cube"), QString("BaseWhiteNoLighting"), new Point3d(10,70,50)).objet);
+void OgreWidget::drawBloc(Bloc * bloc){
+    if(bloc->getBloc3d() == NULL)
+        qWarning("[Ogre] ajour d'un bloc NULL impossible");
+    else{
+        Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode(bloc->getId()+"Node");
+        mNode->setPosition(0,0,0);
+
+        mNode->attachObject(bloc->getBloc3d());
+        bloc->setNodeBloc3d(mNode);
+    }
 }
