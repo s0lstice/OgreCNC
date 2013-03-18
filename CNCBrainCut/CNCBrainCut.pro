@@ -66,7 +66,6 @@ HEADERS += \
     sources/controleur/controleurbloc.h \
     sources/controleur/controleurmain.h \
     sources/modele/modelemain.h \
-    sources/vue/dialog.h \
     sources/vue/vuemain.h
 
 SOURCES += \
@@ -77,7 +76,6 @@ SOURCES += \
     sources/controleur/controleurbloc.cpp \
     sources/controleur/controleurmain.cpp \
     sources/modele/modelemain.cpp \
-    sources/vue/dialog.cpp \
     sources/vue/vuemain.cpp
 
 FORMS += \

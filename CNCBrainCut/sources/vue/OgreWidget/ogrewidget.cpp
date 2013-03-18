@@ -2,10 +2,12 @@
 
 #include <QtGui/QX11Info>
 #include <QGLWidget>
+#include <iostream>
 
 #include "../../modele/bloc/bloc.h"
 
 using namespace OgreCNC;
+using namespace std;
 
 const QPoint     OgreWidget::invalidMousePoint(-1,-1);
 const Ogre::Real OgreWidget::turboModifier(10);
@@ -94,29 +96,32 @@ void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
     if(e->buttons().testFlag(Qt::LeftButton))
     {
-        Ogre::Real x = e->pos().x() / (float)width();
-        Ogre::Real y = e->pos().y() / (float)height();
-        
-        Ogre::Ray ray = ogreCamera->getCameraToViewportRay(x, y);
-        Ogre::RaySceneQuery *query = ogreSceneManager->createRayQuery(ray);
-        Ogre::RaySceneQueryResult &queryResult = query->execute();
-        Ogre::RaySceneQueryResult::iterator queryResultIterator = queryResult.begin();
-        
-        if(queryResultIterator != queryResult.end())
+        // initialisation de la requête
+        Ogre::RaySceneQuery *raySceneQuery =
+        ogreSceneManager->createRayQuery(Ogre::Ray());
+        // initialisation du rayon de mesure
+        Ogre::Ray mouseRay = ogreCamera->getCameraToViewportRay(
+        e->posF().x()/(float)width(),
+        e->posF().y()/(float)height());
+        raySceneQuery->setRay(mouseRay);
+        raySceneQuery->setSortByDistance(true);
+
+        // exécution de la requête
+        Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
+
+        // parcours des résultats, récupération du premier « MovableObject »
+        Ogre::RaySceneQueryResult::iterator itr;
+
+        for (itr = result.begin();itr!=result.end();itr++)
         {
-            if(queryResultIterator->movable)
+            if(itr->movable)
             {
-                selectedNode = queryResultIterator->movable->getParentSceneNode();
-                selectedNode->showBoundingBox(true);
+                cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
             }
         }
-        else
-        {
-            selectedNode->showBoundingBox(false);
-            selectedNode = 0;
-        }
-        
-        ogreSceneManager->destroyQuery(query);
+//        else{
+//            cout << "[Ogre] Rien a prender" << endl;
+//        }
         
         update();
         e->accept();
