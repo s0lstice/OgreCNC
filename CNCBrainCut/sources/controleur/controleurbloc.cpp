@@ -131,7 +131,7 @@ void ControleurBloc::creatBloc(const QModelIndex  &index){
 
     emit beginResetModel();
     groupe->append(bloc);
-    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(groupe->getName());
+    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
     emit endResetModel();
 
     emit ogreDrawBloc(bloc);
@@ -152,7 +152,7 @@ void ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, 
     Bloc * bloc = new Bloc(dimention, position, groupe);
     bloc->updateBloc3d();
     groupe->append(bloc);
-    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(groupe->getName());
+    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
     emit endResetModel();
 
     emit ogreDrawBloc(bloc);

@@ -54,14 +54,9 @@ void OgreWidget::setBackgroundColor(QColor c)
 void OgreWidget::setCameraPosition(const Ogre::Vector3 &pos)
 {
 	ogreCamera->setPosition(pos);
-	ogreCamera->lookAt(0,50,0);
+    ogreCamera->lookAt(0,0,0);
     update();
     emit cameraPositionChanged(pos);
-}
-
-void OgreWidget::resizeWidget(int w, int h){
-    setMinimumSize(w, h);
-    resize(w, h);
 }
 
 void OgreWidget::keyPressEvent(QKeyEvent *e)
@@ -71,18 +66,17 @@ void OgreWidget::keyPressEvent(QKeyEvent *e)
 	
 	if(!mappingInitialised)
 	{
-		keyCoordModificationMapping[Qt::Key_Z] 		  = Ogre::Vector3( 0, 0,-5);
-		keyCoordModificationMapping[Qt::Key_S] 		  = Ogre::Vector3( 0, 0, 5);
-		keyCoordModificationMapping[Qt::Key_Q] 		  = Ogre::Vector3(-5, 0, 0);
-		keyCoordModificationMapping[Qt::Key_D] 		  = Ogre::Vector3( 5, 0, 0);
-		keyCoordModificationMapping[Qt::Key_PageUp]   = Ogre::Vector3( 0, 5, 0);
-        keyCoordModificationMapping[Qt::Key_PageDown] = Ogre::Vector3( 0,-5, 0);
+        keyCoordModificationMapping[Qt::Key_Z] 		  = Ogre::Vector3( 0, 0,-10);
+        keyCoordModificationMapping[Qt::Key_S] 		  = Ogre::Vector3( 0, 0, 10);
+        keyCoordModificationMapping[Qt::Key_Q] 		  = Ogre::Vector3(-10, 0, 0);
+        keyCoordModificationMapping[Qt::Key_D] 		  = Ogre::Vector3( 10, 0, 0);
+        keyCoordModificationMapping[Qt::Key_PageUp]   = Ogre::Vector3( 0, 10, 0);
+        keyCoordModificationMapping[Qt::Key_PageDown] = Ogre::Vector3( 0,-10, 0);
 		
 		mappingInitialised = true;
 	}
 	
-	QMap<int, Ogre::Vector3>::iterator keyPressed =
-		keyCoordModificationMapping.find(e->key());
+    QMap<int, Ogre::Vector3>::iterator keyPressed = keyCoordModificationMapping.find(e->key());
 	if(keyPressed != keyCoordModificationMapping.end() && ogreCamera)
 	{
 		const Ogre::Vector3 &actualCamPos = ogreCamera->getPosition();
@@ -223,6 +217,7 @@ void OgreWidget::resizeEvent(QResizeEvent *e)
             Ogre::Real aspectRatio = Ogre::Real(newSize.width()) / Ogre::Real(newSize.height());
             ogreCamera->setAspectRatio(aspectRatio);
         }
+        update();
     }
 }
 
@@ -279,9 +274,9 @@ void OgreWidget::initOgreSystem()
 		width(), height(), false, &viewConfig);
     
     ogreCamera = ogreSceneManager->createCamera("myCamera");
-    Ogre::Vector3 camPos(0, 50,150);
+    Ogre::Vector3 camPos(0, 0,500);
 	ogreCamera->setPosition(camPos);
-	ogreCamera->lookAt(0,50,0);
+    ogreCamera->lookAt(0,0,0);
     emit cameraPositionChanged(camPos);
     
     ogreViewport = ogreRenderWindow->addViewport(ogreCamera);
@@ -333,6 +328,7 @@ void OgreWidget::createScene()
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
 
     ogreSceneManager->setSkyDome(true, "CloudySky", 5, 8);
+
 }
 
 void OgreWidget::drawBloc(Bloc * bloc){

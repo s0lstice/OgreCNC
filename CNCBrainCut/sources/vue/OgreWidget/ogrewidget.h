@@ -30,7 +30,6 @@ namespace OgreCNC {
     public slots:
         void setBackgroundColor(QColor c);
         void setCameraPosition(const Ogre::Vector3 &pos);
-        void resizeWidget(int w, int h);
 
     signals:
         void cameraPositionChanged(const Ogre::Vector3 &pos);

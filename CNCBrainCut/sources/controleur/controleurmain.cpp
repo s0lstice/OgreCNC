@@ -10,12 +10,12 @@ ControleurMain::ControleurMain(QWidget *parent) :
     QWidget(parent)
 {
     m_modele = new ModeleMain(this);
+
+    initControleur();
+
     m_vue = new VueMain(this);
     m_vue->setModele(m_modele);
     m_modele->setVue(m_vue);
-
-    m_gestionBloc = new ControleurBloc(this);
-    m_gestionBloc->setRootNode(m_modele->getTravailBoc());
 
     initConnections();
 
@@ -24,4 +24,9 @@ ControleurMain::ControleurMain(QWidget *parent) :
 
 void ControleurMain::initConnections(){
     connect(m_gestionBloc, SIGNAL(ogreDrawBloc(Bloc*)), m_vue, SLOT(ogreDrawBloc(Bloc*)));
+}
+
+void ControleurMain::initControleur(){
+    m_gestionBloc = new ControleurBloc(this);
+    m_gestionBloc->setRootNode(m_modele->getTravailBoc());
 }

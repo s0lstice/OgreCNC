@@ -64,32 +64,17 @@
       <x>1090</x>
       <y>10</y>
       <width>211</width>
-      <height>429</height>
+      <height>581</height>
      </rect>
     </property>
     <property name="title">
      <string>Gestion des blocs</string>
     </property>
-    <widget class="QTreeWidget" name="treeWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>191</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
     <widget class="QCheckBox" name="vue_checkBox">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>240</y>
        <width>81</width>
        <height>17</height>
       </rect>
@@ -105,7 +90,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>270</y>
        <width>191</width>
        <height>151</height>
       </rect>
@@ -252,7 +237,7 @@
      <property name="geometry">
       <rect>
        <x>9</x>
-       <y>290</y>
+       <y>430</y>
        <width>191</width>
        <height>131</height>
       </rect>
@@ -343,7 +328,7 @@
      <property name="geometry">
       <rect>
        <x>160</x>
-       <y>100</y>
+       <y>240</y>
        <width>41</width>
        <height>22</height>
       </rect>
@@ -363,7 +348,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>100</y>
+       <y>240</y>
        <width>46</width>
        <height>16</height>
       </rect>
@@ -371,6 +356,22 @@
      <property name="text">
       <string>Unités</string>
      </property>
+    </widget>
+    <widget class="QTreeView" name="treeBlocs">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>201</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="headerHidden">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
     </widget>
    </widget>
    <widget class="QTabWidget" name="decoupe_menu_biblio_onglet">

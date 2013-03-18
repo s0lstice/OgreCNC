@@ -1,7 +1,6 @@
 #include <QtGui>
 
 #include "controleur/controleurmain.h"
-#include "vue/OgreWidget/vue3d.h"
 
 int main(int argc, char **argv)
 {

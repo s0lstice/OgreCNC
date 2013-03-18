@@ -35,11 +35,28 @@ namespace  OgreCNC {
         static int m_id;
         QString m_name;
 
+        /* Sommets du cube*/
+        Ogre::Vector3 m_sommet0;
+        Ogre::Vector3 m_sommet1;
+        Ogre::Vector3 m_sommet2;
+        Ogre::Vector3 m_sommet3;
+        Ogre::Vector3 m_sommet4;
+        Ogre::Vector3 m_sommet5;
+        Ogre::Vector3 m_sommet6;
+        Ogre::Vector3 m_sommet7;
+
         /*Ogre*/
         Ogre::ManualObject * m_bloc3d; //obet 3d
         Ogre::SceneNode * m_nodeBloc3d; //noeud de l'obset 3d dans le scenemanangeur
-        QString m_matName; //nom du materiaux
+        QString m_faceMatName; //nom du materiaux pour les faces
+        QString m_segmentMatName;  //nom du materiaux pour les segments
+        Ogre::ColourValue m_colorBloc; //couleur des faces
+        Ogre::ColourValue m_colorSegments;
 
+        void updateSommets();
+        void creatBloc();
+        void updateFaces();
+        void updateContour();
 
     public:
 
@@ -47,7 +64,6 @@ namespace  OgreCNC {
         explicit Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc * m_parent = NULL);
         Bloc(NodeBloc *parent);
         ~Bloc();
-        void updateBloc3d();
 
         inline Type getType(){
             return m_type;
@@ -87,6 +103,28 @@ namespace  OgreCNC {
 
         inline void setNodeBloc3d(Ogre::SceneNode * node){
             m_nodeBloc3d = node;
+        }
+
+        inline void setDimention(Ogre::Vector3 dimention){
+            m_dimention = dimention;
+            updateSommets();
+            updateFaces();
+        }
+
+        inline void setPosition(Ogre::Vector3 position){
+            m_position = position;
+            updateSommets();
+            updateFaces();
+        }
+
+        inline void updateBloc3d(){
+            if(m_bloc3d == NULL){
+                updateSommets();
+                creatBloc();
+            }
+
+            updateFaces();
+            updateContour();
         }
     };
 

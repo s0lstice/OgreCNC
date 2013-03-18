@@ -61,8 +61,6 @@ win32 {
 
 HEADERS += \
     sources/vue/OgreWidget/ogrewidget.h \
-    sources/vue/OgreWidget/Coordinate3DModifier.h \
-    sources/vue/OgreWidget/vue3d.h \
     sources/modele/bloc/nodebloc.h \
     sources/modele/bloc/bloc.h \
     sources/controleur/controleurbloc.h \

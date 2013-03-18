@@ -15,13 +15,17 @@ namespace OgreCNC {
     public:
         explicit ControleurMain(QWidget *parent = 0);
 
+        inline ControleurBloc * getModeleBlocs(){
+            return m_gestionBloc;
+        }
+
     private:
         VueMain * m_vue;
         ModeleMain * m_modele;
 
         ControleurBloc * m_gestionBloc;
 
-
+        void initControleur();
         void initConnections();
 
     signals:
