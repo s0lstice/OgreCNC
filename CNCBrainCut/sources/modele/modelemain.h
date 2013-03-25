@@ -23,7 +23,7 @@ namespace OgreCNC{
             m_controleur = controleur;
         }
 
-        inline NodeBloc * getTravailBoc(){
+        inline NodeBloc * getTravailBloc(){
             return m_RootTravailBlocs;
         }
 

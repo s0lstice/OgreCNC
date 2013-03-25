@@ -19,6 +19,9 @@ namespace  OgreCNC {
         Ogre::Vector3 m_dimention; //longeur = x; hauteur = y; largeur = z
         Ogre::Vector3 m_position; // position du centre de l'objet
 
+        //Modif Mel
+        Ogre::Vector3 m_positionVueEclatee; // position du centre de l'objet dans la vue éclatée
+
         /*Pointeur vers le noeud parent -- pour le noeud racine, qui n'a pas de père, le pointeur vaut NULL*/
         NodeBloc* m_parent;
 
@@ -73,6 +76,20 @@ namespace  OgreCNC {
             return m_parent;
         }
 
+        //Modif Mel
+        inline Ogre::Vector3 getPosition(){
+            return m_position;
+        }
+        inline Ogre::Vector3 getPositionVueEclatee(){
+            return m_positionVueEclatee;
+        }
+
+
+
+        inline Ogre::SceneNode* getNodeBloc3d(){
+            return m_nodeBloc3d;
+        }
+
         inline void setParent(NodeBloc * parent){
             m_parent = parent;
         }
@@ -113,7 +130,12 @@ namespace  OgreCNC {
 
         inline void setPosition(Ogre::Vector3 position){
             m_position = position;
-            updateSommets();
+            updateFaces();
+        }
+
+        //Modif Mel
+        inline void setPositionVueEclatee(Ogre::Vector3 position){
+            m_positionVueEclatee = position;
             updateFaces();
         }
 

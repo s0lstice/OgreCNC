@@ -341,7 +341,7 @@ void OgreWidget::drawBloc(Bloc * bloc){
         qWarning("[Ogre] ajour d'un bloc NULL impossible");
     else{
         Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode(bloc->getId()+"Node");
-        mNode->setPosition(0,0,0);
+        mNode->setPosition(bloc->getPosition());
 
         mNode->attachObject(bloc->getBloc3d());
         bloc->setNodeBloc3d(mNode);

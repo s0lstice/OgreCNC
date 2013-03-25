@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QString>
 
+#include <Ogre.h>
+
 #include "../modele/bloc/nodebloc.h"
 #include "../modele/bloc/bloc.h"
 #include "controleurmain.h"
@@ -116,7 +118,7 @@ void ControleurBloc::add(Bloc * bloc, const QModelIndex  &index){
     emit endResetModel();
 }
 
-void ControleurBloc::creatBloc(const QModelIndex  &index){
+Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
     NodeBloc *groupe;
 
     if(index.isValid() == false)
@@ -135,9 +137,11 @@ void ControleurBloc::creatBloc(const QModelIndex  &index){
     emit endResetModel();
 
     emit ogreDrawBloc(bloc);
+
+    return bloc;
 }
 
-void ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index){
+Bloc* ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index){
     NodeBloc *groupe;
 
     if(index.isValid() == false)
@@ -156,6 +160,8 @@ void ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, 
     emit endResetModel();
 
     emit ogreDrawBloc(bloc);
+
+    return bloc;
 }
 
 void ControleurBloc::creatNodeBloc(const QModelIndex  &index){
@@ -246,4 +252,96 @@ void ControleurBloc::switchEtat(Bloc *blocs){
         emit layoutChanged();
     }
 
+}
+
+//Modif Mel
+/*Cette fonction éloigne tous les blocs d'une distance "eloignement" sur l'axe donné par positionRoot->positionBloc
+* Le bloc racine n'est pas déplacé.
+*/
+void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
+
+    if(eloignement != 0)
+    {
+        if(eloignement < 0)
+            eloignement = -eloignement;
+
+        int i;
+        Bloc* bloc;
+        Ogre::Vector3 positionBloc;
+        Ogre::Vector3 nouvellePosition;
+        Ogre::SceneNode* nodeBloc;
+
+        if(node == NULL)
+        {
+            node = m_root;
+        }
+
+        //Récupération des fils du noeud bloc
+        QVector<Bloc*> * listeFils = node->getListeFils();
+
+        //On parcourt tous les fils du noeud
+        for(i = 0; i < listeFils->count(); i++)
+        {
+            bloc = listeFils->data()[i];
+            positionBloc = bloc->getPosition();
+            nodeBloc = bloc->getNodeBloc3d();
+
+            switch(bloc->getType())
+            {
+                case Bloc::BLOC:
+                    //On applique le changement de position sur le noeud feuille
+                    nouvellePosition = ControleurBloc::calculerConstanteVueEclatee(bloc, eloignement);
+                    nouvellePosition[0] = nouvellePosition[0] + positionBloc[0];
+                    nouvellePosition[1] = nouvellePosition[1] + positionBloc[1];
+                    nouvellePosition[2] = nouvellePosition[2] + positionBloc[2];
+                    bloc->setPositionVueEclatee(nouvellePosition);
+                    nodeBloc->setPosition(nouvellePosition[0],nouvellePosition[1],nouvellePosition[2]);
+                    break;
+                case Bloc::NODE:
+                    //On applique le changement de position sur le noeud bloc
+                    nouvellePosition = ControleurBloc::calculerConstanteVueEclatee(bloc, eloignement);
+                    nouvellePosition[0] = nouvellePosition[0] + positionBloc[0];
+                    nouvellePosition[1] = nouvellePosition[1] + positionBloc[1];
+                    nouvellePosition[2] = nouvellePosition[2] + positionBloc[2];
+                    bloc->setPositionVueEclatee(nouvellePosition);
+                    nodeBloc->setPosition(nouvellePosition[0],nouvellePosition[1],nouvellePosition[2]);
+                    //On parcourt ses fils
+                    ControleurBloc::appliquerVueEclatee(eloignement, (NodeBloc*)bloc);
+            }
+        }
+    }
+}
+
+//Rappel : on déplace par rapport au centre de gravité de la racine
+Ogre::Vector3 ControleurBloc::calculerConstanteVueEclatee(Bloc* noeudAdeplacer, double eloignement){
+
+    //En vue éclatée, la racine reste à sa position initiale
+    if( (noeudAdeplacer == m_root) || (noeudAdeplacer->getPosition() == m_root->getPosition()) )
+    {
+        return( Ogre::Vector3(0,0,0) );
+    }
+
+    Ogre::Vector3 positionRoot = m_root->getPosition();
+    Ogre::Vector3 positionNoeud = noeudAdeplacer->getPosition();
+
+    double X = positionNoeud[0]-positionRoot[0];
+    double Y = positionNoeud[1]-positionRoot[1];
+    double Z = positionNoeud[2]-positionRoot[2];
+
+    double norme = sqrt(  (positionNoeud[0]-positionRoot[0])*(positionNoeud[0]-positionRoot[0])
+                        + (positionNoeud[1]-positionRoot[1])*(positionNoeud[1]-positionRoot[1])
+                        + (positionNoeud[2]-positionRoot[2])*(positionNoeud[2]-positionRoot[2])
+                       );
+
+    double normalisationX = X/norme;
+    double normalisationY = Y/norme;
+    double normalisationZ = Z/norme;
+
+    norme = norme + eloignement;
+
+    X = X + norme * normalisationX;
+    Y = Y + norme * normalisationY;
+    Z = Z + norme * normalisationZ;
+
+    return( Ogre::Vector3(X,Y,Z) );
 }

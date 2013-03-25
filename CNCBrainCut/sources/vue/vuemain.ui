@@ -73,9 +73,9 @@
     <widget class="QCheckBox" name="vue_checkBox">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>240</y>
-       <width>81</width>
+       <x>0</x>
+       <y>230</y>
+       <width>111</width>
        <height>17</height>
       </rect>
      </property>
@@ -92,7 +92,7 @@
        <x>10</x>
        <y>270</y>
        <width>191</width>
-       <height>151</height>
+       <height>161</height>
       </rect>
      </property>
      <property name="title">
@@ -147,9 +147,9 @@
      <widget class="QLabel" name="blocDimensions_label">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>70</y>
-        <width>61</width>
+        <x>60</x>
+        <y>80</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -161,7 +161,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>90</y>
+        <y>100</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -174,7 +174,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
+        <y>100</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -187,7 +187,7 @@
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>90</y>
+        <y>100</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -200,8 +200,8 @@
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>120</y>
-        <width>41</width>
+        <y>130</y>
+        <width>51</width>
         <height>20</height>
        </rect>
       </property>
@@ -210,8 +210,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>120</y>
-        <width>41</width>
+        <y>130</y>
+        <width>51</width>
         <height>16</height>
        </rect>
       </property>
@@ -223,8 +223,8 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>120</y>
-        <width>21</width>
+        <y>130</y>
+        <width>31</width>
         <height>16</height>
        </rect>
       </property>
@@ -237,9 +237,9 @@
      <property name="geometry">
       <rect>
        <x>9</x>
-       <y>430</y>
+       <y>440</y>
        <width>191</width>
-       <height>131</height>
+       <height>141</height>
       </rect>
      </property>
      <property name="title">
@@ -249,7 +249,7 @@
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>90</y>
+        <y>100</y>
         <width>81</width>
         <height>23</height>
        </rect>
@@ -262,7 +262,7 @@
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>60</y>
+        <y>70</y>
         <width>81</width>
         <height>23</height>
        </rect>
@@ -274,9 +274,9 @@
      <widget class="QLabel" name="blocActionDimensions_label">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>10</y>
-        <width>61</width>
+        <x>60</x>
+        <y>20</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -288,7 +288,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>40</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -301,7 +301,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>30</y>
+        <y>40</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -314,7 +314,7 @@
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>30</y>
+        <y>40</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -327,9 +327,9 @@
     <widget class="QComboBox" name="unites_comboBox">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>240</y>
-       <width>41</width>
+       <x>60</x>
+       <y>250</y>
+       <width>51</width>
        <height>22</height>
       </rect>
      </property>
@@ -347,8 +347,8 @@
     <widget class="QLabel" name="unites_label">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>240</y>
+       <x>10</x>
+       <y>250</y>
        <width>46</width>
        <height>16</height>
       </rect>
@@ -373,14 +373,27 @@
       <bool>false</bool>
      </attribute>
     </widget>
+    <widget class="QLineEdit" name="valeurEclatement_text">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>230</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>valeur</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTabWidget" name="decoupe_menu_biblio_onglet">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>10</y>
       <width>241</width>
-      <height>429</height>
+      <height>581</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -396,9 +409,9 @@
      <widget class="QPushButton" name="quitter_pushButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>60</x>
         <y>140</y>
-        <width>91</width>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
@@ -409,9 +422,9 @@
      <widget class="QPushButton" name="ouvrirProjet_pushButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>60</x>
         <y>20</y>
-        <width>91</width>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
@@ -422,9 +435,9 @@
      <widget class="QPushButton" name="enregistrer_pushButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>60</x>
         <y>60</y>
-        <width>91</width>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
@@ -435,9 +448,9 @@
      <widget class="QPushButton" name="enregistrerSous_pushButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>60</x>
         <y>100</y>
-        <width>91</width>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
@@ -450,51 +463,12 @@
      <attribute name="title">
       <string>Découpe</string>
      </attribute>
-     <widget class="QGroupBox" name="modeDecoupeDroit_GroupBox">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>30</y>
-        <width>101</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string/>
-      </property>
-      <widget class="QRadioButton" name="classiqueRadioButton">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>classique</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="multipleRadioButton">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>multiple</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QGroupBox" name="definitionDecoupeGroupBox">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>100</y>
-        <width>191</width>
+        <y>120</y>
+        <width>221</width>
         <height>171</height>
        </rect>
       </property>
@@ -517,7 +491,7 @@
       <widget class="QLineEdit" name="origineY_text">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>90</x>
          <y>40</y>
          <width>51</width>
          <height>20</height>
@@ -530,7 +504,7 @@
       <widget class="QLineEdit" name="origineZ_text">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>170</x>
          <y>40</y>
          <width>51</width>
          <height>20</height>
@@ -545,7 +519,7 @@
         <rect>
          <x>80</x>
          <y>20</y>
-         <width>41</width>
+         <width>61</width>
          <height>16</height>
         </rect>
        </property>
@@ -558,8 +532,8 @@
         <rect>
          <x>80</x>
          <y>70</y>
-         <width>46</width>
-         <height>13</height>
+         <width>71</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
@@ -582,7 +556,7 @@
       <widget class="QRadioButton" name="directionY_radioButton">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>90</x>
          <y>90</y>
          <width>41</width>
          <height>17</height>
@@ -595,7 +569,7 @@
       <widget class="QRadioButton" name="directionZ_radioButton">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>170</x>
          <y>90</y>
          <width>41</width>
          <height>17</height>
@@ -608,10 +582,10 @@
       <widget class="QLabel" name="distance_label">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>120</y>
-         <width>46</width>
-         <height>13</height>
+         <width>61</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
@@ -623,7 +597,7 @@
         <rect>
          <x>100</x>
          <y>120</y>
-         <width>81</width>
+         <width>121</width>
          <height>16</height>
         </rect>
        </property>
@@ -647,9 +621,9 @@
       <widget class="QLineEdit" name="nbBlocs_text">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>120</x>
          <y>140</y>
-         <width>61</width>
+         <width>71</width>
          <height>20</height>
         </rect>
        </property>
@@ -659,9 +633,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>280</y>
-        <width>191</width>
-        <height>111</height>
+        <y>320</y>
+        <width>221</width>
+        <height>141</height>
        </rect>
       </property>
       <property name="title">
@@ -671,8 +645,8 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>20</y>
-         <width>71</width>
+         <y>30</y>
+         <width>91</width>
          <height>17</height>
         </rect>
        </property>
@@ -684,8 +658,8 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>50</y>
-         <width>61</width>
+         <y>70</y>
+         <width>81</width>
          <height>17</height>
         </rect>
        </property>
@@ -697,8 +671,8 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>80</y>
-         <width>61</width>
+         <y>110</y>
+         <width>81</width>
          <height>17</height>
         </rect>
        </property>
@@ -709,8 +683,8 @@
       <widget class="QToolButton" name="imagePerteGauche">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>10</y>
+         <x>140</x>
+         <y>20</y>
          <width>31</width>
          <height>31</height>
         </rect>
@@ -720,7 +694,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../perteGauche.png</normaloff>../perteGauche.png</iconset>
+         <normaloff>../../media/Icones/perteGauche.png</normaloff>../../media/Icones/perteGauche.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -732,8 +706,8 @@
       <widget class="QToolButton" name="imagePerteCentree">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>70</y>
+         <x>140</x>
+         <y>100</y>
          <width>31</width>
          <height>31</height>
         </rect>
@@ -743,7 +717,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../perteCentree.png</normaloff>../perteCentree.png</iconset>
+         <normaloff>../../media/Icones/perteCentree.png</normaloff>../../media/Icones/perteCentree.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -755,8 +729,8 @@
       <widget class="QToolButton" name="imagePerteDroite">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>40</y>
+         <x>140</x>
+         <y>60</y>
          <width>31</width>
          <height>31</height>
         </rect>
@@ -766,7 +740,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../perteDroite.png</normaloff>../perteDroite.png</iconset>
+         <normaloff>../../media/Icones/perteDroite.png</normaloff>../../media/Icones/perteDroite.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -776,57 +750,96 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="modeDecoupeGauche_GroupBox">
+     <widget class="QGroupBox" name="modeDecoupeGroupBox">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
-        <width>111</width>
-        <height>61</height>
+        <y>9</y>
+        <width>221</width>
+        <height>101</height>
        </rect>
       </property>
       <property name="title">
-       <string/>
-      </property>
-      <widget class="QRadioButton" name="horizontaleRadioButton">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>111</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>horizontale</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="verticaleRadioButton">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>101</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>verticale</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>10</y>
-        <width>91</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
        <string>Mode de découpe</string>
       </property>
+      <widget class="QGroupBox" name="modeDecoupeDroit_GroupBox">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>20</y>
+         <width>101</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QRadioButton" name="classiqueRadioButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>91</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>classique</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="multipleRadioButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>91</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>multiple</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="modeDecoupeGauche_GroupBox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>111</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QRadioButton" name="horizontaleRadioButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>111</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>horizontale</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="verticaleRadioButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>verticale</string>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="biblio_onglet">
@@ -838,8 +851,8 @@
        <rect>
         <x>9</x>
         <y>140</y>
-        <width>181</width>
-        <height>131</height>
+        <width>211</width>
+        <height>171</height>
        </rect>
       </property>
       <property name="title">
@@ -850,9 +863,9 @@
       <property name="geometry">
        <rect>
         <x>9</x>
-        <y>280</y>
-        <width>181</width>
-        <height>121</height>
+        <y>320</y>
+        <width>211</width>
+        <height>201</height>
        </rect>
       </property>
       <property name="title">
@@ -864,7 +877,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>181</width>
+        <width>211</width>
         <height>121</height>
        </rect>
       </property>
@@ -874,9 +887,9 @@
       <widget class="QLineEdit" name="biblioNomNouveau_text">
        <property name="geometry">
         <rect>
-         <x>72</x>
-         <y>20</y>
-         <width>101</width>
+         <x>70</x>
+         <y>30</y>
+         <width>141</width>
          <height>20</height>
         </rect>
        </property>
@@ -884,8 +897,8 @@
       <widget class="QLabel" name="biblioNomNouveau_label">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>20</y>
+         <x>0</x>
+         <y>30</y>
          <width>31</width>
          <height>16</height>
         </rect>
@@ -898,8 +911,8 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>50</y>
-         <width>101</width>
+         <y>60</y>
+         <width>141</width>
          <height>22</height>
         </rect>
        </property>
@@ -917,10 +930,10 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>50</y>
-         <width>46</width>
-         <height>13</height>
+         <x>0</x>
+         <y>60</y>
+         <width>71</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
@@ -930,7 +943,7 @@
       <widget class="QPushButton" name="biblioValiderAjout_pushButton">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>70</x>
          <y>90</y>
          <width>75</width>
          <height>23</height>

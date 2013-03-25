@@ -20,6 +20,7 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)
     m_parent = parent;
 
     m_etat = CHUTE;
+    m_type = BLOC;
     m_visible = Qt::Checked;
 
     m_bloc3d = NULL;
@@ -36,6 +37,7 @@ Bloc::Bloc(NodeBloc *parent)
     m_position = Ogre::Vector3(0,0,0);
 
     m_etat = CHUTE;
+    m_type = BLOC;
     m_visible = Qt::Unchecked;
 
     m_id++;

@@ -29,12 +29,16 @@ namespace OgreCNC {
         QModelIndex parent(const QModelIndex &child) const;
         QVariant data(const QModelIndex &index, int role) const;
         void add(Bloc * bloc, const QModelIndex  &index);
-        void creatBloc(const QModelIndex  &index = QModelIndex());
-        void creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index = QModelIndex());
+        Bloc* creatBloc(const QModelIndex  &index = QModelIndex());
+        Bloc* creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index = QModelIndex());
         void creatNodeBloc(const QModelIndex  &index = QModelIndex());
         Qt::ItemFlags flags (const QModelIndex  &index ) const;
         bool setData (const QModelIndex &index, const QVariant &value, int role);
         void switchEtat(Bloc *blocs);
+
+        //Modif Mel
+        void appliquerVueEclatee(double eloignement, NodeBloc* node = NULL);
+        Ogre::Vector3 calculerConstanteVueEclatee(Bloc* noeudAdeplacer, double eloignement);
 
     signals:
         void ogreDrawBloc(Bloc * bloc);
