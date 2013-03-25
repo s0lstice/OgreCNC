@@ -49,7 +49,8 @@ namespace  OgreCNC {
         Ogre::Vector3 m_sommet7;
 
         /*Ogre*/
-        Ogre::ManualObject * m_bloc3d; //obet 3d
+        Ogre::ManualObject * m_blocContour3d; //contour de l'objet 3d
+        Ogre::Entity * m_blocFace3d;
         Ogre::SceneNode * m_nodeBloc3d; //noeud de l'obset 3d dans le scenemanangeur
         QString m_faceMatName; //nom du materiaux pour les faces
         QString m_segmentMatName;  //nom du materiaux pour les segments
@@ -57,7 +58,6 @@ namespace  OgreCNC {
         Ogre::ColourValue m_colorSegments;
 
         void updateSommets();
-        void creatBloc();
         void updateFaces();
         void updateContour();
 
@@ -76,18 +76,8 @@ namespace  OgreCNC {
             return m_parent;
         }
 
-        //Modif Mel
-        inline Ogre::Vector3 getPosition(){
-            return m_position;
-        }
         inline Ogre::Vector3 getPositionVueEclatee(){
             return m_positionVueEclatee;
-        }
-
-
-
-        inline Ogre::SceneNode* getNodeBloc3d(){
-            return m_nodeBloc3d;
         }
 
         inline void setParent(NodeBloc * parent){
@@ -114,12 +104,28 @@ namespace  OgreCNC {
             return m_id;
         }
 
-        inline Ogre::ManualObject * getBloc3d(){
-            return m_bloc3d;
+        inline Ogre::ManualObject * getBlocContour3d(){
+            return m_blocContour3d;
         }
 
-        inline void setNodeBloc3d(Ogre::SceneNode * node){
-            m_nodeBloc3d = node;
+        inline void setBlocContour3d(Ogre::ManualObject *blocContour){
+            m_blocContour3d = blocContour;
+        }
+
+        inline Ogre::SceneNode* getNodeBloc3d(){
+            return m_nodeBloc3d;
+        }
+
+        inline void setNodeBloc3d(Ogre::SceneNode* nodeBloc){
+            m_nodeBloc3d = nodeBloc;
+        }
+
+        inline Ogre::Entity * getBlocFace3d(){
+            return m_blocFace3d;
+        }
+
+        inline void setBlocFace3d(Ogre::Entity * blocFace){
+            m_blocFace3d = blocFace;
         }
 
         inline void setDimention(Ogre::Vector3 dimention){
@@ -128,25 +134,37 @@ namespace  OgreCNC {
             updateFaces();
         }
 
+        inline Ogre::Vector3 getDimention(){
+            return m_dimention;
+        }
+
+        inline Ogre::Vector3 getPosition(){
+            return m_position;
+        }
+
         inline void setPosition(Ogre::Vector3 position){
             m_position = position;
             updateFaces();
         }
 
-        //Modif Mel
-        inline void setPositionVueEclatee(Ogre::Vector3 position){
-            m_positionVueEclatee = position;
-            updateFaces();
+        inline QString getFaceMatName(){
+            return m_faceMatName;
         }
 
-        inline void updateBloc3d(){
-            if(m_bloc3d == NULL){
-                updateSommets();
-                creatBloc();
-            }
+        inline QString getSegmentMatName(){
+            return m_segmentMatName;
+        }
 
-            updateFaces();
-            updateContour();
+        inline Ogre::ColourValue getCouleurFace(){
+            return m_colorBloc;
+        }
+
+        inline Ogre::ColourValue getCouleurSegment(){
+            return m_colorSegments;
+        }
+
+        inline void setPositionVueEclatee(Ogre::Vector3 position){
+            m_positionVueEclatee = position;
         }
     };
 

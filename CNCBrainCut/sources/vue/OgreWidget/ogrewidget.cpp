@@ -15,12 +15,17 @@ const Ogre::Real OgreWidget::turboModifier(10);
 OgreWidget::OgreWidget(QWidget *parent)
 :QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
 ogreRoot(0), ogreSceneManager(0), ogreRenderWindow(0), ogreViewport(0),
-ogreCamera(0), oldPos(invalidMousePoint), selectedNode(0)
+ogreCamera(0), oldPos(invalidMousePoint)
 {
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAttribute(Qt::WA_PaintOnScreen);
     setFocusPolicy(Qt::ClickFocus);
     setMinimumSize(800, 600);
+
+    cameraLookAt = Ogre::Vector3(0,0,0);
+    cameraPosition  = Ogre::Vector3(300.000,300.000,300.000);
+    cameraDistanceBloc  = Ogre::Vector3(300.000,300.000,300.000);
+    curentBlock = NULL;
 }
 
 OgreWidget::~OgreWidget()
@@ -53,12 +58,22 @@ void OgreWidget::setBackgroundColor(QColor c)
     }
 }
 
-void OgreWidget::setCameraPosition(const Ogre::Vector3 &pos)
+void OgreWidget::upDateCamera()
 {
-	ogreCamera->setPosition(pos);
-    ogreCamera->lookAt(0,0,0);
+    ogreCamera->setPosition(cameraPosition);
+    ogreCamera->lookAt(cameraLookAt);
     update();
-    emit cameraPositionChanged(pos);
+    emit cameraPositionChanged(cameraPosition);
+}
+
+void OgreWidget::setCameraPosition(const Ogre::Vector3 &pos){
+    cameraPosition = pos;
+    upDateCamera();
+}
+
+void OgreWidget::setCameraDirection(const Ogre::Vector3 &pos){
+    cameraLookAt = pos;
+    upDateCamera();
 }
 
 void OgreWidget::keyPressEvent(QKeyEvent *e)
@@ -112,16 +127,20 @@ void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
         // parcours des résultats, récupération du premier « MovableObject »
         Ogre::RaySceneQueryResult::iterator itr;
 
+        if(itr == result.begin())
+            cout << "[Ogre] pas d'objet " << endl;
+
         for (itr = result.begin();itr!=result.end();itr++)
         {
             if(itr->movable)
             {
                 cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
+                selectNode(itr->movable->getParentSceneNode());
+            }
+            else{
+                cout << "[Ogre] Rien a prender" << endl;
             }
         }
-//        else{
-//            cout << "[Ogre] Rien a prender" << endl;
-//        }
         
         update();
         e->accept();
@@ -279,10 +298,9 @@ void OgreWidget::initOgreSystem()
 		width(), height(), false, &viewConfig);
     
     ogreCamera = ogreSceneManager->createCamera("myCamera");
-    Ogre::Vector3 camPos(0, 0,500);
-	ogreCamera->setPosition(camPos);
-    ogreCamera->lookAt(0,0,0);
-    emit cameraPositionChanged(camPos);
+    ogreCamera->setPosition(cameraPosition);
+    ogreCamera->lookAt(cameraLookAt);
+    emit cameraPositionChanged(cameraPosition);
     
     ogreViewport = ogreRenderWindow->addViewport(ogreCamera);
     ogreViewport->setBackgroundColour(Ogre::ColourValue(0,0,0));
@@ -336,14 +354,176 @@ void OgreWidget::createScene()
 
 }
 
-void OgreWidget::drawBloc(Bloc * bloc){
-    if(bloc->getBloc3d() == NULL)
-        qWarning("[Ogre] ajour d'un bloc NULL impossible");
-    else{
-        Ogre::SceneNode* mNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode(bloc->getId()+"Node");
-        mNode->setPosition(bloc->getPosition());
+void OgreWidget::selectBloc(Bloc * bloc){
+    cameraLookAt = bloc->getPosition();
+    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
 
-        mNode->attachObject(bloc->getBloc3d());
-        bloc->setNodeBloc3d(mNode);
+    curentBlock = bloc;
+    curentNode = bloc->getNodeBloc3d();
+
+    ogreCamera->setPosition(cameraPosition);
+    ogreCamera->lookAt(cameraLookAt);
+    emit cameraPositionChanged(cameraPosition);
+}
+
+void OgreWidget::selectNode(Ogre::SceneNode * node){
+    cameraLookAt = node->getPosition();
+    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
+
+    curentBlock = NULL;
+    curentNode = node;
+
+    ogreCamera->setPosition(cameraPosition);
+    ogreCamera->lookAt(cameraLookAt);
+    emit cameraPositionChanged(cameraPosition);
+}
+
+void OgreWidget::createBloc(Bloc * bloc){
+    Ogre::Vector3 position = bloc->getPosition();
+    Ogre::Vector3 dimention = bloc->getDimention();
+    Ogre::Entity * blocFace = bloc->getBlocFace3d();
+    Ogre::SceneNode * node = bloc->getNodeBloc3d();
+    Ogre::ManualObject * blocContour = bloc->getBlocContour3d();
+
+    if(blocFace == NULL){
+        blocFace = ogreSceneManager->createEntity(QString::number(bloc->getId()).toStdString()+"_cube", "cube.mesh");
+        blocFace->setMaterialName(bloc->getFaceMatName().toStdString());
+        bloc->setBlocFace3d(blocFace);
     }
+
+    if(blocContour==NULL){
+        Ogre::Vector3 sommet0 = Ogre::Vector3(- 100/2, + 100/2, + 100/2);
+        Ogre::Vector3 sommet1 = Ogre::Vector3(- 100/2, - 100/2, + 100/2);
+        Ogre::Vector3 sommet2 = Ogre::Vector3(+ 100/2, - 100/2, + 100/2);
+        Ogre::Vector3 sommet3 = Ogre::Vector3(+ 100/2, + 100/2, + 100/2);
+        Ogre::Vector3 sommet4 = Ogre::Vector3(- 100/2, + 100/2, - 100/2);
+        Ogre::Vector3 sommet5 = Ogre::Vector3(- 100/2, - 100/2, - 100/2);
+        Ogre::Vector3 sommet6 = Ogre::Vector3(+ 100/2, - 100/2, - 100/2);
+        Ogre::Vector3 sommet7 = Ogre::Vector3(+ 100/2, + 100/2, - 100/2);
+
+
+        blocContour = new Ogre::ManualObject(QString::number(bloc->getId()).toStdString()+"_contour"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
+
+        blocContour->begin(bloc->getSegmentMatName().toStdString(), Ogre::RenderOperation::OT_LINE_LIST);
+
+        //front
+        blocContour->position(sommet0);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet1);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(1.0, 1.0);
+
+        blocContour->position(sommet1);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(1.0, 1.0);
+
+        blocContour->position(sommet2);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(1.0, 0.0);
+
+        blocContour->position(sommet2);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(1.0, 0.0);
+
+        blocContour->position(sommet3);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 0.0);
+
+        blocContour->position(sommet3);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 0.0);
+
+        blocContour->position(sommet0);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 0.0);
+
+        //left
+        blocContour->position(sommet0);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet4);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet4);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet5);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet5);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet1);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        //right
+        blocContour->position(sommet3);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet7);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet7);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet6);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet6);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet2);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        //back
+        blocContour->position(sommet4);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet7);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet5);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->position(sommet6);
+        blocContour->colour(bloc->getCouleurSegment());
+        blocContour->textureCoord(0.0, 1.0);
+
+        blocContour->end();
+        bloc->setBlocContour3d(blocContour);
+    }
+
+    if(node == NULL){
+        node = ogreSceneManager->getRootSceneNode()->createChildSceneNode(QString::number(bloc->getId()).toStdString()+"_node");
+
+        node->attachObject(blocFace);
+        node->attachObject(blocContour);
+
+        node->scale(dimention);
+        node->setPosition(position);
+
+        bloc->setNodeBloc3d(node);
+    }
+
+    if(bloc->getVisibilite() == Qt::Checked)
+        node->setVisible(true);
+    else
+        node->setVisible(false);
 }

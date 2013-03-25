@@ -45,7 +45,7 @@ namespace OgreCNC {
     signals:
 
     public slots:
-        void ogreDrawBloc(Bloc * bloc);
+        void createBloc(Bloc * bloc);
     };
 }
 #endif // VUEMAIN_H

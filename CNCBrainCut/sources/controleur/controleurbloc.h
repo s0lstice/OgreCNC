@@ -42,6 +42,7 @@ namespace OgreCNC {
 
     signals:
         void ogreDrawBloc(Bloc * bloc);
+        void createBloc(Bloc * bloc);
     public slots:
 
     };

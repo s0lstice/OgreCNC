@@ -54,6 +54,6 @@ bool VueMain::event(QEvent * e)
 }
 
 /////***** SLOTS ******/////
-void VueMain::ogreDrawBloc(Bloc * bloc){
-    m_Ogre3d->drawBloc(bloc);
+void VueMain::createBloc(Bloc * bloc){
+    m_Ogre3d->createBloc(bloc);
 }

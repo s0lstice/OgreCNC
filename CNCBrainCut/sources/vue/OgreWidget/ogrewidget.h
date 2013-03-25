@@ -25,11 +25,15 @@ namespace OgreCNC {
             return ogreCamera;
         }
 
-        void drawBloc(Bloc * bloc);
+        void selectBloc(Bloc * bloc);
+        void selectNode(Ogre::SceneNode * node);
+        void createBloc(Bloc * bloc);
 
     public slots:
         void setBackgroundColor(QColor c);
+        void upDateCamera();
         void setCameraPosition(const Ogre::Vector3 &pos);
+        void setCameraDirection(const Ogre::Vector3 &pos);
 
     signals:
         void cameraPositionChanged(const Ogre::Vector3 &pos);
@@ -63,7 +67,11 @@ namespace OgreCNC {
         Ogre::Camera        *ogreCamera;
 
         QPoint oldPos;
-        Ogre::SceneNode *selectedNode;
+        Ogre::Vector3 cameraLookAt;
+        Ogre::Vector3 cameraPosition;
+        Ogre::Vector3 cameraDistanceBloc;
+        Bloc * curentBlock;
+        Ogre::Node * curentNode;
     };
 }
 #endif OGREWIDGET_H
