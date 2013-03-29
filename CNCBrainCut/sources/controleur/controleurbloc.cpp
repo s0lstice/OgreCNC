@@ -16,6 +16,8 @@ ControleurBloc::ControleurBloc(NodeBloc *rootBloc, QObject *parent) :
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
     m_root = rootBloc;
+    m_courantBloc = NULL;
+    m_curantIndex = QModelIndex();
 }
 
 ControleurBloc::ControleurBloc(QObject *parent) :
@@ -23,6 +25,8 @@ ControleurBloc::ControleurBloc(QObject *parent) :
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
     m_root = NULL;
+    m_courantBloc = NULL;
+    m_curantIndex = QModelIndex();
 }
 
 void ControleurBloc::setRootNode(NodeBloc *rootBloc){
@@ -45,6 +49,32 @@ NodeBloc * ControleurBloc::nodeFromIndex(const QModelIndex &index) const {
         return static_cast<NodeBloc *>(index.internalPointer());
     else
         return m_root;
+}
+
+Bloc * ControleurBloc::blocFromId(int id, NodeBloc * node){
+    Bloc * bloc = NULL;
+
+    if(node == NULL)
+        node = m_root;
+
+    QVector<Bloc*> * fils = node->getListeFils();
+
+    for(int i = 0; i < fils->count() ; ++i)
+    {
+        int j = fils->at(i)->getId();
+        if(id == fils->at(i)->getId())
+            return fils->at(i);
+
+        if(fils->at(i)->getType() == Bloc::NODE)
+        {
+            bloc = blocFromId(id,(NodeBloc *)fils->at(i));
+
+            if(bloc != NULL)
+                return bloc;
+        }
+
+    }
+    return bloc;
 }
 
 int ControleurBloc::rowCount(const QModelIndex &parent) const{
@@ -88,7 +118,7 @@ QModelIndex ControleurBloc::parent(const QModelIndex &child) const{
 QVariant ControleurBloc::data(const QModelIndex &index, int role) const{
     if(role == Qt::CheckStateRole)
     {
-      return nodeFromIndex(index)->getVisibilite();
+      return nodeFromIndex(index)->getCheck();
     }
 
     if(role != Qt::DisplayRole)
@@ -116,6 +146,9 @@ void ControleurBloc::add(Bloc * bloc, const QModelIndex  &index){
     groupe->append(bloc);
     qDebug() << QObject::tr("[Gestion des blocs] ajout du bloc : %1").arg(groupe->getName());
     emit endResetModel();
+
+    if(bloc->getType() == Bloc::BLOC)
+        emit si_select(bloc);
 }
 
 Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
@@ -133,12 +166,14 @@ Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
 
     emit beginResetModel();
     groupe->append(bloc);
-    emit createBloc(bloc);
+    emit si_createBloc(bloc);
     qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
     emit endResetModel();
 
-    emit ogreDrawBloc(bloc);
+    emit si_ogreDrawBloc(bloc);
 
+    select(bloc);
+    emit si_select(bloc);
     return bloc;
 }
 
@@ -156,10 +191,12 @@ Bloc* ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position,
     emit beginResetModel();
     Bloc * bloc = new Bloc(dimention, position, groupe);
     groupe->append(bloc);
-    emit createBloc(bloc);
+    emit si_createBloc(bloc);
     qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
     emit endResetModel();
 
+    select(bloc);
+    emit si_select(bloc);
     return bloc;
 }
 
@@ -182,7 +219,8 @@ void ControleurBloc::creatNodeBloc(const QModelIndex  &index){
 }
 
 Qt::ItemFlags ControleurBloc::flags (const QModelIndex  &index ) const{
-    return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
+    //return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
+    return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
 }
 
 bool ControleurBloc::setData (const QModelIndex &index, const QVariant &value, int role){
@@ -195,62 +233,30 @@ bool ControleurBloc::setData (const QModelIndex &index, const QVariant &value, i
 
     if(role == Qt::CheckStateRole)
     {
-        bloc->setVisibilite(static_cast<Qt::CheckState>(value.toUInt()));
-        emit dataChanged(index, index);
-
-        if(bloc->getType() == Bloc::NODE){
-            switchEtat((NodeBloc *)bloc);
-            emit layoutChanged();
-        }
+        select(bloc, index);
+        emit si_select(bloc);
     }
     return true;
 }
 
-void ControleurBloc::switchEtat(Bloc *blocs){
-    Bloc * child;
-    QVector<Bloc*> * childs;
-
-    if(blocs == NULL){
-        qDebug() << tr("[Gestion des blocs] inversion de l'etat de touts les blocs");
-        blocs = m_root;
-
-        //permetre la recurance
-        if(blocs->getVisibilite() == Qt::Checked)
-            blocs->setVisibilite(Qt::Unchecked);
-        else{
-            blocs->setVisibilite(Qt::Checked);
-        }
+void ControleurBloc::select(Bloc *bloc,const QModelIndex & index){
+    if(m_courantBloc != NULL)
+    {
+        m_courantBloc->setCheck(Qt::Unchecked);
     }
 
-    if(blocs->getType() == Bloc::NODE){
-        qDebug() << tr("[Gestion des blocs] inversion de l'etat du groupe de blocs %1").arg(blocs->getName());
-        childs = ((NodeBloc*)blocs)->getListeFils();
-
-        foreach(child, *childs){
-            qDebug() << tr("[Gestion des blocs] inversion de l'etat du membre %1 en fonction de l'etat parent").arg(child->getName());
-            child->setVisibilite(child->getParent()->getVisibilite());
-
-            if(child->getType() == Bloc::NODE){
-                switchEtat((NodeBloc *)child);
-            }
-
-            emit layoutChanged();
-
-        }
-    }
-    else{
-        if(blocs->getVisibilite() == Qt::Checked){
-            blocs->setVisibilite(Qt::Unchecked);
-            qDebug() << tr("[Gestion des blocs] deselection du bloc %1").arg(blocs->getName());
-        }
-        else
-        {
-            blocs->setVisibilite(Qt::Checked);
-            qDebug() << tr("[Gestion des blocs] selection du bloc %1").arg(blocs->getName());
-        }
-        emit layoutChanged();
+    if(m_curantIndex.isValid()){
+        emit dataChanged(m_curantIndex, m_curantIndex);
     }
 
+    m_courantBloc = bloc;
+    m_courantBloc->setCheck(Qt::Checked);
+    m_curantIndex = index;
+    emit dataChanged(m_curantIndex, m_curantIndex);
+}
+
+void ControleurBloc::select(int id){
+    select(blocFromId(id));
 }
 
 //Modif Mel

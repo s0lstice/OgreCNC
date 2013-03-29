@@ -42,10 +42,15 @@ namespace OgreCNC {
         Ui::VueMain *ui;
 
         bool event(QEvent * e);
+
+        void initConnections();
+
     signals:
+        void si_select(int id);
 
     public slots:
-        void createBloc(Bloc * bloc);
+        void sl_createBloc(Bloc * bloc);
+        void sl_selectBloc(Bloc * bloc);
     };
 }
 #endif // VUEMAIN_H

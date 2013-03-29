@@ -16,6 +16,8 @@ namespace OgreCNC {
     private:
         NodeBloc * m_root;
         ControleurMain * m_controleur;
+        Bloc * m_courantBloc;
+        QModelIndex m_curantIndex;
 
     public:
         explicit ControleurBloc(NodeBloc *rootBloc, QObject *parent = 0);
@@ -24,6 +26,7 @@ namespace OgreCNC {
         void setRootNode(NodeBloc *rootBloc);
         QModelIndex index(int row, int column, const QModelIndex &parent) const;
         NodeBloc * nodeFromIndex(const QModelIndex &index) const;
+        Bloc * blocFromId(int id, NodeBloc * node = NULL);
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;
         QModelIndex parent(const QModelIndex &child) const;
@@ -34,15 +37,19 @@ namespace OgreCNC {
         void creatNodeBloc(const QModelIndex  &index = QModelIndex());
         Qt::ItemFlags flags (const QModelIndex  &index ) const;
         bool setData (const QModelIndex &index, const QVariant &value, int role);
-        void switchEtat(Bloc *blocs);
+        void select(Bloc *bloc, const QModelIndex &index = QModelIndex());
+        void select(int id);
 
         //Modif Mel
         void appliquerVueEclatee(double eloignement, NodeBloc* node = NULL);
         Ogre::Vector3 calculerConstanteVueEclatee(Bloc* noeudAdeplacer, double eloignement);
 
+
     signals:
-        void ogreDrawBloc(Bloc * bloc);
-        void createBloc(Bloc * bloc);
+        void si_ogreDrawBloc(Bloc * bloc);
+        void si_createBloc(Bloc * bloc);
+        void si_select(Bloc * bloc);
+
     public slots:
 
     };

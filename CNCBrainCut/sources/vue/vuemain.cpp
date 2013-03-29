@@ -24,12 +24,19 @@ VueMain::VueMain(QWidget *parent) :
     ui->ogreLayout->addWidget(m_Ogre3d);
     ui->treeBlocs->setModel(controleur->getModeleBlocs());
 
+    initConnections();
+
     this->showNormal();
 }
 
 VueMain::~VueMain()
 {
     delete ui;
+}
+
+void VueMain::initConnections(){
+    //select
+    connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
 }
 
 bool VueMain::event(QEvent * e)
@@ -54,6 +61,10 @@ bool VueMain::event(QEvent * e)
 }
 
 /////***** SLOTS ******/////
-void VueMain::createBloc(Bloc * bloc){
+void VueMain::sl_createBloc(Bloc * bloc){
     m_Ogre3d->createBloc(bloc);
+}
+
+void VueMain::sl_selectBloc(Bloc * bloc){
+    m_Ogre3d->selectBloc(bloc);
 }
