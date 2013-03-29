@@ -349,9 +349,7 @@ void OgreWidget::setupNLoadResources()
 void OgreWidget::createScene()
 {
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
-
-    ogreSceneManager->setSkyDome(true, "CloudySky", 5, 8);
-
+    ogreViewport->setBackgroundColour(Ogre::ColourValue::White);
 }
 
 void OgreWidget::selectBloc(Bloc * bloc){

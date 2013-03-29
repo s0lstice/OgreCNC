@@ -2,7 +2,6 @@
 #include "ui_vuemain.h"
 
 #include "OgreWidget/ogrewidget.h"
-#include "OgreWidget/OgreView.h"
 
 #include "../controleur/controleurmain.h"
 #include "../controleur/controleurbloc.h"
