@@ -39,14 +39,14 @@ ControleurMain::ControleurMain(QWidget *parent) :
     positionIni2 = bloc2->getPosition();
 
     m_gestionBloc->appliquerVueEclatee(100,NULL);
-
-
 }
 
 void ControleurMain::initConnections(){
-    connect(m_gestionBloc, SIGNAL(createBloc(Bloc*)), m_vue, SLOT(createBloc(Bloc*)));
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
+    connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_createBloc(Bloc*)));
+    connect(m_vue, SIGNAL(si_select(int)), this, SLOT(sl_select(int)));
+    connect(m_gestionBloc, SIGNAL(si_select(Bloc*)), m_vue, SLOT(sl_selectBloc(Bloc*)));
 }
 
 void ControleurMain::initControleur(){
@@ -82,3 +82,7 @@ void ControleurMain::sl_update_cut(){
     }
 }
 
+//***** SLOTS *****//
+void ControleurMain::sl_select(int id){
+    m_gestionBloc->select(id);
+}

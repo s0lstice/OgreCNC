@@ -14,7 +14,7 @@ namespace  OgreCNC {
         enum Etat {UTILISE, PERTE, CHUTE};
         enum Type {BLOC, NODE};
 
-    protected:
+    public:
         /*Dimensions d'un bloc (en mm) -- le volume n'est pas stocké comme attribut, mais un accesseur spécifique le calculera*/
         Ogre::Vector3 m_dimention; //longeur = x; hauteur = y; largeur = z
         Ogre::Vector3 m_position; // position du centre de l'objet
@@ -28,14 +28,15 @@ namespace  OgreCNC {
         /*Etat du bloc*/
         Etat m_etat;
 
-        /*Visibilité du bloc : vaut 0 si le bloc est invisible, et 1 sinon*/
-        Qt::CheckState m_visible;
+        /*selection du bloc*/
+        Qt::CheckState m_select;
 
         /*Type de bloc, boc (leaf) or node*/
         Type m_type;
 
         /*identifiant et denomination*/
-        static int m_id;
+        static int nbBloc;
+        int m_id;
         QString m_name;
 
         /* Sommets du cube*/
@@ -84,12 +85,12 @@ namespace  OgreCNC {
             m_parent = parent;
         }
 
-        inline Qt::CheckState getVisibilite(){
-            return m_visible;
+        inline Qt::CheckState getCheck(){
+            return m_select;
         }
 
-        inline void setVisibilite(Qt::CheckState state){
-            m_visible = state;
+        inline void setCheck(Qt::CheckState state){
+            m_select = state;
         }
 
         inline QString getName(){

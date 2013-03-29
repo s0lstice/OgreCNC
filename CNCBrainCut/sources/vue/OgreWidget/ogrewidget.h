@@ -37,6 +37,7 @@ namespace OgreCNC {
 
     signals:
         void cameraPositionChanged(const Ogre::Vector3 &pos);
+        void si_select(int id);
 
     protected:
         virtual void keyPressEvent(QKeyEvent *e);

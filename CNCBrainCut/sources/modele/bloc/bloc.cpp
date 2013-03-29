@@ -6,7 +6,7 @@
 #include "nodebloc.h"
 
 using namespace OgreCNC;
-int Bloc::m_id = 0;
+int Bloc::nbBloc = 0;
 
 /*Constructeurs*/
 
@@ -15,13 +15,13 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)
     m_dimention = dimention;
     m_position = position;
 
-    m_id++;
+    m_id = nbBloc++;
     m_name = QString::number(m_id);
     m_parent = parent;
 
     m_etat = CHUTE;
     m_type = BLOC;
-    m_visible = Qt::Checked;
+    m_select = Qt::Unchecked;
 
     m_blocContour3d = NULL;
     m_blocFace3d = NULL;
@@ -39,9 +39,9 @@ Bloc::Bloc(NodeBloc *parent)
 
     m_etat = CHUTE;
     m_type = BLOC;
-    m_visible = Qt::Unchecked;
+    m_select = Qt::Unchecked;
 
-    m_id++;
+    m_id = nbBloc++;
     m_name = QString::number(m_id);
     m_parent = parent;
 
@@ -52,6 +52,8 @@ Bloc::Bloc(NodeBloc *parent)
     m_segmentMatName = "BaseWhiteNoLighting";
     m_colorBloc = Ogre::ColourValue(0,0.5,1.0,0.5);
     m_colorSegments = Ogre::ColourValue(0.0,0.0,0.0,1);
+
+    m_id++;
 }
 
 Bloc::~Bloc()

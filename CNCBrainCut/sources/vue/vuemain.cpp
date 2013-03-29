@@ -2,7 +2,6 @@
 #include "ui_vuemain.h"
 
 #include "OgreWidget/ogrewidget.h"
-#include "OgreWidget/OgreView.h"
 
 #include "../controleur/controleurmain.h"
 #include "../controleur/controleurbloc.h"
@@ -35,6 +34,13 @@ VueMain::~VueMain()
     delete ui;
 }
 
+void VueMain::initConnections(){
+    //select
+    connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
+
+    connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
+}
+
 bool VueMain::event(QEvent * e)
 {
     switch(e->type())
@@ -57,7 +63,7 @@ bool VueMain::event(QEvent * e)
 }
 
 /////***** SLOTS ******/////
-void VueMain::createBloc(Bloc * bloc){
+void VueMain::sl_createBloc(Bloc * bloc){
     m_Ogre3d->createBloc(bloc);
 }
 
@@ -142,10 +148,6 @@ void VueMain::sl_init_cut(ModeleCut *modele){
     ui->nbBlocs_text->setText(QString::number(m_modeleCut->nbBlocs));
 }
 
-void VueMain::initConnections(){
-    connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
-}
-
 
 /////***** Gestion de l'interaction avec l'IHM *****/////
 void OgreCNC::VueMain::on_demarrerDecoupe_pushButton_clicked()
@@ -171,4 +173,8 @@ void OgreCNC::VueMain::on_horizontaleRadioButton_clicked()
         m_modeleCut->decoupeHV = ModeleCut::HORIZONTALE;
         emit si_update_cut();
     }
+}
+
+void VueMain::sl_selectBloc(Bloc * bloc){
+    m_Ogre3d->selectBloc(bloc);
 }

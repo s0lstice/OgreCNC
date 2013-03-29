@@ -125,22 +125,22 @@ void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
         Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
 
         // parcours des résultats, récupération du premier « MovableObject »
-        Ogre::RaySceneQueryResult::iterator itr;
+        Ogre::RaySceneQueryResult::iterator itr = result.begin();
 
-        if(itr == result.begin())
-            cout << "[Ogre] pas d'objet " << endl;
+        while(itr->movable ==NULL && itr!=result.end())
+            itr++;
 
-        for (itr = result.begin();itr!=result.end();itr++)
+        if(itr->movable)
         {
-            if(itr->movable)
-            {
-                cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
-                selectNode(itr->movable->getParentSceneNode());
-            }
-            else{
-                cout << "[Ogre] Rien a prender" << endl;
-            }
+            cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
+            selectNode(itr->movable->getParentSceneNode());
+            emit si_select(atoi(itr->movable->getName().c_str()));
+
         }
+        else{
+            cout << "[Ogre] pas d'objet " << endl;
+        }
+
         
         update();
         e->accept();
@@ -349,33 +349,33 @@ void OgreWidget::setupNLoadResources()
 void OgreWidget::createScene()
 {
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
-
-    ogreSceneManager->setSkyDome(true, "CloudySky", 5, 8);
-
+    ogreViewport->setBackgroundColour(Ogre::ColourValue::White);
 }
 
 void OgreWidget::selectBloc(Bloc * bloc){
-    cameraLookAt = bloc->getPosition();
-    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
-
     curentBlock = bloc;
     curentNode = bloc->getNodeBloc3d();
 
+    cameraLookAt = curentNode->getPosition();
+    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
+
     ogreCamera->setPosition(cameraPosition);
     ogreCamera->lookAt(cameraLookAt);
     emit cameraPositionChanged(cameraPosition);
+    update();
 }
 
 void OgreWidget::selectNode(Ogre::SceneNode * node){
-    cameraLookAt = node->getPosition();
-    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
-
     curentBlock = NULL;
     curentNode = node;
+
+    cameraLookAt = curentNode->getPosition();
+    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
 
     ogreCamera->setPosition(cameraPosition);
     ogreCamera->lookAt(cameraLookAt);
     emit cameraPositionChanged(cameraPosition);
+    update();
 }
 
 void OgreWidget::createBloc(Bloc * bloc){
@@ -511,7 +511,7 @@ void OgreWidget::createBloc(Bloc * bloc){
     }
 
     if(node == NULL){
-        node = ogreSceneManager->getRootSceneNode()->createChildSceneNode(QString::number(bloc->getId()).toStdString()+"_node");
+        node = ogreSceneManager->getRootSceneNode()->createChildSceneNode(QString::number(bloc->getId()).toStdString());
 
         node->attachObject(blocFace);
         node->attachObject(blocContour);
@@ -521,9 +521,4 @@ void OgreWidget::createBloc(Bloc * bloc){
 
         bloc->setNodeBloc3d(node);
     }
-
-    if(bloc->getVisibilite() == Qt::Checked)
-        node->setVisible(true);
-    else
-        node->setVisible(false);
 }
