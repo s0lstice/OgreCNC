@@ -8,6 +8,8 @@ namespace OgreCNC {
     class VueMain;
     class ModeleMain;
     class ControleurBloc;
+    class ControleurCut;
+    class ModeleCut;
 
     class ControleurMain : public QWidget
     {
@@ -25,13 +27,17 @@ namespace OgreCNC {
 
         ControleurBloc * m_gestionBloc;
 
+        ControleurCut * m_controleurCut;
+
         void initControleur();
         void initConnections();
 
     signals:
+        void si_init_cut(ModeleCut* modeleCut);
 
     public slots:
-
+        void sl_start_cut();
+        void sl_update_cut();
     };
 
 }

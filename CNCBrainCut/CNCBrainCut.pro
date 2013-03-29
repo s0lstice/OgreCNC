@@ -66,7 +66,9 @@ HEADERS += \
     sources/controleur/controleurbloc.h \
     sources/controleur/controleurmain.h \
     sources/modele/modelemain.h \
-    sources/vue/vuemain.h
+    sources/vue/vuemain.h \
+    sources/controleur/controleurcut.h \
+    sources/modele/modelecut.h
 
 SOURCES += \
     sources/vue/OgreWidget/ogrewidget.cpp \
@@ -76,7 +78,9 @@ SOURCES += \
     sources/controleur/controleurbloc.cpp \
     sources/controleur/controleurmain.cpp \
     sources/modele/modelemain.cpp \
-    sources/vue/vuemain.cpp
+    sources/vue/vuemain.cpp \
+    sources/controleur/controleurcut.cpp \
+    sources/modele/modelecut.cpp
 
 FORMS += \
     sources/vue/vuemain.ui
