@@ -37,11 +37,10 @@ ControleurMain::ControleurMain(QWidget *parent) :
     positionIni1= bloc1->getPosition();
     Ogre::Vector3 positionIni2;
     positionIni2 = bloc2->getPosition();
-
-    //m_gestionBloc->appliquerVueEclatee(100,NULL);
 }
 
 void ControleurMain::initConnections(){
+    connect(m_vue, SIGNAL(si_vueEclate(double)), this, SLOT(sl_vueEclate(double)));
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
     connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
@@ -103,4 +102,9 @@ void ControleurMain::sl_abort_cut(){
 //***** SLOTS *****//
 void ControleurMain::sl_select(int id){
     m_gestionBloc->select(id);
+}
+
+void ControleurMain::sl_vueEclate(double distance){
+    m_gestionBloc->appliquerVueEclatee(distance, NULL);
+    emit si_updateOgreVue();
 }

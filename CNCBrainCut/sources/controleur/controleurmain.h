@@ -36,12 +36,14 @@ namespace OgreCNC {
     signals:
         void si_init_cut(ModeleCut* modeleCut);
         void si_select(Bloc * bloc);
+        void si_updateOgreVue();
 
     public slots:
         void sl_start_cut();
         void sl_update_cut();
         void sl_select(int id);
         void sl_abort_cut();
+        void sl_vueEclate(double distance);
 
     };
 

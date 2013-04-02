@@ -54,6 +54,7 @@ namespace OgreCNC {
         void si_abort_cut();
         void si_update_cut();
         void si_select(int id);
+        void si_vueEclate(double distance);
 
     private slots:
         void on_demarrerDecoupe_pushButton_clicked();
@@ -88,6 +89,10 @@ namespace OgreCNC {
         void on_distance_text_textEdited(const QString &arg1);
 
         void on_nbBlocs_text_textEdited(const QString &arg1);
+
+        void on_distanceVueEclate_valueChanged(int arg1);
+
+        void on_vueEclateCheched_clicked(bool checked);
 
     public slots:
         void sl_createBloc(Bloc * bloc);

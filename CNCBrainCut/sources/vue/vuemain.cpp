@@ -37,8 +37,8 @@ VueMain::~VueMain()
 void VueMain::initConnections(){
     //select
     connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
-
     connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
+    connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
 }
 
 bool VueMain::event(QEvent * e)
@@ -303,4 +303,20 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
         m_modeleCut->nbBlocs = arg1.toInt();
         emit si_update_cut();
     }
+}
+
+void OgreCNC::VueMain::on_distanceVueEclate_valueChanged(int arg1)
+{
+    if(ui->vueEclateCheched->checkState() == Qt::Checked)
+        emit si_vueEclate(ui->distanceVueEclate->value());
+    else
+        emit si_vueEclate(0);
+}
+
+void OgreCNC::VueMain::on_vueEclateCheched_clicked(bool checked)
+{
+    if(checked == true)
+        emit si_vueEclate(ui->distanceVueEclate->value());
+    else
+        emit si_vueEclate(0);
 }

@@ -112,8 +112,7 @@ void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
     if(e->buttons().testFlag(Qt::LeftButton))
     {
         // initialisation de la requête
-        Ogre::RaySceneQuery *raySceneQuery =
-        ogreSceneManager->createRayQuery(Ogre::Ray());
+        Ogre::RaySceneQuery *raySceneQuery = ogreSceneManager->createRayQuery(Ogre::Ray());
         // initialisation du rayon de mesure
         Ogre::Ray mouseRay = ogreCamera->getCameraToViewportRay(
         e->posF().x()/(float)width(),
@@ -168,10 +167,6 @@ void OgreWidget::mouseMoveEvent(QMouseEvent *e)
             deltaX *= turboModifier;
             deltaY *= turboModifier;
         }
-        
-//        Ogre::Vector3 camTranslation(deltaX, deltaY, 0);
-//        const Ogre::Vector3 &actualCamPos = ogreCamera->getPosition();
-//        setCameraPosition(actualCamPos + camTranslation);
         
         Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
 

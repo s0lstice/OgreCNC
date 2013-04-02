@@ -16,6 +16,12 @@
     <height>600</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>1300</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -29,52 +35,25 @@
       <height>601</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="ogreLayout">
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="ogreLayout"/>
    </widget>
    <widget class="QGroupBox" name="gestionBlocs_groupBox">
     <property name="geometry">
      <rect>
       <x>1090</x>
       <y>10</y>
-      <width>211</width>
-      <height>581</height>
+      <width>201</width>
+      <height>603</height>
      </rect>
     </property>
     <property name="title">
      <string>Gestion des blocs</string>
     </property>
-    <widget class="QCheckBox" name="vue_checkBox">
+    <widget class="QCheckBox" name="vueEclateCheched">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>230</y>
+       <y>235</y>
        <width>111</width>
        <height>17</height>
       </rect>
@@ -90,7 +69,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>270</y>
+       <y>290</y>
        <width>191</width>
        <height>161</height>
       </rect>
@@ -237,9 +216,9 @@
      <property name="geometry">
       <rect>
        <x>9</x>
-       <y>440</y>
+       <y>450</y>
        <width>191</width>
-       <height>141</height>
+       <height>143</height>
       </rect>
      </property>
      <property name="title">
@@ -250,8 +229,8 @@
        <rect>
         <x>50</x>
         <y>100</y>
-        <width>81</width>
-        <height>23</height>
+        <width>89</width>
+        <height>27</height>
        </rect>
       </property>
       <property name="text">
@@ -263,8 +242,8 @@
        <rect>
         <x>50</x>
         <y>70</y>
-        <width>81</width>
-        <height>23</height>
+        <width>85</width>
+        <height>27</height>
        </rect>
       </property>
       <property name="text">
@@ -327,8 +306,8 @@
     <widget class="QComboBox" name="unites_comboBox">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>250</y>
+       <x>70</x>
+       <y>262</y>
        <width>51</width>
        <height>22</height>
       </rect>
@@ -348,7 +327,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>265</y>
        <width>46</width>
        <height>16</height>
       </rect>
@@ -373,27 +352,37 @@
       <bool>false</bool>
      </attribute>
     </widget>
-    <widget class="QLineEdit" name="valeurEclatement_text">
+    <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>230</y>
-       <width>71</width>
-       <height>21</height>
+       <x>174</x>
+       <y>235</y>
+       <width>66</width>
+       <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>valeur</string>
+      <string>mm</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="distanceVueEclate">
+     <property name="geometry">
+      <rect>
+       <x>117</x>
+       <y>230</y>
+       <width>51</width>
+       <height>27</height>
+      </rect>
      </property>
     </widget>
    </widget>
    <widget class="QTabWidget" name="decoupe_menu_biblio_onglet">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>10</y>
       <width>241</width>
-      <height>581</height>
+      <height>551</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -468,8 +457,8 @@
        <rect>
         <x>0</x>
         <y>100</y>
-        <width>221</width>
-        <height>171</height>
+        <width>231</width>
+        <height>180</height>
        </rect>
       </property>
       <property name="title">
@@ -634,8 +623,8 @@
        <rect>
         <x>0</x>
         <y>280</y>
-        <width>221</width>
-        <height>141</height>
+        <width>181</width>
+        <height>151</height>
        </rect>
       </property>
       <property name="title">
@@ -779,8 +768,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>91</width>
-          <height>17</height>
+          <width>92</width>
+          <height>22</height>
          </rect>
         </property>
         <property name="text">
@@ -792,8 +781,8 @@
          <rect>
           <x>10</x>
           <y>30</y>
-          <width>91</width>
-          <height>17</height>
+          <width>87</width>
+          <height>22</height>
          </rect>
         </property>
         <property name="text">
@@ -818,8 +807,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>111</width>
-          <height>17</height>
+          <width>108</width>
+          <height>22</height>
          </rect>
         </property>
         <property name="text">
@@ -831,8 +820,8 @@
          <rect>
           <x>10</x>
           <y>30</y>
-          <width>101</width>
-          <height>17</height>
+          <width>89</width>
+          <height>22</height>
          </rect>
         </property>
         <property name="text">
@@ -846,8 +835,8 @@
        <rect>
         <x>0</x>
         <y>430</y>
-        <width>221</width>
-        <height>101</height>
+        <width>215</width>
+        <height>77</height>
        </rect>
       </property>
       <property name="title">
@@ -858,7 +847,7 @@
         <rect>
          <x>60</x>
          <y>10</y>
-         <width>98</width>
+         <width>85</width>
          <height>27</height>
         </rect>
        </property>
@@ -871,7 +860,7 @@
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>98</width>
+         <width>85</width>
          <height>27</height>
         </rect>
        </property>
@@ -884,7 +873,7 @@
         <rect>
          <x>120</x>
          <y>40</y>
-         <width>98</width>
+         <width>85</width>
          <height>27</height>
         </rect>
        </property>
