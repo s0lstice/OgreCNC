@@ -23,8 +23,8 @@ ogreCamera(0), oldPos(invalidMousePoint)
     setMinimumSize(800, 600);
 
     cameraLookAt = Ogre::Vector3(0,0,0);
-    cameraPosition  = Ogre::Vector3(300.000,300.000,300.000);
-    cameraDistanceBloc  = Ogre::Vector3(300.000,300.000,300.000);
+    cameraPosition  = Ogre::Vector3(0,0,500.000);
+    cameraDistanceBloc  = Ogre::Vector3(0,0,500.000);
     curentBlock = NULL;
 }
 
@@ -127,22 +127,26 @@ void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
         // parcours des résultats, récupération du premier « MovableObject »
         Ogre::RaySceneQueryResult::iterator itr = result.begin();
 
-        while(itr->movable ==NULL && itr!=result.end())
-            itr++;
-
-        if(itr->movable)
+        if(itr != result.end())
         {
-            cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
-            selectNode(itr->movable->getParentSceneNode());
-            emit si_select(atoi(itr->movable->getName().c_str()));
+            while(itr->movable ==NULL && itr!=result.end())
+                itr++;
 
-        }
-        else{
-            cout << "[Ogre] pas d'objet " << endl;
+            if(itr->movable)
+            {
+                cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
+                selectNode(itr->movable->getParentSceneNode());
+                emit si_select(atoi(itr->movable->getName().c_str()));
+
+            }
+            else{
+                cout << "[Ogre] pas d'objet " << endl;
+            }
         }
 
-        
+
         update();
+
         e->accept();
     }
     else
@@ -165,10 +169,22 @@ void OgreWidget::mouseMoveEvent(QMouseEvent *e)
             deltaY *= turboModifier;
         }
         
-        Ogre::Vector3 camTranslation(deltaX, deltaY, 0);
-        const Ogre::Vector3 &actualCamPos = ogreCamera->getPosition();
-        setCameraPosition(actualCamPos + camTranslation);
+//        Ogre::Vector3 camTranslation(deltaX, deltaY, 0);
+//        const Ogre::Vector3 &actualCamPos = ogreCamera->getPosition();
+//        setCameraPosition(actualCamPos + camTranslation);
         
+        Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
+
+        ogreCamera->setPosition(curentNode->_getDerivedPosition());
+        ogreCamera->yaw(Ogre::Degree(-deltaX * 0.25f));
+        ogreCamera->pitch(Ogre::Degree(-deltaY * 0.25f));
+        ogreCamera->moveRelative(Ogre::Vector3(0, 0, dist));
+
+        cameraPosition = ogreCamera->getPosition();
+
+        update();
+        emit cameraPositionChanged(cameraPosition);
+
         oldPos = pos;
         e->accept();
     }
@@ -257,16 +273,21 @@ void OgreWidget::showEvent(QShowEvent *e)
 
 void OgreWidget::wheelEvent(QWheelEvent *e)
 {
-    Ogre::Vector3 zTranslation(0,0, -e->delta() / 60);
-    
+    Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
+
+
     if(e->modifiers().testFlag(Qt::ControlModifier))
     {
-        zTranslation.z *= turboModifier;
+        dist *= turboModifier;
     }
 
-    const Ogre::Vector3 &actualCamPos = ogreCamera->getPosition();
-    setCameraPosition(actualCamPos + zTranslation);
-    
+    ogreCamera->moveRelative(Ogre::Vector3(0, 0, -e->delta() * 0.004f * dist));
+
+    cameraPosition = ogreCamera->getPosition();
+
+    update();
+    emit cameraPositionChanged(cameraPosition);
+
     e->accept();
 }
 
@@ -401,7 +422,6 @@ void OgreWidget::createBloc(Bloc * bloc){
         Ogre::Vector3 sommet6 = Ogre::Vector3(+ 100/2, - 100/2, - 100/2);
         Ogre::Vector3 sommet7 = Ogre::Vector3(+ 100/2, + 100/2, - 100/2);
 
-
         blocContour = new Ogre::ManualObject(QString::number(bloc->getId()).toStdString()+"_contour"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
 
         blocContour->begin(bloc->getSegmentMatName().toStdString(), Ogre::RenderOperation::OT_LINE_LIST);
@@ -516,7 +536,7 @@ void OgreWidget::createBloc(Bloc * bloc){
         node->attachObject(blocFace);
         node->attachObject(blocContour);
 
-        node->scale(dimention);
+        node->scale(dimention/100);
         node->setPosition(position);
 
         bloc->setNodeBloc3d(node);
