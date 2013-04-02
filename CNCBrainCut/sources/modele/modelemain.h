@@ -7,6 +7,7 @@ namespace OgreCNC{
     class ControleurMain;
     class VueMain;
     class NodeBloc;
+    class ModeleCut;
 
     class ModeleMain : public QObject
     {
@@ -14,6 +15,8 @@ namespace OgreCNC{
     public:
         explicit ModeleMain(QObject *parent = 0);
         ~ModeleMain();
+
+        ModeleCut* getModeleCut();
 
         inline void setVue(VueMain * vue){
             m_vue = vue;
@@ -32,6 +35,8 @@ namespace OgreCNC{
         VueMain * m_vue;
 
         NodeBloc * m_RootTravailBlocs;
+
+        ModeleCut* m_modeleCut;
 
 
     signals:
