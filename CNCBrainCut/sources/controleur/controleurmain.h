@@ -41,6 +41,7 @@ namespace OgreCNC {
         void sl_start_cut();
         void sl_update_cut();
         void sl_select(int id);
+        void sl_abort_cut();
 
     };
 
