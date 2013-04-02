@@ -61,6 +61,34 @@ namespace OgreCNC {
         void on_annulerDecoupe_pushButton_clicked();
         void on_horizontaleRadioButton_clicked();
 
+        void on_verticaleRadioButton_clicked();
+
+        void on_classiqueRadioButton_clicked();
+
+        void on_multipleRadioButton_clicked();
+
+        void on_directionX_radioButton_clicked();
+
+        void on_directionY_radioButton_clicked();
+
+        void on_directionZ_radioButton_clicked();
+
+        void on_perteGauche_RadioButton_clicked();
+
+        void on_perteDroite_RadioButton_clicked();
+
+        void on_perteCentree_RadioButton_clicked();
+
+        void on_origineX_text_textEdited(const QString &arg1);
+
+        void on_origineY_text_textEdited(const QString &arg1);
+
+        void on_origineZ_text_textEdited(const QString &arg1);
+
+        void on_distance_text_textEdited(const QString &arg1);
+
+        void on_nbBlocs_text_textEdited(const QString &arg1);
+
     public slots:
         void sl_createBloc(Bloc * bloc);
         void sl_selectBloc(Bloc * bloc);

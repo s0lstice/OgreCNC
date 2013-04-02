@@ -44,6 +44,7 @@ ControleurMain::ControleurMain(QWidget *parent) :
 void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
+    connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
     connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_createBloc(Bloc*)));
     connect(m_vue, SIGNAL(si_select(int)), this, SLOT(sl_select(int)));
     connect(m_gestionBloc, SIGNAL(si_select(Bloc*)), m_vue, SLOT(sl_selectBloc(Bloc*)));
@@ -81,6 +82,21 @@ void ControleurMain::sl_update_cut(){
         m_controleurCut->update_cut();
     }
 }
+
+void sl_abort_cut(){
+    /*VOIR AVEC MICKAEL : EST-CE QU'ON FAIT ICI LA REACTIVATION/DESACTIVATION DE TOUS LES BOUTONS OU PAS ?*/
+    /*On désactive les boutons d'annulation et de validation*/
+    ui->validerDecoupe_pushButton->setEnabled(false);
+    ui->annulerDecoupe_pushButton->setEnabled(false);
+    /*On réactive le bouton de lancement d'une découpe*/
+    ui->demarrerDecoupe_pushButton->setEnabled(true);
+    /*On désactive également tous les autres boutons, qui ne sont accessibles que lorsque l'utilisateur démarre une découpe*/
+    ui->definitionDecoupeGroupBox->setEnabled(false);
+    ui->modeDecoupeDroit_GroupBox->setEnabled(false);
+    ui->modeDecoupeGauche_GroupBox->setEnabled(false);
+    ui->positionPerteGroupBox->setEnabled(false);
+}
+
 
 //***** SLOTS *****//
 void ControleurMain::sl_select(int id){

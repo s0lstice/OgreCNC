@@ -74,8 +74,9 @@ void VueMain::sl_init_cut(ModeleCut *modele){
     ui->validerDecoupe_pushButton->setEnabled(true);
     ui->annulerDecoupe_pushButton->setEnabled(true);
     ui->definitionDecoupeGroupBox->setEnabled(true);
-
-    /*A FINIR POUR TOUS LES BOUTONS*/
+    ui->modeDecoupeDroit_GroupBox->setEnabled(true);
+    ui->modeDecoupeGauche_GroupBox->setEnabled(true);
+    ui->positionPerteGroupBox->setEnabled(true);
 
     /*On renseigne le modéle de la vue*/
     m_modeleCut = modele;
@@ -149,6 +150,10 @@ void VueMain::sl_init_cut(ModeleCut *modele){
 }
 
 
+void VueMain::sl_selectBloc(Bloc * bloc){
+    m_Ogre3d->selectBloc(bloc);
+}
+
 /////***** Gestion de l'interaction avec l'IHM *****/////
 void OgreCNC::VueMain::on_demarrerDecoupe_pushButton_clicked()
 {
@@ -167,7 +172,6 @@ void OgreCNC::VueMain::on_annulerDecoupe_pushButton_clicked()
 
 void OgreCNC::VueMain::on_horizontaleRadioButton_clicked()
 {
-    /*METTRE A JOUR LE CHAMP MODIFIE >> FAIRE DE MEME POUR TOUS LES BOUTONS*/
     if(m_modeleCut != NULL)
     {
         m_modeleCut->decoupeHV = ModeleCut::HORIZONTALE;
@@ -175,6 +179,128 @@ void OgreCNC::VueMain::on_horizontaleRadioButton_clicked()
     }
 }
 
-void VueMain::sl_selectBloc(Bloc * bloc){
-    m_Ogre3d->selectBloc(bloc);
+void OgreCNC::VueMain::on_verticaleRadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->decoupeHV = ModeleCut::VERTICALE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_classiqueRadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->decoupeCM = ModeleCut::CLASSIQUE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_multipleRadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->decoupeCM = ModeleCut::MULTIPLE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_directionX_radioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->direction = ModeleCut::X;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_directionY_radioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->direction = ModeleCut::Y;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->direction = ModeleCut::Z;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_perteGauche_RadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->posPerte = ModeleCut::GAUCHE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_perteDroite_RadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->posPerte = ModeleCut::DROITE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_perteCentree_RadioButton_clicked()
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->posPerte = ModeleCut::CENTREE;
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_origineX_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->origineDecoupe[0] = (qreal)arg1.toDouble();
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_origineY_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->origineDecoupe[1] = (qreal)arg1.toDouble();
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_origineZ_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->origineDecoupe[2] = (qreal)arg1.toDouble();
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->distance = (qreal)arg1.toDouble();
+        emit si_update_cut();
+    }
+}
+
+void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->nbBlocs = arg1.toInt();
+        emit si_update_cut();
+    }
 }
