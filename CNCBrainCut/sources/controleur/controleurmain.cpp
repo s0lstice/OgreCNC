@@ -22,8 +22,8 @@ ControleurMain::ControleurMain(QWidget *parent) :
 
     initConnections();
 
-    Bloc* bloc1 = m_gestionBloc->creatBloc(Ogre::Vector3(2.00,1.00,3.00),Ogre::Vector3(0,0,0));
-    Bloc* bloc2 = m_gestionBloc->creatBloc(Ogre::Vector3(3.00,1.00,2.00),Ogre::Vector3(1.00,0.20,0.50));
+    Bloc* bloc1 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(0, 0, 0));
+    Bloc* bloc2 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
 
     Ogre::SceneNode* node2 = bloc2->getNodeBloc3d();
     Ogre::SceneNode* node1 = bloc1->getNodeBloc3d();
@@ -33,7 +33,7 @@ ControleurMain::ControleurMain(QWidget *parent) :
     Ogre::Vector3 positionIni2;
     positionIni2 = bloc2->getPosition();
 
-    m_gestionBloc->appliquerVueEclatee(100,NULL);
+    //m_gestionBloc->appliquerVueEclatee(100,NULL);
 }
 
 void ControleurMain::initConnections(){
