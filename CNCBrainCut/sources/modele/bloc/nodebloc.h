@@ -17,6 +17,7 @@ namespace OgreCNC {
     signals:
         void updateDimensionBloc(Bloc * bloc);
         void updatePostionBloc(Bloc * bloc);
+        void updateCouleurBloc(Bloc * bloc);
 
     public:
         /*Constructeurs*/
@@ -43,6 +44,7 @@ namespace OgreCNC {
             m_listeFils->append(bloc);
             connect(bloc, SIGNAL(updateDimensionBloc(Bloc*)), this, SIGNAL(updateDimensionBloc(Bloc*)));
             connect(bloc, SIGNAL(updatePostionBloc(Bloc*)), this, SIGNAL(updatePostionBloc(Bloc*)));
+            connect(bloc, SIGNAL(updateCouleurBloc(Bloc*)), this, SIGNAL(updateCouleurBloc(Bloc*)));
         }
 
         inline void remove(Bloc * bloc){

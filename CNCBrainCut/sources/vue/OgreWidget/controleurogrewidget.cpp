@@ -17,6 +17,27 @@ int ControleurOgreWidget::updateDimentionBloc(Bloc * bloc)
 {
     if(bloc == NULL)
     {
+        qWarning() << QObject::tr("[Controleur Ogre] mise a jour de la couleur impossible, les bloc est nul");
+        return 1;
+    }
+
+    if(bloc->getNodeBloc3d() == NULL)
+    {
+        qWarning() << QObject::tr("[Controleur Ogre] mise a jour de la couleur impossible, les bloc3D est nul");
+        return 1;
+    }
+
+    Ogre::SceneNode * node = bloc->getNodeBloc3d();
+    Ogre::Vector3 scale = bloc->getDimension()/(node->getScale()*100);
+    node->scale( scale );
+
+    return 0;
+}
+
+int ControleurOgreWidget::updateCouleurBloc(Bloc * bloc)
+{
+    if(bloc == NULL)
+    {
         qWarning() << QObject::tr("[Controleur Ogre] mise a jour des dimantions impossible, les bloc est nul");
         return 1;
     }
@@ -27,10 +48,9 @@ int ControleurOgreWidget::updateDimentionBloc(Bloc * bloc)
         return 1;
     }
 
-    Ogre::SceneNode * node = bloc->getNodeBloc3d();
-    Ogre::Vector3 scale = bloc->getDimension()/(node->getScale()*100);
-    node->scale( scale );
+    Ogre::Entity * blocFace = ((Ogre::Entity *)bloc->getNodeBloc3d()->getAttachedObject(QString::number(bloc->getId()).toStdString()+"_cube"));
 
+    blocFace->setMaterialName(bloc->getFaceMatName().toStdString());
     return 0;
 }
 
@@ -241,7 +261,7 @@ void ControleurOgreWidget::beginSegment(Ogre::ManualObject * segment, Ogre::Vect
     segment->setBoundingBox(BB);
 }
 
-void ControleurOgreWidget::changeSegmentColot(Ogre::MovableObject * segment, Ogre::ColourValue color){
+void ControleurOgreWidget::changeColorSegment(Ogre::MovableObject * segment, Ogre::ColourValue color){
 
     if(segment != NULL)
     {
@@ -283,6 +303,7 @@ void ControleurOgreWidget::changeSegmentColot(Ogre::MovableObject * segment, Ogr
                 Found = false;
                 break;
             }
+
             //fin
             Ogre::Vector3 max;
             switch (idSegment[1]) {
@@ -323,9 +344,9 @@ void ControleurOgreWidget::changeSegmentColot(Ogre::MovableObject * segment, Ogr
 
 void ControleurOgreWidget::selectSegment(Ogre::ManualObject * segment)
 {
-    changeSegmentColot(curentSegment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(curentSegment, Ogre::ColourValue::Blue); //deselection
     curentSegment = segment;
-    changeSegmentColot(curentSegment, Ogre::ColourValue::Red); //selection
+    changeColorSegment(curentSegment, Ogre::ColourValue::Red); //selection
 }
 
 void ControleurOgreWidget::selectOgreBloc(Ogre::SceneNode * node){

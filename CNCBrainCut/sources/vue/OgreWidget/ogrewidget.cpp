@@ -23,6 +23,8 @@ ogreCamera(0), oldPos(invalidMousePoint)
 
     initCameraLookAt = Ogre::Vector3(0,0,0);
     initCameraPosition  = Ogre::Vector3(0,0,500.000);
+
+    curentNode = NULL;
 }
 
 OgreWidget::~OgreWidget()

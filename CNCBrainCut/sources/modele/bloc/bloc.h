@@ -106,10 +106,6 @@ namespace  OgreCNC {
          * \brief m_segmentMatName est le nom du materiau pour les segments
          */
         QString m_segmentMatName;
-        /*!
-         * \brief m_colorBloc est la couleur courante des face du bloc
-         */
-        Ogre::ColourValue m_colorBloc;
 
         //Modif Mel
         Ogre::Vector3 m_positionVueEclatee; // position du centre de l'objet dans la vue éclatée
@@ -117,9 +113,9 @@ namespace  OgreCNC {
     signals:
         void updateDimensionBloc(Bloc * bloc);
         void updatePostionBloc(Bloc * bloc);
+        void updateCouleurBloc(Bloc * bloc);
 
     public:
-
 
         void updateSommets();
 
@@ -181,9 +177,7 @@ namespace  OgreCNC {
          * \brief setCheck sélectionne le bloc
          * \param state
          */
-        inline void setCheck(Qt::CheckState state){
-            m_select = state;
-        }
+        void setCheck(Qt::CheckState state);
 
         /*!
          * \brief getName renvoie le nom du bloc
@@ -261,6 +255,16 @@ namespace  OgreCNC {
         }
 
         /*!
+         * \brief setEtat change l'etat du bloc
+         * \param etat est le nouvel etat
+         */
+        void setEtat(Etat etat);
+
+        inline Etat getEtat(){
+            return m_etat;
+        }
+
+        /*!
          * \brief getFaceMatName renvoi le nom du materiau utilisé pour le dessin des faces
          * \return
          */
@@ -276,14 +280,6 @@ namespace  OgreCNC {
         }
 
         /*!
-         * \brief getCouleurFacerenvoie la couleur courente des faces
-         * \return
-         */
-        inline Ogre::ColourValue getCouleurFace(){
-            return m_colorBloc;
-        }
-
-        /*!
          * \brief setPositionVueEclatee revoie la position dans la vue éclaté
          * \param position
          */
@@ -296,41 +292,49 @@ namespace  OgreCNC {
          * \return
          */
         inline Ogre::Vector3 getSommet0(){ return m_sommet0;}
+
         /*!
          * \brief getSommet1 indique la position du sommet 1
          * \return
          */
         inline Ogre::Vector3 getSommet1(){ return m_sommet1;}
+
         /*!
          * \brief getSommet2 indique la position du sommet 2
          * \return
          */
         inline Ogre::Vector3 getSommet2(){ return m_sommet2;}
+
         /*!
          * \brief getSommet3 indique la position du sommet 3
          * \return
          */
         inline Ogre::Vector3 getSommet3(){ return m_sommet3;}
+
         /*!
          * \brief getSommet4 indique la position du sommet 4
          * \return
          */
         inline Ogre::Vector3 getSommet4(){ return m_sommet4;}
+
         /*!
          * \brief getSommet5 indique la position du sommet 5
          * \return
          */
         inline Ogre::Vector3 getSommet5(){ return m_sommet5;}
+
         /*!
          * \brief getSommet6 indique la position du sommet 6
          * \return
          */
         inline Ogre::Vector3 getSommet6(){ return m_sommet6;}
+
         /*!
          * \brief getSommet7 indique la position du sommet 7
          * \return
          */
         inline Ogre::Vector3 getSommet7(){ return m_sommet7;}
+
         /*!
          * \brief serialize le bloc
          * \return

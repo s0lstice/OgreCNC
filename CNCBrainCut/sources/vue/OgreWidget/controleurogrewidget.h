@@ -66,7 +66,7 @@ namespace OgreCNC {
              * \param segment à modifier
              * \param color est la nouvelle couleur
              */
-            void changeSegmentColot(Ogre::MovableObject * segment, Ogre::ColourValue color);
+            void changeColorSegment(Ogre::MovableObject * segment, Ogre::ColourValue color);
         public:
             /*!
              * \brief ControleurOgreWidget est le constructeur
@@ -97,6 +97,13 @@ namespace OgreCNC {
              * \return l'erreur
              */
             int updatePositionBloc(Bloc * bloc);
+
+            /*!
+             * \brief updateDimentionBloc change la couleur du bloc 3D
+             * \param bloc
+             * \return
+             */
+            int updateCouleurBloc(Bloc * bloc);
 
         signals:
             OgreCNC::Bloc * si_blocFormOgreNode( Ogre::SceneNode * node);

@@ -71,7 +71,8 @@ HEADERS += \
     sources/vue/vuemain.h \
     sources/controleur/controleurcut.h \
     sources/modele/modelecut.h \
-    sources/vue/OgreWidget/controleurogrewidget.h
+    sources/vue/OgreWidget/controleurogrewidget.h \
+    sources/modele/constantesapplication.h
 
 SOURCES += \
     sources/vue/OgreWidget/ogrewidget.cpp \

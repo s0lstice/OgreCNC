@@ -10,6 +10,8 @@
 #include "../modele/bloc/bloc.h"
 #include "controleurmain.h"
 
+#include "../modele/constantesapplication.h"
+
 using namespace OgreCNC;
 ControleurBloc::ControleurBloc(NodeBloc *rootBloc, QObject *parent) :
     QAbstractItemModel(parent)
@@ -40,6 +42,7 @@ void ControleurBloc::setRootNode(NodeBloc *rootBloc){
     m_root = rootBloc;
     connect(m_root, SIGNAL(updateDimensionBloc(Bloc*)), m_controleur, SIGNAL(si_updateDimensionBloc(Bloc*)));
     connect(m_root, SIGNAL(updatePostionBloc(Bloc*)), m_controleur, SIGNAL(si_updatePostionBloc(Bloc*)));
+    connect(m_root, SIGNAL(updateCouleurBloc(Bloc*)), m_controleur, SIGNAL(si_updateCouleurBloc(Bloc*)));
 }
 
 QModelIndex ControleurBloc::index(int row, int column, const QModelIndex &parent) const{
@@ -277,14 +280,17 @@ void ControleurBloc::selectSegment(Ogre::ManualObject * segment)
 }
 
 void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
-    if(m_currentBloc != NULL)
+    if( (m_currentBloc != NULL) && (m_currentBloc != bloc))
     {
         m_currentBloc->setCheck(Qt::Unchecked);
+
         if(m_currentIndex.isValid()){
             emit dataChanged(m_currentIndex, m_currentIndex);
         }
     }
 
+    if(m_currentBloc != bloc)
+    {
     m_currentBloc = bloc;
     m_currentBloc->setCheck(Qt::Checked);
     m_currentIndex = index;
@@ -297,6 +303,7 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
             m_currentSegment = NULL;
             emit si_selectSegment(m_currentSegment);
         }
+    }
 }
 
 //Modif Mel

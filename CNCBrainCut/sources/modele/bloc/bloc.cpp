@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "nodebloc.h"
+#include "../constantesapplication.h"
 
 using namespace OgreCNC;
 int Bloc::nbBloc = 0;
@@ -25,9 +26,8 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)  :
     m_select = Qt::Unchecked;
 
     m_nodeBloc3d = NULL;
-    m_faceMatName = "cube";
+    m_faceMatName = constantes::BLOC_CHUTE;
     m_segmentMatName = "BaseWhiteNoLighting";
-    m_colorBloc = Ogre::ColourValue(0,0.5,1.0,0.5);
 
     updateSommets();
 }
@@ -46,9 +46,8 @@ Bloc::Bloc(NodeBloc *parent)
     m_parent = parent;
 
     m_nodeBloc3d = NULL;
-    m_faceMatName = "cube";
+    m_faceMatName = constantes::BLOC_CHUTE;
     m_segmentMatName = "BaseWhiteNoLighting";
-    m_colorBloc = Ogre::ColourValue(0,0.5,1.0,0.5);
 
     m_id++;
 
@@ -117,4 +116,42 @@ void Bloc::deserialize(QVariantMap bloc){
     m_dimension.x = dimention["x"].toInt();
     m_dimension.y = dimention["y"].toInt();
     m_dimension.z = dimention["z"].toInt();
+}
+
+void Bloc::setEtat(Etat etat)
+{
+    if(etat != m_etat)
+    {
+        m_etat = etat;
+        if(etat == UTILISE)
+            m_faceMatName = constantes::BLOC_USE;
+        else
+            m_faceMatName = constantes::BLOC_CHUTE;
+        if(m_select == Qt::Checked)
+            m_faceMatName = constantes::BLOC_SELECTED;
+
+        emit updateCouleurBloc(this);
+    }
+}
+
+void Bloc::setCheck(Qt::CheckState state){
+    if(m_select != state)
+    {
+        m_select = state;
+        if(m_select == Qt::Checked)
+        {
+            m_faceMatName = constantes::BLOC_SELECTED;
+        }
+        else
+        {
+            if(m_etat == CHUTE)
+            {
+                m_faceMatName = constantes::BLOC_CHUTE;
+            }
+            else
+                m_faceMatName = constantes::BLOC_USE;
+        }
+
+        emit updateCouleurBloc(this);
+    }
 }

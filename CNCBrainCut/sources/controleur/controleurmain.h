@@ -41,6 +41,8 @@ namespace OgreCNC {
 
         void si_updateDimensionBloc(Bloc * bloc);
         void si_updatePostionBloc(Bloc * bloc);
+        void si_updateCouleurBloc(Bloc* bloc);
+
     public slots:
         void sl_start_cut();
         void sl_update_cut();
