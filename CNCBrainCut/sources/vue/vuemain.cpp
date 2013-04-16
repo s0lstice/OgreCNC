@@ -45,6 +45,8 @@ void VueMain::initConnections(){
     connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
     connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
     connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
+    connect(controleur, SIGNAL(si_updateDimensionBloc(Bloc*)), this, SLOT(sl_updateDimentionBloc(Bloc*)));
+    connect(controleur, SIGNAL(si_updatePostionBloc(Bloc*)), this, SLOT(sl_updatePositionBloc(Bloc*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_blocFormOgreNode(Ogre::SceneNode*)), controleur, SLOT(sl_blocFromOgreNode(Ogre::SceneNode*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_SelectBloc(Bloc*)), controleur, SLOT(sl_selectBloc(Bloc*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_selectSegemnt(Ogre::ManualObject*)), controleur, SLOT(sl_selectSegment(Ogre::ManualObject*)));
@@ -52,6 +54,14 @@ void VueMain::initConnections(){
 
 void VueMain::sl_creat3Dbloc(Bloc * bloc){
     m_ControleurOgreWidget->creat3DBloc(bloc);
+}
+
+void VueMain::sl_updateDimentionBloc(Bloc * bloc){
+    m_ControleurOgreWidget->updateDimentionBloc(bloc);
+}
+
+void VueMain::sl_updatePositionBloc(Bloc * bloc){
+    m_ControleurOgreWidget->updatePositionBloc(bloc);
 }
 
 bool VueMain::event(QEvent * e)

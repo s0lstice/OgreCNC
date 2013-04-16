@@ -37,6 +37,11 @@ namespace OgreCNC {
             }
 
             /*!
+             * \brief m_BBSize est le rayon des boites englobantes pours les segments
+             */
+            int m_BBSize;
+
+            /*!
              * \brief clearConectionsWithWidget detruit les connections au widget
              */
             inline void clearConectionsWithWidget(){
@@ -80,6 +85,18 @@ namespace OgreCNC {
             }
 
             int creat3DBloc(Bloc *bloc);
+            /*!
+             * \brief updateDimentionBloc adapte le bloc 3d aux nouvelles dimensions
+             * \param bloc le bloc a modifier
+             * \return l'erreur
+             */
+            int updateDimentionBloc(Bloc * bloc);
+            /*!
+             * \brief updatePositionBloc change la postion du bloc 3D
+             * \param bloc le bloc a deplacer
+             * \return l'erreur
+             */
+            int updatePositionBloc(Bloc * bloc);
 
         signals:
             OgreCNC::Bloc * si_blocFormOgreNode( Ogre::SceneNode * node);

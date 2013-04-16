@@ -10,9 +10,10 @@ int Bloc::nbBloc = 0;
 
 /*Constructeurs*/
 
-Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)
+Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)  :
+    QObject(parent)
 {
-    m_dimention = dimention;
+    m_dimension = dimention;
     m_position = position;
 
     m_id = nbBloc++;
@@ -33,7 +34,7 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)
 
 Bloc::Bloc(NodeBloc *parent)
 {
-    m_dimention = Ogre::Vector3(0,0,0);
+    m_dimension = Ogre::Vector3(0,0,0);
     m_position = Ogre::Vector3(0,0,0);
 
     m_etat = CHUTE;
@@ -67,14 +68,14 @@ Bloc::~Bloc()
 }
 
 void Bloc::updateSommets(){
-    m_sommet0 = Ogre::Vector3(- m_dimention[0]/2, + m_dimention[1]/2, + m_dimention[2]/2);
-    m_sommet1 = Ogre::Vector3(- m_dimention[0]/2, - m_dimention[1]/2, + m_dimention[2]/2);
-    m_sommet2 = Ogre::Vector3(+ m_dimention[0]/2, - m_dimention[1]/2, + m_dimention[2]/2);
-    m_sommet3 = Ogre::Vector3(+ m_dimention[0]/2, + m_dimention[1]/2, + m_dimention[2]/2);
-    m_sommet4 = Ogre::Vector3(- m_dimention[0]/2, + m_dimention[1]/2, - m_dimention[2]/2);
-    m_sommet5 = Ogre::Vector3(- m_dimention[0]/2, - m_dimention[1]/2, - m_dimention[2]/2);
-    m_sommet6 = Ogre::Vector3(+ m_dimention[0]/2, - m_dimention[1]/2, - m_dimention[2]/2);
-    m_sommet7 = Ogre::Vector3(+ m_dimention[0]/2, + m_dimention[1]/2, - m_dimention[2]/2);
+    m_sommet0 = Ogre::Vector3(- m_dimension[0]/2, + m_dimension[1]/2, + m_dimension[2]/2);
+    m_sommet1 = Ogre::Vector3(- m_dimension[0]/2, - m_dimension[1]/2, + m_dimension[2]/2);
+    m_sommet2 = Ogre::Vector3(+ m_dimension[0]/2, - m_dimension[1]/2, + m_dimension[2]/2);
+    m_sommet3 = Ogre::Vector3(+ m_dimension[0]/2, + m_dimension[1]/2, + m_dimension[2]/2);
+    m_sommet4 = Ogre::Vector3(- m_dimension[0]/2, + m_dimension[1]/2, - m_dimension[2]/2);
+    m_sommet5 = Ogre::Vector3(- m_dimension[0]/2, - m_dimension[1]/2, - m_dimension[2]/2);
+    m_sommet6 = Ogre::Vector3(+ m_dimension[0]/2, - m_dimension[1]/2, - m_dimension[2]/2);
+    m_sommet7 = Ogre::Vector3(+ m_dimension[0]/2, + m_dimension[1]/2, - m_dimension[2]/2);
 }
 
 QVariantMap Bloc::serialize(){
@@ -93,9 +94,9 @@ QVariantMap Bloc::serialize(){
     blocMap.insert("position", positionMap);
 
     QVariantMap dimentionMap;
-    dimentionMap.insert("x", m_dimention.x);
-    dimentionMap.insert("y", m_dimention.y);
-    dimentionMap.insert("z", m_dimention.z);
+    dimentionMap.insert("x", m_dimension.x);
+    dimentionMap.insert("y", m_dimension.y);
+    dimentionMap.insert("z", m_dimension.z);
     blocMap.insert("dimention", dimentionMap);
 
     return blocMap;
@@ -113,7 +114,7 @@ void Bloc::deserialize(QVariantMap bloc){
     m_position.z = position["z"].toInt();
 
     QVariantMap dimention = bloc["dimention"].toMap();
-    m_dimention.x = dimention["x"].toInt();
-    m_dimention.y = dimention["y"].toInt();
-    m_dimention.z = dimention["z"].toInt();
+    m_dimension.x = dimention["x"].toInt();
+    m_dimension.y = dimention["y"].toInt();
+    m_dimension.z = dimention["z"].toInt();
 }

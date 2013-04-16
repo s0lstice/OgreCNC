@@ -15,7 +15,8 @@ ControleurBloc::ControleurBloc(NodeBloc *rootBloc, QObject *parent) :
     QAbstractItemModel(parent)
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
-    m_root = rootBloc;
+    m_root = NULL;
+    setRootNode(rootBloc);
     m_currentBloc = NULL;
     m_currentSegment = NULL;
     m_currentIndex = QModelIndex();
@@ -32,7 +33,13 @@ ControleurBloc::ControleurBloc(QObject *parent) :
 }
 
 void ControleurBloc::setRootNode(NodeBloc *rootBloc){
+    if(m_root != NULL)
+    {
+        disconnect(m_root, 0,0,0);
+    }
     m_root = rootBloc;
+    connect(m_root, SIGNAL(updateDimensionBloc(Bloc*)), m_controleur, SIGNAL(si_updateDimensionBloc(Bloc*)));
+    connect(m_root, SIGNAL(updatePostionBloc(Bloc*)), m_controleur, SIGNAL(si_updatePostionBloc(Bloc*)));
 }
 
 QModelIndex ControleurBloc::index(int row, int column, const QModelIndex &parent) const{

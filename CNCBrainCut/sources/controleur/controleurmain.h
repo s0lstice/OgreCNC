@@ -39,6 +39,8 @@ namespace OgreCNC {
         void si_select(Bloc * bloc);
         void si_updateOgreVue();
 
+        void si_updateDimensionBloc(Bloc * bloc);
+        void si_updatePostionBloc(Bloc * bloc);
     public slots:
         void sl_start_cut();
         void sl_update_cut();
@@ -47,6 +49,7 @@ namespace OgreCNC {
         void sl_vueEclate(double distance);
         Bloc * sl_blocFromOgreNode(Ogre::SceneNode * node);
         void sl_selectSegment(Ogre::ManualObject * segment);
+
 
     };
 

@@ -9,8 +9,9 @@ namespace  OgreCNC {
 
     class NodeBloc;
 
-    class Bloc
+    class Bloc : public QObject
     {
+        Q_OBJECT
     public:
         enum Etat {UTILISE, PERTE, CHUTE};
         enum Type {BLOC, NODE};
@@ -18,9 +19,9 @@ namespace  OgreCNC {
     protected:
         /*Dimensions d'un bloc (en mm) -- le volume n'est pas stocké comme attribut, mais un accesseur spécifique le calculera*/
         /*!
-         * \brief m_dimention dimention d'un bloc (mm), longeur = x; hauteur = y; largeur = z
+         * \brief m_Dimension Dimension d'un bloc (mm), longeur = x; hauteur = y; largeur = z
          */
-        Ogre::Vector3 m_dimention;
+        Ogre::Vector3 m_dimension;
         /*!
          * \brief m_position est laposition d'un bloc dans l'espace (mm). Definit en fonction du centre de l'objet.
          */
@@ -113,25 +114,25 @@ namespace  OgreCNC {
         //Modif Mel
         Ogre::Vector3 m_positionVueEclatee; // position du centre de l'objet dans la vue éclatée
 
+    signals:
+        void updateDimensionBloc(Bloc * bloc);
+        void updatePostionBloc(Bloc * bloc);
 
     public:
 
 
         void updateSommets();
-        void updateFaces();
-        void updateContour();
-
 
         /*!
          * \brief Bloc est le constructeur
-         * \param dimention est la dimention du bloc
+         * \param Dimension est la Dimension du bloc
          * \param position est la position du bloc
          * \param m_parent est le pernet du bloc
          */
-        explicit Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc * m_parent = NULL);
+        explicit Bloc(Ogre::Vector3 Dimension, Ogre::Vector3 position, NodeBloc * m_parent = NULL);
 
         /*!
-         * \brief Bloc contstructeur de blocdepuis un NodeBloc, la creation du bloc 3D ne serra pas faite car les dimention minimal ne serront pas réspecté. Le bloc doit etre initilisé et updaté.
+         * \brief Bloc contstructeur de blocdepuis un NodeBloc, la creation du bloc 3D ne serra pas faite car les Dimension minimal ne serront pas réspecté. Le bloc doit etre initilisé et updaté.
          * \param parent
          */
         Bloc(NodeBloc *parent);
@@ -225,21 +226,21 @@ namespace  OgreCNC {
         }
 
         /*!
-         * \brief setDimention change les dimention du bloc
-         * \param dimention
+         * \brief setDimension change les Dimension du bloc
+         * \param Dimension
          */
-        inline void setDimention(Ogre::Vector3 dimention){
-            m_dimention = dimention;
+        inline void setDimension(Ogre::Vector3 Dimension){
+            m_dimension = Dimension;
             updateSommets();
-            updateFaces();
+            emit updateDimensionBloc(this);
         }
 
         /*!
-         * \brief getDimention renvoie les dimention du bloc
+         * \brief getDimension renvoie les Dimension du bloc
          * \return
          */
-        inline Ogre::Vector3 getDimention(){
-            return m_dimention;
+        inline Ogre::Vector3 getDimension(){
+            return m_dimension;
         }
 
         /*!
@@ -256,7 +257,7 @@ namespace  OgreCNC {
          */
         inline void setPosition(Ogre::Vector3 position){
             m_position = position;
-            updateFaces();
+            emit updatePostionBloc(this);
         }
 
         /*!

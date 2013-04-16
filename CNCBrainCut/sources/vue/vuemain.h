@@ -61,6 +61,8 @@ namespace OgreCNC {
 
     private slots:
         void sl_creat3Dbloc(Bloc * bloc);
+        void sl_updateDimentionBloc(Bloc * bloc);
+        void sl_updatePositionBloc(Bloc * bloc);
         void on_demarrerDecoupe_pushButton_clicked();
         void on_validerDecoupe_pushButton_clicked();
         void on_annulerDecoupe_pushButton_clicked();

@@ -8,11 +8,15 @@ namespace OgreCNC {
 
     class NodeBloc : public Bloc
     {
-
+        Q_OBJECT
     private:
         /*Liste des noeuds fils issus de la découpe du noeud bloc*/
         QVector<Bloc*> * m_listeFils;
         Bloc * m_bloc; //bloc initial, avant dedoupe
+
+    signals:
+        void updateDimensionBloc(Bloc * bloc);
+        void updatePostionBloc(Bloc * bloc);
 
     public:
         /*Constructeurs*/
@@ -37,6 +41,21 @@ namespace OgreCNC {
         inline void append(Bloc * bloc){
             bloc->setParent(this);
             m_listeFils->append(bloc);
+            connect(bloc, SIGNAL(updateDimensionBloc(Bloc*)), this, SIGNAL(updateDimensionBloc(Bloc*)));
+            connect(bloc, SIGNAL(updatePostionBloc(Bloc*)), this, SIGNAL(updatePostionBloc(Bloc*)));
+        }
+
+        inline void remove(Bloc * bloc){
+            bloc->setParent(NULL); //met le parent du bloc à null
+            for(int i =0; i < m_listeFils->count(); ++i){
+                if(m_listeFils->at(i) == bloc) //recherche du bloc dans la liste
+                {
+                    disconnect(bloc, 0,0,0); //deconnection
+                    m_listeFils->remove(i); //supression
+                    break;
+                }
+            }
+
         }
 
         inline Bloc * at(int i){

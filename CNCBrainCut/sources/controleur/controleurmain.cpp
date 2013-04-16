@@ -29,15 +29,40 @@ ControleurMain::ControleurMain(QWidget *parent) :
     initConnections();
 
     Bloc* bloc1 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(0, 0, 0));
+
     Bloc* bloc2 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc3 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc4 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc5 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc6 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc7 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc8 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
+    Bloc* bloc9 = m_gestionBloc->creatBloc(Ogre::Vector3(100,100,100),Ogre::Vector3(100, 100, 100));
 
-    Ogre::SceneNode* node2 = bloc2->getNodeBloc3d();
-    Ogre::SceneNode* node1 = bloc1->getNodeBloc3d();
+    bloc1->setDimension(Ogre::Vector3(100,300,200));
+    bloc2->setDimension(Ogre::Vector3(50,50,50));
+    bloc2->setPosition(Ogre::Vector3(25,25,25));
 
-    Ogre::Vector3 positionIni1;
-    positionIni1= bloc1->getPosition();
-    Ogre::Vector3 positionIni2;
-    positionIni2 = bloc2->getPosition();
+    bloc3->setDimension(Ogre::Vector3(50,50,50));
+    bloc3->setPosition(Ogre::Vector3(25,25,-25));
+
+    bloc4->setDimension(Ogre::Vector3(50,50,50));
+    bloc4->setPosition(Ogre::Vector3(-25,25,25));
+
+    bloc5->setDimension(Ogre::Vector3(50,50,50));
+    bloc5->setPosition(Ogre::Vector3(-25,25,-25));
+
+    bloc6->setDimension(Ogre::Vector3(50,50,50));
+    bloc6->setPosition(Ogre::Vector3(25,-25,25));
+
+    bloc7->setDimension(Ogre::Vector3(50,50,50));
+    bloc7->setPosition(Ogre::Vector3(25,-25,-25));
+
+    bloc8->setDimension(Ogre::Vector3(50,50,50));
+    bloc8->setPosition(Ogre::Vector3(-25,-25,25));
+
+    bloc9->setDimension(Ogre::Vector3(50,50,50));
+    bloc9->setPosition(Ogre::Vector3(-25,-25,-25));
 }
 
 void ControleurMain::initConnections(){
