@@ -8,8 +8,5 @@ int main(int argc, char **argv)
 
     OgreCNC::ControleurMain controleur;
 
-    /*vue3d window3d;
-    window3d.show();*/
-
     return app.exec();
 }

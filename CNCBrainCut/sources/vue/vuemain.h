@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMdiArea>
+#include <Ogre.h>
 
 namespace Ui {
 class VueMain;
@@ -16,6 +17,7 @@ namespace OgreCNC {
     class OgreWidget;
     class Bloc;
     class ModeleCut;
+    class ControleurOgreWidget;
 
     class VueMain : public QMainWindow
     {
@@ -40,10 +42,11 @@ namespace OgreCNC {
         QMdiArea * mdi;
         OgreWidget * m_Ogre3d;
 
-        Ui::VueMain *ui;
+        Ui::VueMain * ui;
 
         ModeleCut* m_modeleCut;
 
+        ControleurOgreWidget * m_ControleurOgreWidget;
         bool event(QEvent * e);
 
         void initConnections();
@@ -57,46 +60,31 @@ namespace OgreCNC {
         void si_vueEclate(double distance);
 
     private slots:
+        void sl_creat3Dbloc(Bloc * bloc);
         void on_demarrerDecoupe_pushButton_clicked();
         void on_validerDecoupe_pushButton_clicked();
         void on_annulerDecoupe_pushButton_clicked();
         void on_horizontaleRadioButton_clicked();
-
         void on_verticaleRadioButton_clicked();
-
         void on_classiqueRadioButton_clicked();
-
         void on_multipleRadioButton_clicked();
-
         void on_directionX_radioButton_clicked();
-
         void on_directionY_radioButton_clicked();
-
         void on_directionZ_radioButton_clicked();
-
         void on_perteGauche_RadioButton_clicked();
-
         void on_perteDroite_RadioButton_clicked();
-
         void on_perteCentree_RadioButton_clicked();
-
         void on_origineX_text_textEdited(const QString &arg1);
-
         void on_origineY_text_textEdited(const QString &arg1);
-
         void on_origineZ_text_textEdited(const QString &arg1);
-
         void on_distance_text_textEdited(const QString &arg1);
-
         void on_nbBlocs_text_textEdited(const QString &arg1);
-
         void on_distanceVueEclate_valueChanged(int arg1);
-
         void on_vueEclateCheched_clicked(bool checked);
 
     public slots:
-        void sl_createBloc(Bloc * bloc);
         void sl_selectBloc(Bloc * bloc);
+        void sl_selectSegment(Ogre::ManualObject * segment);
         void sl_init_cut(ModeleCut* modele);
     };
 }

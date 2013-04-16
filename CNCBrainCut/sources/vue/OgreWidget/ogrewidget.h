@@ -28,16 +28,18 @@ namespace OgreCNC {
         void selectBloc(Bloc * bloc);
         void selectNode(Ogre::SceneNode * node);
         void createBloc(Bloc * bloc);
+        void setCurentNode(Ogre::SceneNode * node);
 
     public slots:
         void setBackgroundColor(QColor c);
-        void upDateCamera();
         void setCameraPosition(const Ogre::Vector3 &pos);
         void setCameraDirection(const Ogre::Vector3 &pos);
 
     signals:
         void cameraPositionChanged(const Ogre::Vector3 &pos);
         void si_select(int id);
+        void si_selectionObjet(Ogre::SceneNode *object);
+        void si_selectionSegment(Ogre::ManualObject * segment);
 
     protected:
         virtual void keyPressEvent(QKeyEvent *e);
@@ -55,9 +57,10 @@ namespace OgreCNC {
         void initOgreSystem();
         void setupNLoadResources();
         void createScene();
+        Ogre::MovableObject *picking(QMouseEvent *e);
+        void selectionObjet(QMouseEvent *e);
 
     private:
-        static const Ogre::Real turboModifier;
         static const QPoint invalidMousePoint;
 
     private:
@@ -68,10 +71,12 @@ namespace OgreCNC {
         Ogre::Camera        *ogreCamera;
 
         QPoint oldPos;
-        Ogre::Vector3 cameraLookAt;
-        Ogre::Vector3 cameraPosition;
-        Ogre::Vector3 cameraDistanceBloc;
-        Bloc * curentBlock;
+        Ogre::Vector3 initCameraLookAt;
+        Ogre::Vector3 initCameraPosition;
+
+        /*!
+         * \brief curentNode est le noeud 3d courent
+         */
         Ogre::Node * curentNode;
     };
 }

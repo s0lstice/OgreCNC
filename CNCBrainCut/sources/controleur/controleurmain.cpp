@@ -1,14 +1,15 @@
 #include "controleurmain.h"
 
+#include <Ogre.h>
+#include <iostream>
+#include <QMessageBox>
+
 #include "../modele/modelemain.h"
 #include "../vue/vuemain.h"
 #include "controleurbloc.h"
 #include "../modele/bloc/bloc.h"
 #include "../modele/modelecut.h"
 #include "controleurcut.h"
-#include <Ogre.h>
-#include <iostream>
-#include <QMessageBox>
 
 using namespace OgreCNC;
 
@@ -19,7 +20,7 @@ ControleurMain::ControleurMain(QWidget *parent) :
 
     m_controleurCut = NULL;
 
-    initControleur();
+    initControleurs();
 
     m_vue = new VueMain(this);
     m_vue->setModele(m_modele);
@@ -44,12 +45,12 @@ void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
     connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
-    connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_createBloc(Bloc*)));
-    connect(m_vue, SIGNAL(si_select(int)), this, SLOT(sl_select(int)));
-    connect(m_gestionBloc, SIGNAL(si_select(Bloc*)), m_vue, SLOT(sl_selectBloc(Bloc*)));
+    connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_creat3Dbloc(Bloc*)));
+    connect(m_gestionBloc, SIGNAL(si_selectBloc(Bloc*)), m_vue, SLOT(sl_selectBloc(Bloc*)));
+    connect(m_gestionBloc, SIGNAL(si_selectSegment(Ogre::ManualObject*)), m_vue, SLOT(sl_selectSegment(Ogre::ManualObject*)));
 }
 
-void ControleurMain::initControleur(){
+void ControleurMain::initControleurs(){
     m_gestionBloc = new ControleurBloc(this);
     m_gestionBloc->setRootNode(m_modele->getTravailBloc());
 }
@@ -100,11 +101,19 @@ void ControleurMain::sl_abort_cut(){
 
 
 //***** SLOTS *****//
-void ControleurMain::sl_select(int id){
-    m_gestionBloc->select(id);
+void ControleurMain::sl_selectBloc(Bloc * bloc){
+    m_gestionBloc->selectBloc(bloc);
+}
+
+void ControleurMain::sl_selectSegment(Ogre::ManualObject * segment){
+    m_gestionBloc->selectSegment(segment);
 }
 
 void ControleurMain::sl_vueEclate(double distance){
     m_gestionBloc->appliquerVueEclatee(distance, NULL);
     emit si_updateOgreVue();
+}
+
+Bloc * ControleurMain::sl_blocFromOgreNode(Ogre::SceneNode * node){
+    return m_gestionBloc->blocFromOgreNode(node);
 }

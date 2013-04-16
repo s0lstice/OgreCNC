@@ -12,6 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CNCBrainCut
 TEMPLATE = app
 
+INCLUDEPATH += $$$(PWD)/QJson
+
 unix {
     # You may need to change this include directory
     INCLUDEPATH += /usr/share/OGRE
@@ -68,7 +70,8 @@ HEADERS += \
     sources/modele/modelemain.h \
     sources/vue/vuemain.h \
     sources/controleur/controleurcut.h \
-    sources/modele/modelecut.h
+    sources/modele/modelecut.h \
+    sources/vue/OgreWidget/controleurogrewidget.h
 
 SOURCES += \
     sources/vue/OgreWidget/ogrewidget.cpp \
@@ -80,7 +83,8 @@ SOURCES += \
     sources/modele/modelemain.cpp \
     sources/vue/vuemain.cpp \
     sources/controleur/controleurcut.cpp \
-    sources/modele/modelecut.cpp
+    sources/modele/modelecut.cpp \
+    sources/vue/OgreWidget/controleurogrewidget.cpp
 
 FORMS += \
     sources/vue/vuemain.ui

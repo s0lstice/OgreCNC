@@ -51,6 +51,8 @@ namespace OgreCNC {
             return m_bloc;
         }
 
+        QVariantMap serialize();
+        void deserialize(QVariantMap nodeBloc);
         /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
     private:
         void destroyListeFils();

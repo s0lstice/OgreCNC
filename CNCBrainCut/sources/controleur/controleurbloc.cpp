@@ -16,8 +16,9 @@ ControleurBloc::ControleurBloc(NodeBloc *rootBloc, QObject *parent) :
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
     m_root = rootBloc;
-    m_courantBloc = NULL;
-    m_curantIndex = QModelIndex();
+    m_currentBloc = NULL;
+    m_currentSegment = NULL;
+    m_currentIndex = QModelIndex();
 }
 
 ControleurBloc::ControleurBloc(QObject *parent) :
@@ -25,8 +26,9 @@ ControleurBloc::ControleurBloc(QObject *parent) :
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
     m_root = NULL;
-    m_courantBloc = NULL;
-    m_curantIndex = QModelIndex();
+    m_currentBloc = NULL;
+    m_currentSegment = NULL;
+    m_currentIndex = QModelIndex();
 }
 
 void ControleurBloc::setRootNode(NodeBloc *rootBloc){
@@ -51,29 +53,43 @@ NodeBloc * ControleurBloc::nodeFromIndex(const QModelIndex &index) const {
         return m_root;
 }
 
-Bloc * ControleurBloc::blocFromId(int id, NodeBloc * node){
+Bloc * ControleurBloc::blocFromOgreNode(Ogre::SceneNode * node, NodeBloc * racine){
     Bloc * bloc = NULL;
 
-    if(node == NULL)
-        node = m_root;
-
-    QVector<Bloc*> * fils = node->getListeFils();
-
-    for(int i = 0; i < fils->count() ; ++i)
+    if(node != NULL)
     {
-        int j = fils->at(i)->getId();
-        if(id == fils->at(i)->getId())
-            return fils->at(i);
+        if(racine == NULL)
+            racine = m_root;
 
-        if(fils->at(i)->getType() == Bloc::NODE)
+        if(racine->getInitialBloc() != NULL) //teste si la NodeBloc possaide un bloc initiale, "on ne sais jamais"
+        if(node == racine->getInitialBloc()->getNodeBloc3d()){
+            bloc = racine->getInitialBloc();
+            return bloc;
+        }
+
+        QVector<Bloc*> * fils = racine->getListeFils();
+
+        for(int i = 0; i < fils->count() ; ++i)
         {
-            bloc = blocFromId(id,(NodeBloc *)fils->at(i));
-
-            if(bloc != NULL)
+            if(node == fils->at(i)->getNodeBloc3d())
+            {
+                bloc = fils->at(i);
                 return bloc;
+            }
+
+            if(fils->at(i)->getType() == Bloc::NODE)
+            {
+
+                bloc = blocFromOgreNode(node,(NodeBloc *)fils->at(i));
+
+                if(bloc != NULL)
+                    return bloc;
+            }
+
         }
 
     }
+
     return bloc;
 }
 
@@ -148,7 +164,7 @@ void ControleurBloc::add(Bloc * bloc, const QModelIndex  &index){
     emit endResetModel();
 
     if(bloc->getType() == Bloc::BLOC)
-        emit si_select(bloc);
+        emit si_selectBloc(bloc);
 }
 
 Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
@@ -172,8 +188,8 @@ Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
 
     emit si_ogreDrawBloc(bloc);
 
-    select(bloc);
-    emit si_select(bloc);
+    selectBloc(bloc);
+    emit si_selectBloc(bloc);
     return bloc;
 }
 
@@ -195,8 +211,8 @@ Bloc* ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position,
     qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
     emit endResetModel();
 
-    select(bloc);
-    emit si_select(bloc);
+    selectBloc(bloc);
+    emit si_selectBloc(bloc);
     return bloc;
 }
 
@@ -233,30 +249,47 @@ bool ControleurBloc::setData (const QModelIndex &index, const QVariant &value, i
 
     if(role == Qt::CheckStateRole)
     {
-        select(bloc, index);
-        emit si_select(bloc);
+        selectBloc(bloc, index);
+        emit si_selectBloc(bloc);
     }
     return true;
 }
 
-void ControleurBloc::select(Bloc *bloc,const QModelIndex & index){
-    if(m_courantBloc != NULL)
+void ControleurBloc::selectSegment(Ogre::ManualObject * segment)
+{
+    m_currentSegment = segment;
+
+    emit si_selectSegment(m_currentSegment); //indique la selection d'un segment
+
+    //selctionne le bloc si le segemnt ne fait pas partie du bloc courent
+    if(m_currentSegment->getParentSceneNode()->getParentSceneNode() != m_currentBloc->getNodeBloc3d())
     {
-        m_courantBloc->setCheck(Qt::Unchecked);
+        selectBloc(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()));
+        emit si_selectBloc(m_currentBloc); //indique la selection d'un nouveau bloc
     }
-
-    if(m_curantIndex.isValid()){
-        emit dataChanged(m_curantIndex, m_curantIndex);
-    }
-
-    m_courantBloc = bloc;
-    m_courantBloc->setCheck(Qt::Checked);
-    m_curantIndex = index;
-    emit dataChanged(m_curantIndex, m_curantIndex);
 }
 
-void ControleurBloc::select(int id){
-    select(blocFromId(id));
+void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
+    if(m_currentBloc != NULL)
+    {
+        m_currentBloc->setCheck(Qt::Unchecked);
+        if(m_currentIndex.isValid()){
+            emit dataChanged(m_currentIndex, m_currentIndex);
+        }
+    }
+
+    m_currentBloc = bloc;
+    m_currentBloc->setCheck(Qt::Checked);
+    m_currentIndex = index;
+    emit dataChanged(m_currentIndex, m_currentIndex);
+
+    //deslectione du segment courent s'il n'est pas sur le bloc selectionne
+    if(m_currentSegment != NULL)
+        if(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()) != m_currentBloc)
+        {
+            m_currentSegment = NULL;
+            emit si_selectSegment(m_currentSegment);
+        }
 }
 
 //Modif Mel
@@ -267,8 +300,8 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 
     if(eloignement != 0)
     {
-        if(eloignement < 0)
-            eloignement = -eloignement;
+//        if(eloignement < 0)
+//            eloignement = -eloignement;
 
         int i;
         Bloc* bloc;

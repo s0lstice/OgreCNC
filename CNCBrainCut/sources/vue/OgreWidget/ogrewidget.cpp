@@ -10,7 +10,6 @@ using namespace OgreCNC;
 using namespace std;
 
 const QPoint     OgreWidget::invalidMousePoint(-1,-1);
-const Ogre::Real OgreWidget::turboModifier(10);
 
 OgreWidget::OgreWidget(QWidget *parent)
 :QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
@@ -22,10 +21,8 @@ ogreCamera(0), oldPos(invalidMousePoint)
     setFocusPolicy(Qt::ClickFocus);
     setMinimumSize(800, 600);
 
-    cameraLookAt = Ogre::Vector3(0,0,0);
-    cameraPosition  = Ogre::Vector3(0,0,500.000);
-    cameraDistanceBloc  = Ogre::Vector3(0,0,500.000);
-    curentBlock = NULL;
+    initCameraLookAt = Ogre::Vector3(0,0,0);
+    initCameraPosition  = Ogre::Vector3(0,0,500.000);
 }
 
 OgreWidget::~OgreWidget()
@@ -58,22 +55,15 @@ void OgreWidget::setBackgroundColor(QColor c)
     }
 }
 
-void OgreWidget::upDateCamera()
-{
-    ogreCamera->setPosition(cameraPosition);
-    ogreCamera->lookAt(cameraLookAt);
-    update();
-    emit cameraPositionChanged(cameraPosition);
-}
-
 void OgreWidget::setCameraPosition(const Ogre::Vector3 &pos){
-    cameraPosition = pos;
-    upDateCamera();
+    ogreCamera->setPosition(pos);
+    update();
+    emit cameraPositionChanged(pos);
 }
 
 void OgreWidget::setCameraDirection(const Ogre::Vector3 &pos){
-    cameraLookAt = pos;
-    upDateCamera();
+    ogreCamera->lookAt(pos);
+    update();
 }
 
 void OgreWidget::keyPressEvent(QKeyEvent *e)
@@ -109,49 +99,7 @@ void OgreWidget::keyPressEvent(QKeyEvent *e)
 
 void OgreWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if(e->buttons().testFlag(Qt::LeftButton))
-    {
-        // initialisation de la requête
-        Ogre::RaySceneQuery *raySceneQuery = ogreSceneManager->createRayQuery(Ogre::Ray());
-        // initialisation du rayon de mesure
-        Ogre::Ray mouseRay = ogreCamera->getCameraToViewportRay(
-        e->posF().x()/(float)width(),
-        e->posF().y()/(float)height());
-        raySceneQuery->setRay(mouseRay);
-        raySceneQuery->setSortByDistance(true);
-
-        // exécution de la requête
-        Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
-
-        // parcours des résultats, récupération du premier « MovableObject »
-        Ogre::RaySceneQueryResult::iterator itr = result.begin();
-
-        if(itr != result.end())
-        {
-            while(itr->movable ==NULL && itr!=result.end())
-                itr++;
-
-            if(itr->movable)
-            {
-                cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
-                selectNode(itr->movable->getParentSceneNode());
-                emit si_select(atoi(itr->movable->getName().c_str()));
-
-            }
-            else{
-                cout << "[Ogre] pas d'objet " << endl;
-            }
-        }
-
-
-        update();
-
-        e->accept();
-    }
-    else
-    {
-        e->ignore();
-    }
+    e->ignore();
 }
 
 void OgreWidget::mouseMoveEvent(QMouseEvent *e)
@@ -161,13 +109,7 @@ void OgreWidget::mouseMoveEvent(QMouseEvent *e)
         const QPoint &pos = e->pos();
         Ogre::Real deltaX = pos.x() - oldPos.x();
         Ogre::Real deltaY = pos.y() - oldPos.y();
-        
-        if(e->modifiers().testFlag(Qt::ControlModifier))
-        {
-            deltaX *= turboModifier;
-            deltaY *= turboModifier;
-        }
-        
+              
         Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
 
         ogreCamera->setPosition(curentNode->_getDerivedPosition());
@@ -175,10 +117,8 @@ void OgreWidget::mouseMoveEvent(QMouseEvent *e)
         ogreCamera->pitch(Ogre::Degree(-deltaY * 0.25f));
         ogreCamera->moveRelative(Ogre::Vector3(0, 0, dist));
 
-        cameraPosition = ogreCamera->getPosition();
-
         update();
-        emit cameraPositionChanged(cameraPosition);
+        emit cameraPositionChanged(ogreCamera->getPosition());
 
         oldPos = pos;
         e->accept();
@@ -194,6 +134,12 @@ void OgreWidget::mousePressEvent(QMouseEvent *e)
     if(e->buttons().testFlag(Qt::LeftButton))
     {
         oldPos = e->pos();
+        e->accept();
+    }
+    else
+    if(e->buttons().testFlag(Qt::RightButton))
+    {
+        selectionObjet(e);
         e->accept();
     }
     else
@@ -270,18 +216,10 @@ void OgreWidget::wheelEvent(QWheelEvent *e)
 {
     Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
 
-
-    if(e->modifiers().testFlag(Qt::ControlModifier))
-    {
-        dist *= turboModifier;
-    }
-
     ogreCamera->moveRelative(Ogre::Vector3(0, 0, -e->delta() * 0.004f * dist));
 
-    cameraPosition = ogreCamera->getPosition();
-
     update();
-    emit cameraPositionChanged(cameraPosition);
+    emit cameraPositionChanged(ogreCamera->getPosition());
 
     e->accept();
 }
@@ -314,9 +252,9 @@ void OgreWidget::initOgreSystem()
 		width(), height(), false, &viewConfig);
     
     ogreCamera = ogreSceneManager->createCamera("myCamera");
-    ogreCamera->setPosition(cameraPosition);
-    ogreCamera->lookAt(cameraLookAt);
-    emit cameraPositionChanged(cameraPosition);
+    ogreCamera->setPosition(initCameraPosition);
+    ogreCamera->lookAt(initCameraLookAt);
+    emit cameraPositionChanged(ogreCamera->getPosition());
     
     ogreViewport = ogreRenderWindow->addViewport(ogreCamera);
     ogreViewport->setBackgroundColour(Ogre::ColourValue(0,0,0));
@@ -365,175 +303,55 @@ void OgreWidget::setupNLoadResources()
 void OgreWidget::createScene()
 {
 	ogreSceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
-    ogreViewport->setBackgroundColour(Ogre::ColourValue::White);
+    ogreViewport->setBackgroundColour(Ogre::ColourValue(0.5,0.5,0.5));
 }
 
-void OgreWidget::selectBloc(Bloc * bloc){
-    curentBlock = bloc;
-    curentNode = bloc->getNodeBloc3d();
+Ogre::MovableObject * OgreWidget::picking(QMouseEvent *e){
+    // initialisation de la requête
+    Ogre::RaySceneQuery *raySceneQuery = ogreSceneManager->createRayQuery(Ogre::Ray());
 
-    cameraLookAt = curentNode->getPosition();
-    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
+    // initialisation du rayon de mesure
+    Ogre::Ray mouseRay = ogreCamera->getCameraToViewportRay(
+    e->posF().x()/(float)width(),
+    e->posF().y()/(float)height());
+    raySceneQuery->setRay(mouseRay);
+    raySceneQuery->setSortByDistance(true);
 
-    ogreCamera->setPosition(cameraPosition);
-    ogreCamera->lookAt(cameraLookAt);
-    emit cameraPositionChanged(cameraPosition);
-    update();
+    // exécution de la requête
+    Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
+
+    // parcours des résultats, récupération du premier « MovableObject »
+    Ogre::RaySceneQueryResult::iterator itr = result.begin();
+
+    if(itr != result.end())
+    {
+        while(itr->movable ==NULL && itr!=result.end())
+            itr++;
+
+        if(itr->movable)
+        {
+            cout << "[Ogre] Objet : " << itr->movable->getName() << endl;
+            return itr->movable;
+        }
+        else{
+            cout << "[Ogre] pas d'objet " << endl;
+            return NULL;
+        }
+    }
+
+    return NULL;
 }
 
-void OgreWidget::selectNode(Ogre::SceneNode * node){
-    curentBlock = NULL;
+void OgreWidget::selectionObjet(QMouseEvent *e){
+    Ogre::MovableObject * objet = picking(e);
+    if(objet != NULL)
+        if(objet->getName().find("_segment") != std::string::npos)
+            emit si_selectionSegment(((Ogre::ManualObject *)objet));
+        else
+            emit si_selectionObjet(objet->getParentSceneNode());
+}
+
+void OgreWidget::setCurentNode(Ogre::SceneNode * node)
+{
     curentNode = node;
-
-    cameraLookAt = curentNode->getPosition();
-    cameraPosition = Ogre::Vector3(cameraLookAt + cameraDistanceBloc);
-
-    ogreCamera->setPosition(cameraPosition);
-    ogreCamera->lookAt(cameraLookAt);
-    emit cameraPositionChanged(cameraPosition);
-    update();
-}
-
-void OgreWidget::createBloc(Bloc * bloc){
-    Ogre::Vector3 position = bloc->getPosition();
-    Ogre::Vector3 dimention = bloc->getDimention();
-    Ogre::Entity * blocFace = bloc->getBlocFace3d();
-    Ogre::SceneNode * node = bloc->getNodeBloc3d();
-    Ogre::ManualObject * blocContour = bloc->getBlocContour3d();
-
-    if(blocFace == NULL){
-        blocFace = ogreSceneManager->createEntity(QString::number(bloc->getId()).toStdString()+"_cube", "cube.mesh");
-        blocFace->setMaterialName(bloc->getFaceMatName().toStdString());
-        bloc->setBlocFace3d(blocFace);
-    }
-
-    if(blocContour==NULL){
-        Ogre::Vector3 sommet0 = Ogre::Vector3(- 100/2, + 100/2, + 100/2);
-        Ogre::Vector3 sommet1 = Ogre::Vector3(- 100/2, - 100/2, + 100/2);
-        Ogre::Vector3 sommet2 = Ogre::Vector3(+ 100/2, - 100/2, + 100/2);
-        Ogre::Vector3 sommet3 = Ogre::Vector3(+ 100/2, + 100/2, + 100/2);
-        Ogre::Vector3 sommet4 = Ogre::Vector3(- 100/2, + 100/2, - 100/2);
-        Ogre::Vector3 sommet5 = Ogre::Vector3(- 100/2, - 100/2, - 100/2);
-        Ogre::Vector3 sommet6 = Ogre::Vector3(+ 100/2, - 100/2, - 100/2);
-        Ogre::Vector3 sommet7 = Ogre::Vector3(+ 100/2, + 100/2, - 100/2);
-
-        blocContour = new Ogre::ManualObject(QString::number(bloc->getId()).toStdString()+"_contour"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-
-        blocContour->begin(bloc->getSegmentMatName().toStdString(), Ogre::RenderOperation::OT_LINE_LIST);
-
-        //front
-        blocContour->position(sommet0);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet1);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(1.0, 1.0);
-
-        blocContour->position(sommet1);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(1.0, 1.0);
-
-        blocContour->position(sommet2);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(1.0, 0.0);
-
-        blocContour->position(sommet2);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(1.0, 0.0);
-
-        blocContour->position(sommet3);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 0.0);
-
-        blocContour->position(sommet3);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 0.0);
-
-        blocContour->position(sommet0);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 0.0);
-
-        //left
-        blocContour->position(sommet0);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet4);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet4);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet5);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet5);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet1);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        //right
-        blocContour->position(sommet3);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet7);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet7);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet6);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet6);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet2);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        //back
-        blocContour->position(sommet4);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet7);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet5);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->position(sommet6);
-        blocContour->colour(bloc->getCouleurSegment());
-        blocContour->textureCoord(0.0, 1.0);
-
-        blocContour->end();
-        bloc->setBlocContour3d(blocContour);
-    }
-
-    if(node == NULL){
-        node = ogreSceneManager->getRootSceneNode()->createChildSceneNode(QString::number(bloc->getId()).toStdString());
-
-        node->attachObject(blocFace);
-        node->attachObject(blocContour);
-
-        node->scale(dimention/100);
-        node->setPosition(position);
-
-        bloc->setNodeBloc3d(node);
-    }
 }

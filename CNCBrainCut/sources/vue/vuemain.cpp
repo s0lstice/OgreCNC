@@ -6,7 +6,7 @@
 #include "../controleur/controleurmain.h"
 #include "../controleur/controleurbloc.h"
 #include "../modele/modelecut.h"
-
+#include "OgreWidget/controleurogrewidget.h"
 using namespace OgreCNC;
 
 VueMain::VueMain(QWidget *parent) :
@@ -21,6 +21,9 @@ VueMain::VueMain(QWidget *parent) :
     this->setWindowTitle("CNCBrainCut");
 
     m_Ogre3d =  new OgreWidget(this);
+    m_ControleurOgreWidget = new ControleurOgreWidget(this);
+    m_ControleurOgreWidget->setWidget(m_Ogre3d);
+
     ui->ogreLayout->addWidget(m_Ogre3d);
     ui->treeBlocs->setModel(controleur->getModeleBlocs());
 
@@ -32,6 +35,9 @@ VueMain::VueMain(QWidget *parent) :
 VueMain::~VueMain()
 {
     delete ui;
+
+    delete m_Ogre3d;
+    delete m_ControleurOgreWidget;
 }
 
 void VueMain::initConnections(){
@@ -39,6 +45,13 @@ void VueMain::initConnections(){
     connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
     connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
     connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
+    connect(m_ControleurOgreWidget, SIGNAL(si_blocFormOgreNode(Ogre::SceneNode*)), controleur, SLOT(sl_blocFromOgreNode(Ogre::SceneNode*)));
+    connect(m_ControleurOgreWidget, SIGNAL(si_SelectBloc(Bloc*)), controleur, SLOT(sl_selectBloc(Bloc*)));
+    connect(m_ControleurOgreWidget, SIGNAL(si_selectSegemnt(Ogre::ManualObject*)), controleur, SLOT(sl_selectSegment(Ogre::ManualObject*)));
+}
+
+void VueMain::sl_creat3Dbloc(Bloc * bloc){
+    m_ControleurOgreWidget->creat3DBloc(bloc);
 }
 
 bool VueMain::event(QEvent * e)
@@ -63,9 +76,6 @@ bool VueMain::event(QEvent * e)
 }
 
 /////***** SLOTS ******/////
-void VueMain::sl_createBloc(Bloc * bloc){
-    m_Ogre3d->createBloc(bloc);
-}
 
 void VueMain::sl_init_cut(ModeleCut *modele){
     /*On désactive le bouton de lancement d'une découpe*/
@@ -151,7 +161,11 @@ void VueMain::sl_init_cut(ModeleCut *modele){
 
 
 void VueMain::sl_selectBloc(Bloc * bloc){
-    m_Ogre3d->selectBloc(bloc);
+    m_ControleurOgreWidget->selectBloc(bloc);
+}
+
+void VueMain::sl_selectSegment(Ogre::ManualObject * segment){
+    m_ControleurOgreWidget->selectSegment(segment);
 }
 
 /////***** Gestion de l'interaction avec l'IHM *****/////

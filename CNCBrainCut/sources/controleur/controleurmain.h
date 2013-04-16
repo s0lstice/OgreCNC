@@ -2,6 +2,7 @@
 #define CONTROLEURMAIN_H
 
 #include <QWidget>
+#include <Ogre.h>
 
 namespace OgreCNC {
 
@@ -11,7 +12,7 @@ namespace OgreCNC {
     class ControleurCut;
     class ModeleCut;
     class Bloc;
-
+    class ControleurOgreWidget;
     class ControleurMain : public QWidget
     {
         Q_OBJECT
@@ -30,7 +31,7 @@ namespace OgreCNC {
 
         ControleurCut * m_controleurCut;
 
-        void initControleur();
+        void initControleurs();
         void initConnections();
 
     signals:
@@ -41,9 +42,11 @@ namespace OgreCNC {
     public slots:
         void sl_start_cut();
         void sl_update_cut();
-        void sl_select(int id);
+        void sl_selectBloc(Bloc * bloc);
         void sl_abort_cut();
         void sl_vueEclate(double distance);
+        Bloc * sl_blocFromOgreNode(Ogre::SceneNode * node);
+        void sl_selectSegment(Ogre::ManualObject * segment);
 
     };
 
