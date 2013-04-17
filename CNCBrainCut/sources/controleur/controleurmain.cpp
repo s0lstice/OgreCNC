@@ -42,6 +42,7 @@ void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
     connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
+    connect(m_vue, SIGNAL(si_valid_cut()), this, SLOT(sl_valid_cut()));
     connect(m_vue, SIGNAL(si_newNameForCurrentBloc(QString)), this, SLOT(sl_newNameForCurrentBloc(QString)));
     connect(m_vue, SIGNAL(si_changeEtatForCurrentBloc(Bloc::Etat)), this, SLOT(sl_changeEtatForCurrentBloc(Bloc::Etat)));
     connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_creat3Dbloc(Bloc*)));
@@ -85,17 +86,30 @@ void ControleurMain::sl_update_cut(){
 void ControleurMain::sl_abort_cut(){
 //COMMANTE CAR ui N EST PAS DECLARE
 
-//    /*VOIR AVEC MICKAEL : EST-CE QU'ON FAIT ICI LA REACTIVATION/DESACTIVATION DE TOUS LES BOUTONS OU PAS ?*/
-//    /*On désactive les boutons d'annulation et de validation*/
-//    ui->validerDecoupe_pushButton->setEnabled(false);
-//    ui->annulerDecoupe_pushButton->setEnabled(false);
-//    /*On réactive le bouton de lancement d'une découpe*/
-//    ui->demarrerDecoupe_pushButton->setEnabled(true);
-//    /*On désactive également tous les autres boutons, qui ne sont accessibles que lorsque l'utilisateur démarre une découpe*/
-//    ui->definitionDecoupeGroupBox->setEnabled(false);
-//    ui->modeDecoupeDroit_GroupBox->setEnabled(false);
-//    ui->modeDecoupeGauche_GroupBox->setEnabled(false);
-//    ui->positionPerteGroupBox->setEnabled(false);
+    /*VOIR AVEC MICKAEL : EST-CE QU'ON FAIT ICI LA REACTIVATION/DESACTIVATION DE TOUS LES BOUTONS OU PAS ?*/
+    /*On désactive les boutons d'annulation et de validation*/
+    /*Ui::VueMain* ui = this->m_vue->getUi();
+    ui->validerDecoupe_pushButton->setEnabled(false);
+    ui->annulerDecoupe_pushButton->setEnabled(false);*/
+    /*On réactive le bouton de lancement d'une découpe*/
+    //ui->demarrerDecoupe_pushButton->setEnabled(true);
+    /*On désactive également tous les autres boutons, qui ne sont accessibles que lorsque l'utilisateur démarre une découpe*/
+    /*ui->definitionDecoupeGroupBox->setEnabled(false);
+    ui->modeDecoupeDroit_GroupBox->setEnabled(false);
+    ui->modeDecoupeGauche_GroupBox->setEnabled(false);
+    ui->positionPerteGroupBox->setEnabled(false);*/
+}
+
+
+void ControleurMain::sl_valid_cut(){
+    /*On récupère le bloc courant*/
+    //m_gestionBloc->m_currentBloc->getId();
+    /*On récupère l'arête sélectionnée*/
+    //m_gestionBloc->m_currentSegment->getName();
+    /*On effectue la découpe, à partir des données du modèle de découpe modeleCut*/
+    ModeleCut* mCut = m_modele->getModeleCut();
+
+
 }
 
 

@@ -325,8 +325,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 
     if(eloignement != 0)
     {
-//        if(eloignement < 0)
-//            eloignement = -eloignement;
+        eloignement = eloignement/100;
 
         int i;
         Bloc* bloc;
@@ -357,7 +356,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
                     nouvellePosition[0] = nouvellePosition[0] + positionBloc[0];
                     nouvellePosition[1] = nouvellePosition[1] + positionBloc[1];
                     nouvellePosition[2] = nouvellePosition[2] + positionBloc[2];
-                    bloc->setPositionVueEclatee(nouvellePosition);
+                    bloc->setPositionVueEclatee(positionBloc); //on enregistre la position avant éclatement
                     nodeBloc->setPosition(nouvellePosition[0],nouvellePosition[1],nouvellePosition[2]);
                     break;
                 case Bloc::NODE:
@@ -366,11 +365,24 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
                     nouvellePosition[0] = nouvellePosition[0] + positionBloc[0];
                     nouvellePosition[1] = nouvellePosition[1] + positionBloc[1];
                     nouvellePosition[2] = nouvellePosition[2] + positionBloc[2];
-                    bloc->setPositionVueEclatee(nouvellePosition);
+                    bloc->setPositionVueEclatee(positionBloc); //on enregistre la position avant éclatement
                     nodeBloc->setPosition(nouvellePosition[0],nouvellePosition[1],nouvellePosition[2]);
                     //On parcourt ses fils
                     ControleurBloc::appliquerVueEclatee(eloignement, (NodeBloc*)bloc);
             }
+        }
+    }
+    else
+    {
+        if(node == NULL)
+        {
+            node = m_root;
+        }
+
+        /*Si on est dans la position initiale du bloc, on ne bouge pas, sinon on revient à sa position initiale*/
+        if(node->getPosition() != node->getPositionVueEclatee()) //positionVueEclatee contient la position avant éclatement
+        {
+            node->setPosition(node->getPositionVueEclatee());
         }
     }
 }

@@ -17,6 +17,7 @@ VueMain::VueMain(QWidget *parent) :
 
     controleur = qobject_cast<ControleurMain *>(parent);
     modele = NULL;
+    m_modeleCut = NULL;
 
     this->setWindowTitle("CNCBrainCut");
 
@@ -383,4 +384,9 @@ void OgreCNC::VueMain::on_etatblocuse_clicked(bool checked)
         emit si_changeEtatForCurrentBloc(Bloc::UTILISE);
     else
         emit si_changeEtatForCurrentBloc(Bloc::CHUTE);
+}
+
+void OgreCNC::VueMain::on_distanceVueEclate_editingFinished()
+{
+
 }

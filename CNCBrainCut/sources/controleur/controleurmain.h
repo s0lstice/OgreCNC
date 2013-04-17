@@ -50,6 +50,7 @@ namespace OgreCNC {
         void sl_update_cut();
         void sl_selectBloc(Bloc * bloc);
         void sl_abort_cut();
+        void sl_valid_cut();
         void sl_vueEclate(double distance);
         Bloc * sl_blocFromOgreNode(Ogre::SceneNode * node);
         void sl_selectSegment(Ogre::ManualObject * segment);

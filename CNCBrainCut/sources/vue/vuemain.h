@@ -36,6 +36,10 @@ namespace OgreCNC {
             controleur = controleur;
         }
 
+        inline Ui::VueMain* getUi(){
+            return ui;
+        }
+
     private:
         ControleurMain * controleur;
         ModeleMain * modele;
@@ -90,6 +94,10 @@ namespace OgreCNC {
         void on_blocNom_text_textEdited(const QString &arg1);
 
         void on_etatblocuse_clicked(bool checked);
+
+        void on_distanceVueEclate_editingFinished();
+
+        void on_vueEclateCheched_clicked();
 
     public slots:
         void sl_selectBloc(Bloc * bloc);
