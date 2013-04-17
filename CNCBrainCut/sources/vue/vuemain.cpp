@@ -176,7 +176,20 @@ void VueMain::sl_init_cut(ModeleCut *modele){
 
 
 void VueMain::sl_selectBloc(Bloc * bloc){
-    m_ControleurOgreWidget->selectBloc(bloc);
+    m_ControleurOgreWidget->selectBloc(bloc); //mise à jour de la vue 3D
+    ui->blocNom_text->setText(bloc->getName());
+    if(bloc->getEtat() == Bloc::CHUTE)
+    {
+        ui->etatblocchute->setChecked(true);
+        ui->etatblocuse->setChecked(false);
+    }
+    else
+    {
+        ui->etatblocchute->setChecked(false);
+        ui->etatblocuse->setChecked(true);
+    }
+    int volue = (bloc->getDimension().x/100)*(bloc->getDimension().y/100)*(bloc->getDimension().z/100);
+    ui->volume->setText(QString::number(volue));
 }
 
 void VueMain::sl_selectSegment(Ogre::ManualObject * segment){

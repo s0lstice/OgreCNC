@@ -28,8 +28,47 @@ int ControleurOgreWidget::updateDimentionBloc(Bloc * bloc)
     }
 
     Ogre::SceneNode * node = bloc->getNodeBloc3d();
+    Ogre::SceneNode * nodeSegments = ((Ogre::SceneNode *)node->getChild(QString::number(bloc->getId()).toStdString()+"_segments"));
     Ogre::Vector3 scale = bloc->getDimension()/(node->getScale()*100);
     node->scale( scale );
+
+    Ogre::MovableObject * segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";01_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";12_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";23_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";30_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";04_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";45_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";51_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";37_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";76_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";62_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";47_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";56_segment");
+    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+
+    m_Vue3D->update();
 
     return 0;
 }
@@ -51,6 +90,8 @@ int ControleurOgreWidget::updateCouleurBloc(Bloc * bloc)
     Ogre::Entity * blocFace = ((Ogre::Entity *)bloc->getNodeBloc3d()->getAttachedObject(QString::number(bloc->getId()).toStdString()+"_cube"));
 
     blocFace->setMaterialName(bloc->getFaceMatName().toStdString());
+
+    m_Vue3D->update();
     return 0;
 }
 
@@ -71,6 +112,7 @@ int ControleurOgreWidget::updatePositionBloc(Bloc * bloc)
     Ogre::SceneNode * node = bloc->getNodeBloc3d();
     node->setPosition(bloc->getPosition());
 
+    m_Vue3D->update();
     return 0;
 }
 
@@ -103,7 +145,6 @@ int ControleurOgreWidget::creat3DBloc(Bloc * bloc){
         blocFace = m_Vue3D->getSceneManager()->createEntity(QString::number(bloc->getId()).toStdString()+"_cube", "cube.mesh");
         blocFace->setMaterialName(bloc->getFaceMatName().toStdString());
         node->attachObject(blocFace);
-
 
         //Creation des arretes du bloc
         //front
@@ -195,8 +236,9 @@ void ControleurOgreWidget::selectBloc(Bloc * bloc){
         curentBlock = bloc;
         m_Vue3D->setCurentNode(bloc->getNodeBloc3d());
 
-        m_Vue3D->setCameraPosition(Ogre::Vector3(bloc->getPosition() + Ogre::Vector3(0,0,500.000)));
+        m_Vue3D->setCameraPosition(Ogre::Vector3(bloc->getNodeBloc3d()->_getDerivedPosition() + Ogre::Vector3(0,0,500.000)));
         m_Vue3D->setCameraDirection(bloc->getPosition());
+        m_Vue3D->update();
     }
 }
 
