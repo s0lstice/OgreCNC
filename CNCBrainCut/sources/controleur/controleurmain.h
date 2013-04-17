@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <Ogre.h>
 
+#include "../modele/bloc/bloc.h"
+
 namespace OgreCNC {
 
     class VueMain;
@@ -51,8 +53,8 @@ namespace OgreCNC {
         void sl_vueEclate(double distance);
         Bloc * sl_blocFromOgreNode(Ogre::SceneNode * node);
         void sl_selectSegment(Ogre::ManualObject * segment);
-
-
+        void sl_newNameForCurrentBloc(const QString &arg1);
+        void sl_changeEtatForCurrentBloc(Bloc::Etat etat);
     };
 
 }

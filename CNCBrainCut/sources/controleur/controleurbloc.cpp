@@ -249,6 +249,16 @@ Qt::ItemFlags ControleurBloc::flags (const QModelIndex  &index ) const{
     return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
 }
 
+void ControleurBloc::changeNameOfCurrentBloc(const QString &name)
+{
+    m_currentBloc->setName(name);
+    emit dataChanged(m_currentIndex, m_currentIndex);
+}
+
+void ControleurBloc::changeEtatOfCurrentBloc(Bloc::Etat etat){
+    m_currentBloc->setEtat(etat);
+}
+
 bool ControleurBloc::setData (const QModelIndex &index, const QVariant &value, int role){
     Bloc *bloc = nodeFromIndex(index);
 
@@ -291,18 +301,19 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
 
     if(m_currentBloc != bloc)
     {
-    m_currentBloc = bloc;
-    m_currentBloc->setCheck(Qt::Checked);
-    m_currentIndex = index;
-    emit dataChanged(m_currentIndex, m_currentIndex);
+        m_currentBloc = bloc;
+        m_currentBloc->setCheck(Qt::Checked);
+        m_currentIndex = index;
+        emit dataChanged(m_currentIndex, m_currentIndex);
 
-    //deslectione du segment courent s'il n'est pas sur le bloc selectionne
-    if(m_currentSegment != NULL)
-        if(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()) != m_currentBloc)
-        {
-            m_currentSegment = NULL;
-            emit si_selectSegment(m_currentSegment);
-        }
+        //deslectione du segment courent s'il n'est pas sur le bloc selectionne
+        if(m_currentSegment != NULL)
+            if(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()) != m_currentBloc)
+            {
+                m_currentSegment = NULL;
+                emit si_selectSegment(m_currentSegment);
+            }
+        emit si_selectBloc(m_currentBloc); //indique la selection d'un nouveau bloc
     }
 }
 

@@ -4,6 +4,8 @@
 #include <QAbstractItemModel>
 #include <Ogre.h>
 
+#include "../modele/bloc/bloc.h"
+
 namespace OgreCNC {
 
     class NodeBloc;
@@ -36,6 +38,8 @@ namespace OgreCNC {
         Bloc* creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index = QModelIndex());
         void creatNodeBloc(const QModelIndex  &index = QModelIndex());
         Qt::ItemFlags flags (const QModelIndex  &index ) const;
+        void changeNameOfCurrentBloc(const QString &name);
+        void changeEtatOfCurrentBloc(Bloc::Etat etat);
         bool setData (const QModelIndex &index, const QVariant &value, int role);
         void selectBloc(Bloc *bloc, const QModelIndex &index = QModelIndex());
         void selectSegment(Ogre::ManualObject * segment);

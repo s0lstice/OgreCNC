@@ -177,7 +177,9 @@ void VueMain::sl_init_cut(ModeleCut *modele){
 
 void VueMain::sl_selectBloc(Bloc * bloc){
     m_ControleurOgreWidget->selectBloc(bloc); //mise à jour de la vue 3D
+    //nom
     ui->blocNom_text->setText(bloc->getName());
+    //etat
     if(bloc->getEtat() == Bloc::CHUTE)
     {
         ui->etatblocchute->setChecked(true);
@@ -188,8 +190,15 @@ void VueMain::sl_selectBloc(Bloc * bloc){
         ui->etatblocchute->setChecked(false);
         ui->etatblocuse->setChecked(true);
     }
-    int volue = (bloc->getDimension().x/100)*(bloc->getDimension().y/100)*(bloc->getDimension().z/100);
+
+    //volume
+    int volue = (bloc->getDimension().x)*(bloc->getDimension().y)*(bloc->getDimension().z);
     ui->volume->setText(QString::number(volue));
+
+    //dimention
+    ui->longeurbloc->setText(QString::number(bloc->getDimension().x));
+    ui->largeurbloc->setText(QString::number(bloc->getDimension().z));
+    ui->hauteurbloc->setText(QString::number(bloc->getDimension().y));
 }
 
 void VueMain::sl_selectSegment(Ogre::ManualObject * segment){
@@ -361,4 +370,17 @@ void OgreCNC::VueMain::on_vueEclateCheched_clicked(bool checked)
         emit si_vueEclate(ui->distanceVueEclate->value());
     else
         emit si_vueEclate(0);
+}
+
+void OgreCNC::VueMain::on_blocNom_text_textEdited(const QString &arg1)
+{
+    emit si_newNameForCurrentBloc(arg1);
+}
+
+void OgreCNC::VueMain::on_etatblocuse_clicked(bool checked)
+{
+    if(checked)
+        emit si_changeEtatForCurrentBloc(Bloc::UTILISE);
+    else
+        emit si_changeEtatForCurrentBloc(Bloc::CHUTE);
 }

@@ -5,6 +5,8 @@
 #include <QMdiArea>
 #include <Ogre.h>
 
+#include "../modele/bloc/bloc.h"
+
 namespace Ui {
 class VueMain;
 }
@@ -15,7 +17,6 @@ namespace OgreCNC {
     class ControleurMain;
     class ModeleMain;
     class OgreWidget;
-    class Bloc;
     class ModeleCut;
     class ControleurOgreWidget;
 
@@ -58,6 +59,8 @@ namespace OgreCNC {
         void si_update_cut();
         void si_select(int id);
         void si_vueEclate(double distance);
+        void si_newNameForCurrentBloc(const QString &arg1);
+        void si_changeEtatForCurrentBloc(Bloc::Etat etat);
 
     private slots:
         void sl_creat3Dbloc(Bloc * bloc);
@@ -84,6 +87,9 @@ namespace OgreCNC {
         void on_nbBlocs_text_textEdited(const QString &arg1);
         void on_distanceVueEclate_valueChanged(int arg1);
         void on_vueEclateCheched_clicked(bool checked);
+        void on_blocNom_text_textEdited(const QString &arg1);
+
+        void on_etatblocuse_clicked(bool checked);
 
     public slots:
         void sl_selectBloc(Bloc * bloc);

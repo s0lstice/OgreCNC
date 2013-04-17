@@ -28,9 +28,9 @@ ControleurMain::ControleurMain(QWidget *parent) :
 
     initConnections();
 
-    Bloc* bloc1 = m_gestionBloc->creatBloc(Ogre::Vector3(80,50,50),Ogre::Vector3(0, 0, 0)); //800 600 150
+    Bloc* bloc1 = m_gestionBloc->creatBloc(Ogre::Vector3(80,50,50),Ogre::Vector3(0, 200, 0)); //800 600 150
     Bloc* bloc2 = m_gestionBloc->creatBloc(Ogre::Vector3(500,150,950),Ogre::Vector3(0, 0, 0)); //800 600 150
-    Bloc* bloc3 = m_gestionBloc->creatBloc(Ogre::Vector3(5010,1500,9550),Ogre::Vector3(0, 0, 0)); //800 600 150
+    Bloc* bloc3 = m_gestionBloc->creatBloc(Ogre::Vector3(5010,1500,9550),Ogre::Vector3(0, -300, 0)); //800 600 150
 
     bloc1->setDimension(Ogre::Vector3(800,150,600));
     bloc2->setDimension(Ogre::Vector3(50,50,50));
@@ -42,6 +42,8 @@ void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_start_cut()), this, SLOT(sl_start_cut()));
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
     connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
+    connect(m_vue, SIGNAL(si_newNameForCurrentBloc(QString)), this, SLOT(sl_newNameForCurrentBloc(QString)));
+    connect(m_vue, SIGNAL(si_changeEtatForCurrentBloc(Bloc::Etat)), this, SLOT(sl_changeEtatForCurrentBloc(Bloc::Etat)));
     connect(m_gestionBloc, SIGNAL(si_createBloc(Bloc*)), m_vue, SLOT(sl_creat3Dbloc(Bloc*)));
     connect(m_gestionBloc, SIGNAL(si_selectBloc(Bloc*)), m_vue, SLOT(sl_selectBloc(Bloc*)));
     connect(m_gestionBloc, SIGNAL(si_selectSegment(Ogre::ManualObject*)), m_vue, SLOT(sl_selectSegment(Ogre::ManualObject*)));
@@ -113,4 +115,13 @@ void ControleurMain::sl_vueEclate(double distance){
 
 Bloc * ControleurMain::sl_blocFromOgreNode(Ogre::SceneNode * node){
     return m_gestionBloc->blocFromOgreNode(node);
+}
+
+void ControleurMain::sl_newNameForCurrentBloc(const QString &arg1){
+    m_gestionBloc->changeNameOfCurrentBloc(arg1);
+}
+
+void ControleurMain::sl_changeEtatForCurrentBloc(Bloc::Etat etat)
+{
+    m_gestionBloc->changeEtatOfCurrentBloc(etat);
 }

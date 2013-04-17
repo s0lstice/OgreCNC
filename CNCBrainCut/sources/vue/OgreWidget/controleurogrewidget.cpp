@@ -400,7 +400,6 @@ void ControleurOgreWidget::selectOgreBloc(Ogre::SceneNode * node){
     Bloc * bloc = emit si_blocFormOgreNode(node);
     if(bloc != NULL)
     {
-        selectBloc(bloc);
         emit si_SelectBloc(bloc);
     }
 }
