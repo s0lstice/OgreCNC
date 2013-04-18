@@ -49,8 +49,6 @@ Bloc::Bloc(NodeBloc *parent)
     m_faceMatName = constantes::BLOC_CHUTE;
     m_segmentMatName = "BaseWhiteNoLighting";
 
-    m_id++;
-
     updateSommets();
 }
 

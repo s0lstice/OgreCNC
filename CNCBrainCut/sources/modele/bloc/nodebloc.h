@@ -65,11 +65,18 @@ namespace OgreCNC {
         }
 
         /**
-         * @brief getInitialBloc
+         * @brief getInitialBloc renvoi le bloc initial avant la decoupe
          * @return Bloc, le bloc initial, avant la decoupe
          */
         inline Bloc * getInitialBloc(){
             return m_bloc;
+        }
+        /*!
+         * \brief setInitialBloc definit le bloc intial d'avant la découpe
+         * \param bloc
+         */
+        inline void setInitialBloc(Bloc * bloc){
+            m_bloc = bloc;
         }
 
         void updateSommets();

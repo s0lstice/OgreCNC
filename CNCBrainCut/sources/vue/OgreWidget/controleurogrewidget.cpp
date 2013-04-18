@@ -119,9 +119,10 @@ int ControleurOgreWidget::updatePositionBloc(Bloc * bloc)
 
 void ControleurOgreWidget::delete3DBloc(Bloc * bloc)
 {
-    Ogre::SceneNode* i_pSceneNode = bloc->getNodeBloc3d();
-    delete3DBloc(i_pSceneNode);
-    bloc->setNodeBloc3d(NULL);
+//    Ogre::SceneNode* i_pSceneNode = bloc->getNodeBloc3d();
+    bloc->getNodeBloc3d()->setVisible(false);
+//    delete3DBloc(i_pSceneNode);
+//    bloc->setNodeBloc3d(NULL);
 }
 
 void ControleurOgreWidget::delete3DBloc(Ogre::SceneNode * i_pSceneNode)

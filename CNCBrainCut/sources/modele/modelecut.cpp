@@ -1,8 +1,9 @@
 #include "modelecut.h"
-
+#include "modelemain.h"
 using namespace OgreCNC;
-ModeleCut::ModeleCut()
+ModeleCut::ModeleCut(QObject * parent) : QObject(parent)
 {
+    m_modeleMain = qobject_cast<ModeleMain *>(parent);
     isInUse = false;
     origineDecoupe = QVector<qreal>();
     origineDecoupe.append(0.0);
@@ -19,8 +20,9 @@ ModeleCut::ModeleCut()
 
 ModeleCut::ModeleCut(decoupe_HV decHV, decoupe_CM decCM,
                      directionDecoupe directionDec, positionPerte position,
-                     QVector<qreal> origine, qreal dist, int nombreBlocs)
+                     QVector<qreal> origine, qreal dist, int nombreBlocs, QObject *parent) : QObject(parent)
 {
+    m_modeleMain = qobject_cast<ModeleMain *>(parent);
     isInUse = false;
     decoupeHV = decHV;
     decoupeCM = decCM;

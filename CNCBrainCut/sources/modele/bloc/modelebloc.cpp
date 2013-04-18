@@ -44,6 +44,48 @@ QModelIndex ModeleBloc::index(int row, int column, const QModelIndex &parent) co
     return createIndex(row, column, childNode);
 }
 
+int ModeleBloc::rowCount(const QModelIndex &parent) const{
+    if(parent.column() > 0)
+        return 0;
+    NodeBloc *parentNode = nodeFromIndex(parent);
+    if(parentNode->getType() != Bloc::NODE)
+        return 0;
+    if(!parentNode)
+        return 0;
+    return parentNode->getListeFils()->count();
+}
+
+QModelIndex ModeleBloc::parent(const QModelIndex &child) const{
+    NodeBloc *node = nodeFromIndex(child);
+    if(!node)
+        return QModelIndex();
+    NodeBloc *parentnode = node->getParent();
+    if(!parentnode)
+        return QModelIndex();
+    NodeBloc * grandParentNode = parentnode->getParent();
+    if(!grandParentNode)
+        return QModelIndex();
+
+    int row = grandParentNode->getListeFils()->indexOf(parentnode);
+    return createIndex(row, 0, grandParentNode);
+}
+
+QVariant ModeleBloc::data(const QModelIndex &index, int role) const{
+    if(role == Qt::CheckStateRole)
+    {
+      return nodeFromIndex(index)->getCheck();
+    }
+
+    if(role != Qt::DisplayRole)
+        return QVariant();
+
+    NodeBloc *node = nodeFromIndex(index);
+    if(!node)
+        return QVariant();
+
+    return node->getName();
+}
+
 NodeBloc * ModeleBloc::nodeFromIndex(const QModelIndex &index) const {
     if(index.isValid())
         return static_cast<NodeBloc *>(index.internalPointer());
@@ -89,57 +131,12 @@ Bloc * ModeleBloc::blocFromOgreNode(Ogre::SceneNode * node, NodeBloc * racine){
     return bloc;
 }
 
-int ModeleBloc::rowCount(const QModelIndex &parent) const{
-    if(parent.column() > 0)
-        return 0;
-    NodeBloc *parentNode = nodeFromIndex(parent);
-
-    //s'il n'y a pas de parent, il n'y a pas de feres
-    if(parentNode == NULL){
-        return 0;
-    }
-
-    //si ce n'est pas un NodeBloc, il n'y a pas de fils
-    if(parentNode->getType() != Bloc::NODE)
-        return 0;
-    return parentNode->getListeFils()->count();
+Qt::ItemFlags ModeleBloc::flags (const QModelIndex  &index ) const{
+    return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 
 int ModeleBloc::columnCount(const QModelIndex &parent) const{
     return 1; //une seul colonne pour l'affichage
-}
-
-QModelIndex ModeleBloc::parent(const QModelIndex &child) const{
-    NodeBloc *childNode = nodeFromIndex(child);
-    if(childNode == NULL)
-        return QModelIndex();
-
-    NodeBloc *parentNode = childNode->getParent();
-    if(!parentNode)
-        return QModelIndex();
-
-    NodeBloc *grandParentNode = parentNode->getParent();
-    if(!grandParentNode)
-        return QModelIndex();
-
-    int row = grandParentNode->getListeFils()->indexOf(parentNode);
-    return createIndex(row, 0, grandParentNode);
-}
-
-QVariant ModeleBloc::data(const QModelIndex &index, int role) const{
-    if(role == Qt::CheckStateRole)
-    {
-      return nodeFromIndex(index)->getCheck();
-    }
-
-    if(role != Qt::DisplayRole)
-        return QVariant();
-
-    Bloc *bloc = nodeFromIndex(index);
-    if(!bloc)
-        return QVariant();
-
-    return bloc->getName();
 }
 
 void ModeleBloc::add(Bloc * bloc, const QModelIndex  &index){
@@ -240,11 +237,6 @@ NodeBloc * ModeleBloc::creatNodeBloc(Bloc * bloc, NodeBloc * parent){
     emit si_delete3Dbloc(bloc);
 
     return nodeBloc;
-}
-
-Qt::ItemFlags ModeleBloc::flags (const QModelIndex  &index ) const{
-    //return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
-    return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
 }
 
 void ModeleBloc::SetBlocName(Bloc * bloc, const QString name)

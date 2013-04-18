@@ -6,6 +6,8 @@
 
 namespace OgreCNC {
 
+class ModeleMain;
+
 class ModeleCut : public QObject
 {
     Q_OBJECT
@@ -15,6 +17,7 @@ public:
     enum directionDecoupe {X, Y, Z};
     enum positionPerte {GAUCHE, DROITE, CENTREE};
     bool isInUse;
+    ModeleMain *  m_modeleMain;
     /*Paramètres de la découpe*/
     decoupe_HV decoupeHV;
     decoupe_CM decoupeCM;
@@ -26,10 +29,10 @@ public:
 private:
 
 public:
-    ModeleCut();
+    ModeleCut(QObject * parent);
     ModeleCut(decoupe_HV decHV, decoupe_CM decCM,
                          directionDecoupe directionDec, positionPerte position,
-                         QVector<qreal> origine, qreal dist, int nombreBlocs);
+                         QVector<qreal> origine, qreal dist, int nombreBlocs, QObject * parent);
 };
 
 }

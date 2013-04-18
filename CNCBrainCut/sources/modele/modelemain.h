@@ -37,13 +37,13 @@ namespace OgreCNC{
             connect(m_modeleBloc, SIGNAL(si_updatePostionBloc(Bloc*)), m_vue, SLOT(sl_updatePositionBloc(Bloc*)));
 
             Bloc * b = m_modeleBloc->creatBloc(Ogre::Vector3(800,150,600), Ogre::Vector3(0,0,0),m_RootTravailBlocs ); //bloc de départ
-//            Bloc * b1 = m_modeleBloc->creatBloc(Ogre::Vector3(800,150,600), Ogre::Vector3(0,300,0),m_RootTravailBlocs ); //bloc de départ
+            Bloc * b1 = m_modeleBloc->creatBloc(Ogre::Vector3(800,150,600), Ogre::Vector3(0,300,0),m_RootTravailBlocs ); //bloc de départ
 
-//            NodeBloc * nb = m_modeleBloc->creatNodeBloc(b1,m_RootTravailBlocs);
-//            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,0,0), nb);
-//            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(150,0,0), nb);
-//            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,150,0), nb);
-//            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,0,150), nb);
+            NodeBloc * nb = m_modeleBloc->creatNodeBloc(b1,m_RootTravailBlocs);
+            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,0,0), nb);
+            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(150,0,0), nb);
+            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,150,0), nb);
+            m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,0,150), nb);
         }
 
 
