@@ -12,7 +12,7 @@ namespace OgreCNC {
     private:
         /*Liste des noeuds fils issus de la découpe du noeud bloc*/
         QVector<Bloc*> * m_listeFils;
-        Bloc * m_bloc; //bloc initial, avant dedoupe
+        Bloc * m_bloc; //bloc initial, avant decoupe
 
     signals:
         void updateDimensionBloc(Bloc * bloc);
@@ -70,6 +70,10 @@ namespace OgreCNC {
          */
         inline Bloc * getInitialBloc(){
             return m_bloc;
+        }
+
+        inline void setInitialBloc(Bloc* bloc){
+            m_bloc = bloc;
         }
 
         void updateSommets();

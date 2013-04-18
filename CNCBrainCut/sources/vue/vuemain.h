@@ -41,6 +41,9 @@ namespace OgreCNC {
             return ui;
         }
 
+        void griserVoletDecoupe();
+        void activerVoletDecoupe();
+
     private:
         ControleurMain * controleur;
         ModeleMain * modele;
@@ -60,7 +63,7 @@ namespace OgreCNC {
     signals:
         void si_start_cut();
         void si_valid_cut();
-        void si_abort_cut();
+        bool si_abort_cut();
         void si_update_cut();
         void si_select(int id);
         void si_vueEclate(double distance);
@@ -73,11 +76,10 @@ namespace OgreCNC {
         void sl_updateDimentionBloc(Bloc * bloc);
         void sl_updatePositionBloc(Bloc * bloc);
         void sl_updateCouleurBloc(Bloc *bloc);
+
         void on_demarrerDecoupe_pushButton_clicked();
         void on_validerDecoupe_pushButton_clicked();
         void on_annulerDecoupe_pushButton_clicked();
-        void on_horizontaleRadioButton_clicked();
-        void on_verticaleRadioButton_clicked();
         void on_classiqueRadioButton_clicked();
         void on_multipleRadioButton_clicked();
         void on_directionX_radioButton_clicked();
@@ -86,9 +88,6 @@ namespace OgreCNC {
         void on_perteGauche_RadioButton_clicked();
         void on_perteDroite_RadioButton_clicked();
         void on_perteCentree_RadioButton_clicked();
-        void on_origineX_text_textEdited(const QString &arg1);
-        void on_origineY_text_textEdited(const QString &arg1);
-        void on_origineZ_text_textEdited(const QString &arg1);
         void on_distance_text_textEdited(const QString &arg1);
         void on_nbBlocs_text_textEdited(const QString &arg1);
         void on_distanceVueEclate_valueChanged(int arg1);

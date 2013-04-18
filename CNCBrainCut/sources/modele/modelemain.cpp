@@ -23,6 +23,8 @@ ModeleMain::ModeleMain(QObject *parent) :
     m_InitialBloc->setName("Bloc Fictif inutilisable");
     m_RootTravailBlocs = new NodeBloc(m_InitialBloc); //racine
     m_RootTravailBlocs->setName("ROOT");
+    m_InitialBloc->setParent(m_RootTravailBlocs);
+    m_RootTravailBlocs->setInitialBloc(m_InitialBloc);
 
     //modele pour la gestion et l'affichage de l'arbre
     m_modeleBloc = new ModeleBloc(m_RootTravailBlocs, this);
@@ -41,7 +43,7 @@ ModeleMain::~ModeleMain(){
 ModeleCut* ModeleMain::getModeleCut(){
     if(m_modeleCut == NULL)
     {
-        m_modeleCut = new ModeleCut();
+        m_modeleCut = new ModeleCut(this);
     }
     return m_modeleCut;
 }
