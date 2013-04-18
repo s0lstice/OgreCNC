@@ -72,7 +72,8 @@ HEADERS += \
     sources/controleur/controleurcut.h \
     sources/modele/modelecut.h \
     sources/vue/OgreWidget/controleurogrewidget.h \
-    sources/modele/constantesapplication.h
+    sources/modele/constantesapplication.h \
+    sources/modele/bloc/modelebloc.h
 
 SOURCES += \
     sources/vue/OgreWidget/ogrewidget.cpp \
@@ -85,7 +86,8 @@ SOURCES += \
     sources/vue/vuemain.cpp \
     sources/controleur/controleurcut.cpp \
     sources/modele/modelecut.cpp \
-    sources/vue/OgreWidget/controleurogrewidget.cpp
+    sources/vue/OgreWidget/controleurogrewidget.cpp \
+    sources/modele/bloc/modelebloc.cpp
 
 FORMS += \
     sources/vue/vuemain.ui

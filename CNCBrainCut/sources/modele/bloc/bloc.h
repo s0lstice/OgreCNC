@@ -135,11 +135,11 @@ namespace  OgreCNC {
 
         ~Bloc();
 
-        /*!
-         * \brief setParent definit un nouveau parent au bloc.
-         * \param parent
-         */
-        inline void setParent(NodeBloc * parent){m_parent = parent;}
+//        /*!
+//         * \brief setParent definit un nouveau parent au bloc.
+//         * \param parent
+//         */
+//        inline void setParent(NodeBloc * parent){m_parent = parent;}
 
         /*!
          * \brief getType pour savoir si c'est un Bloc ou un NodeBloc
@@ -166,7 +166,7 @@ namespace  OgreCNC {
         }
 
         /*!
-         * \brief getCheck est utilisé pour saboir si le bloc est lobjet courent
+         * \brief getCheck est utilisé pour saboir si le bloc est l'objet courent
          * \return
          */
         inline Qt::CheckState getCheck(){
@@ -259,7 +259,10 @@ namespace  OgreCNC {
          * \param etat est le nouvel etat
          */
         void setEtat(Etat etat);
-
+        /*!
+         * \brief getEtat renvoie l'Etat du bloc
+         * \return
+         */
         inline Etat getEtat(){
             return m_etat;
         }

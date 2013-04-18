@@ -9,311 +9,56 @@
 #include "../modele/bloc/nodebloc.h"
 #include "../modele/bloc/bloc.h"
 #include "controleurmain.h"
-
+#include "../modele/bloc/modelebloc.h"
+#include "../modele/modelemain.h"
 #include "../modele/constantesapplication.h"
 
 using namespace OgreCNC;
-ControleurBloc::ControleurBloc(NodeBloc *rootBloc, QObject *parent) :
-    QAbstractItemModel(parent)
+
+ControleurBloc::ControleurBloc(QObject *parent) : QObject(parent)
 {
     m_controleur = qobject_cast<ControleurMain *>(parent);
-    m_root = NULL;
-    setRootNode(rootBloc);
-    m_currentBloc = NULL;
-    m_currentSegment = NULL;
-    m_currentIndex = QModelIndex();
+    m_modeleBloc = NULL;
 }
 
-ControleurBloc::ControleurBloc(QObject *parent) :
-    QAbstractItemModel(parent)
+void ControleurBloc::setModeleBloc(ModeleBloc * modeleBloc)
 {
-    m_controleur = qobject_cast<ControleurMain *>(parent);
-    m_root = NULL;
-    m_currentBloc = NULL;
-    m_currentSegment = NULL;
-    m_currentIndex = QModelIndex();
-}
-
-void ControleurBloc::setRootNode(NodeBloc *rootBloc){
-    if(m_root != NULL)
-    {
-        disconnect(m_root, 0,0,0);
-    }
-    m_root = rootBloc;
-    connect(m_root, SIGNAL(updateDimensionBloc(Bloc*)), m_controleur, SIGNAL(si_updateDimensionBloc(Bloc*)));
-    connect(m_root, SIGNAL(updatePostionBloc(Bloc*)), m_controleur, SIGNAL(si_updatePostionBloc(Bloc*)));
-    connect(m_root, SIGNAL(updateCouleurBloc(Bloc*)), m_controleur, SIGNAL(si_updateCouleurBloc(Bloc*)));
-}
-
-QModelIndex ControleurBloc::index(int row, int column, const QModelIndex &parent) const{
-    if(!m_root || row < 0 || column < 0)
-        return QModelIndex();
-    NodeBloc *parentNode = nodeFromIndex(parent);
-    Bloc *childNode = parentNode->getListeFils()->value(row);
-
-    if(!childNode)
-        return QModelIndex();
-    return createIndex(row, column, childNode);
-}
-
-NodeBloc * ControleurBloc::nodeFromIndex(const QModelIndex &index) const {
-    if(index.isValid())
-        return static_cast<NodeBloc *>(index.internalPointer());
-    else
-        return m_root;
-}
-
-Bloc * ControleurBloc::blocFromOgreNode(Ogre::SceneNode * node, NodeBloc * racine){
-    Bloc * bloc = NULL;
-
-    if(node != NULL)
-    {
-        if(racine == NULL)
-            racine = m_root;
-
-        if(racine->getInitialBloc() != NULL) //teste si la NodeBloc possaide un bloc initiale, "on ne sais jamais"
-        if(node == racine->getInitialBloc()->getNodeBloc3d()){
-            bloc = racine->getInitialBloc();
-            return bloc;
-        }
-
-        QVector<Bloc*> * fils = racine->getListeFils();
-
-        for(int i = 0; i < fils->count() ; ++i)
-        {
-            if(node == fils->at(i)->getNodeBloc3d())
-            {
-                bloc = fils->at(i);
-                return bloc;
-            }
-
-            if(fils->at(i)->getType() == Bloc::NODE)
-            {
-
-                bloc = blocFromOgreNode(node,(NodeBloc *)fils->at(i));
-
-                if(bloc != NULL)
-                    return bloc;
-            }
-
-        }
-
-    }
-
-    return bloc;
-}
-
-int ControleurBloc::rowCount(const QModelIndex &parent) const{
-    if(parent.column() > 0)
-        return 0;
-    NodeBloc *parentNode = nodeFromIndex(parent);
-
-    //s'il n'y a pas de parent, il n'y a pas de feres
-    if(parentNode == NULL){
-        return 0;
-    }
-
-    //si ce n'est pas un NodeBloc, il n'y a pas de fils
-    if(parentNode->getType() != Bloc::NODE)
-        return 0;
-
-    return parentNode->getListeFils()->count();
-}
-
-int ControleurBloc::columnCount(const QModelIndex &parent) const{
-    return 1; //une seul colonne pour l'affichage
-}
-
-QModelIndex ControleurBloc::parent(const QModelIndex &child) const{
-    NodeBloc *childNode = nodeFromIndex(child);
-    if(childNode == NULL)
-        return QModelIndex();
-
-    NodeBloc *parentNode = childNode->getParent();
-    if(!parentNode)
-        return QModelIndex();
-
-    NodeBloc *grandParentNode = parentNode->getParent();
-    if(!grandParentNode)
-        return QModelIndex();
-
-    int row = grandParentNode->getListeFils()->indexOf(parentNode);
-    return createIndex(row, 0, grandParentNode);
-}
-
-QVariant ControleurBloc::data(const QModelIndex &index, int role) const{
-    if(role == Qt::CheckStateRole)
-    {
-      return nodeFromIndex(index)->getCheck();
-    }
-
-    if(role != Qt::DisplayRole)
-        return QVariant();
-
-    Bloc *bloc = nodeFromIndex(index);
-    if(!bloc)
-        return QVariant();
-
-    return bloc->getName();
-}
-
-void ControleurBloc::add(Bloc * bloc, const QModelIndex  &index){
-    NodeBloc *groupe;
-
-    if(index.isValid() == false)
-        groupe = m_root;
-    else
-        groupe = nodeFromIndex(index);
-
-    if(groupe->getType() != Bloc::NODE)
-        groupe = groupe->getParent();
-
-    emit beginResetModel();
-    groupe->append(bloc);
-    qDebug() << QObject::tr("[Gestion des blocs] ajout du bloc : %1").arg(groupe->getName());
-    emit endResetModel();
-
-    if(bloc->getType() == Bloc::BLOC)
-        emit si_selectBloc(bloc);
-}
-
-Bloc* ControleurBloc::creatBloc(const QModelIndex  &index){
-    NodeBloc *groupe;
-
-    if(index.isValid() == false)
-        groupe = m_root;
-    else
-        groupe = nodeFromIndex(index);
-
-    if(groupe->getType() != Bloc::NODE)
-        groupe = groupe->getParent();
-
-    Bloc * bloc = new Bloc(groupe);
-
-    emit beginResetModel();
-    groupe->append(bloc);
-    emit si_createBloc(bloc);
-    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
-    emit endResetModel();
-
-    emit si_ogreDrawBloc(bloc);
-
-    selectBloc(bloc);
-    emit si_selectBloc(bloc);
-    return bloc;
-}
-
-Bloc* ControleurBloc::creatBloc(Ogre::Vector3 dimention, Ogre::Vector3 position, const QModelIndex  &index){
-    NodeBloc *groupe;
-
-    if(index.isValid() == false)
-        groupe = m_root;
-    else
-        groupe = nodeFromIndex(index);
-
-    if(groupe->getType() != Bloc::NODE)
-        groupe = groupe->getParent();
-
-    emit beginResetModel();
-    Bloc * bloc = new Bloc(dimention, position, groupe);
-    groupe->append(bloc);
-    emit si_createBloc(bloc);
-    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(bloc->getName());
-    emit endResetModel();
-
-    selectBloc(bloc);
-    emit si_selectBloc(bloc);
-    return bloc;
-}
-
-void ControleurBloc::creatNodeBloc(const QModelIndex  &index){
-    NodeBloc *groupe;
-
-    if(index.isValid() == false)
-        groupe = m_root;
-    else
-        groupe = nodeFromIndex(index);
-
-    if(groupe->getType() != Bloc::NODE)
-        groupe = groupe->getParent();
-
-    emit beginResetModel();
-    NodeBloc * nodeBloc = new NodeBloc(groupe);
-    groupe->append(nodeBloc);
-    qDebug() << QObject::tr("[Gestion des blocs] creation du blocs : %1").arg(groupe->getName());
-    emit endResetModel();
-}
-
-Qt::ItemFlags ControleurBloc::flags (const QModelIndex  &index ) const{
-    //return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
-    return Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
-}
-
-void ControleurBloc::changeNameOfCurrentBloc(const QString &name)
-{
-    m_currentBloc->setName(name);
-    emit dataChanged(m_currentIndex, m_currentIndex);
-}
-
-void ControleurBloc::changeEtatOfCurrentBloc(Bloc::Etat etat){
-    m_currentBloc->setEtat(etat);
-}
-
-bool ControleurBloc::setData (const QModelIndex &index, const QVariant &value, int role){
-    Bloc *bloc = nodeFromIndex(index);
-
-    if(role == Qt::EditRole){
-        qDebug() << QObject::tr("[Gestion des blocs] changement du nom du bloc \"%1\" en \"%2\"").arg(bloc->getName()).arg(value.toString());
-        bloc->setName(value.toString());
-    }
-
-    if(role == Qt::CheckStateRole)
-    {
-        selectBloc(bloc, index);
-        emit si_selectBloc(bloc);
-    }
-    return true;
+    m_modeleBloc = modeleBloc;
 }
 
 void ControleurBloc::selectSegment(Ogre::ManualObject * segment)
 {
-    m_currentSegment = segment;
+    m_controleur->m_modele->currentSegment = segment;
 
-    emit si_selectSegment(m_currentSegment); //indique la selection d'un segment
+    emit si_selectSegment(m_controleur->m_modele->currentSegment); //indique la selection d'un segment
 
     //selctionne le bloc si le segemnt ne fait pas partie du bloc courent
-    if(m_currentSegment->getParentSceneNode()->getParentSceneNode() != m_currentBloc->getNodeBloc3d())
+    if(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode() != m_controleur->m_modele->currentBloc->getNodeBloc3d())
     {
-        selectBloc(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()));
-        emit si_selectBloc(m_currentBloc); //indique la selection d'un nouveau bloc
+        selectBloc(m_modeleBloc->blocFromOgreNode(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode()));
     }
 }
 
 void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
-    if( (m_currentBloc != NULL) && (m_currentBloc != bloc))
+    if(m_modeleBloc == NULL)
     {
-        m_currentBloc->setCheck(Qt::Unchecked);
-
-        if(m_currentIndex.isValid()){
-            emit dataChanged(m_currentIndex, m_currentIndex);
-        }
+        qWarning() << QObject::tr("[Controleur Bloc] il n'y a pas de controleur de bloc, l'opperation ne peut etre autorisé");
+        return;
     }
 
-    if(m_currentBloc != bloc)
+    if(m_controleur->m_modele->currentBloc  != bloc)
     {
-        m_currentBloc = bloc;
-        m_currentBloc->setCheck(Qt::Checked);
-        m_currentIndex = index;
-        emit dataChanged(m_currentIndex, m_currentIndex);
+
+        m_modeleBloc->setBlocCheck(bloc, Qt::Checked);
+        m_controleur->m_modele->currentIndex = index;
 
         //deslectione du segment courent s'il n'est pas sur le bloc selectionne
-        if(m_currentSegment != NULL)
-            if(blocFromOgreNode(m_currentSegment->getParentSceneNode()->getParentSceneNode()) != m_currentBloc)
+        if(m_controleur->m_modele->currentSegment != NULL)
+            if(m_modeleBloc->blocFromOgreNode(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode()) != m_controleur->m_modele->currentBloc)
             {
-                m_currentSegment = NULL;
-                emit si_selectSegment(m_currentSegment);
+                m_controleur->m_modele->currentSegment = NULL;
+                emit si_selectSegment(m_controleur->m_modele->currentSegment);
             }
-        emit si_selectBloc(m_currentBloc); //indique la selection d'un nouveau bloc
     }
 }
 
@@ -335,7 +80,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 
         if(node == NULL)
         {
-            node = m_root;
+            node = m_modeleBloc->getRootNode();
         }
 
         //Récupération des fils du noeud bloc
@@ -376,7 +121,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
     {
         if(node == NULL)
         {
-            node = m_root;
+            node = m_modeleBloc->getRootNode();
         }
 
         /*Si on est dans la position initiale du bloc, on ne bouge pas, sinon on revient à sa position initiale*/
@@ -391,12 +136,12 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 Ogre::Vector3 ControleurBloc::calculerConstanteVueEclatee(Bloc* noeudAdeplacer, double eloignement){
 
     //En vue éclatée, la racine reste à sa position initiale
-    if( (noeudAdeplacer == m_root) || (noeudAdeplacer->getPosition() == m_root->getPosition()) )
+    if( (noeudAdeplacer == m_modeleBloc->getRootNode()) || (noeudAdeplacer->getPosition() == m_modeleBloc->getRootNode()->getPosition()) )
     {
         return( Ogre::Vector3(0,0,0) );
     }
 
-    Ogre::Vector3 positionRoot = m_root->getPosition();
+    Ogre::Vector3 positionRoot = m_modeleBloc->getRootNode()->getPosition();
     Ogre::Vector3 positionNoeud = noeudAdeplacer->getPosition();
 
     double X = positionNoeud[0]-positionRoot[0];
@@ -419,4 +164,9 @@ Ogre::Vector3 ControleurBloc::calculerConstanteVueEclatee(Bloc* noeudAdeplacer, 
     Z = Z + norme * normalisationZ;
 
     return( Ogre::Vector3(X,Y,Z) );
+}
+
+void ControleurBloc::changeNameOfCurrentBloc(const QString &name)
+{
+    m_controleur->m_modele->currentBloc->setName(name);
 }

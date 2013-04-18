@@ -6,6 +6,7 @@ using namespace OgreCNC;
 NodeBloc::NodeBloc( Bloc * bloc, NodeBloc * parent) : Bloc(parent)
 {
     m_bloc = bloc;
+    m_bloc->setParent(this);
     m_listeFils = new QVector<Bloc*>();
     m_type = Bloc::NODE;
 }
@@ -20,6 +21,23 @@ NodeBloc::~NodeBloc()
     }
     delete m_listeFils;
     m_listeFils = NULL;
+}
+
+void NodeBloc::updateSommets()
+{
+    m_bloc->updateSommets();
+}
+
+void NodeBloc::setEtat(Etat etat)
+{
+    m_bloc->setEtat(etat);
+    m_etat = etat;
+}
+
+void NodeBloc::setCheck(Qt::CheckState state)
+{
+    m_bloc->setCheck(state);
+    m_select = state;
 }
 
 QVariantMap NodeBloc::serialize(){

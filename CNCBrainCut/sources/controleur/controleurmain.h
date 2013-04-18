@@ -25,9 +25,9 @@ namespace OgreCNC {
             return m_gestionBloc;
         }
 
+        ModeleMain * m_modele;
     private:
         VueMain * m_vue;
-        ModeleMain * m_modele;
 
         ControleurBloc * m_gestionBloc;
 
@@ -38,12 +38,7 @@ namespace OgreCNC {
 
     signals:
         void si_init_cut(ModeleCut* modeleCut);
-        void si_select(Bloc * bloc);
         void si_updateOgreVue();
-
-        void si_updateDimensionBloc(Bloc * bloc);
-        void si_updatePostionBloc(Bloc * bloc);
-        void si_updateCouleurBloc(Bloc* bloc);
 
     public slots:
         void sl_start_cut();

@@ -7,6 +7,8 @@
 #include "../controleur/controleurbloc.h"
 #include "../modele/modelecut.h"
 #include "OgreWidget/controleurogrewidget.h"
+#include "../modele/bloc/modelebloc.h"
+
 using namespace OgreCNC;
 
 VueMain::VueMain(QWidget *parent) :
@@ -26,7 +28,6 @@ VueMain::VueMain(QWidget *parent) :
     m_ControleurOgreWidget->setWidget(m_Ogre3d);
 
     ui->ogreLayout->addWidget(m_Ogre3d);
-    ui->treeBlocs->setModel(controleur->getModeleBlocs());
 
     initConnections();
 
@@ -46,16 +47,17 @@ void VueMain::initConnections(){
     connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
     connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
     connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
-    connect(controleur, SIGNAL(si_updateDimensionBloc(Bloc*)), this, SLOT(sl_updateDimentionBloc(Bloc*)));
-    connect(controleur, SIGNAL(si_updatePostionBloc(Bloc*)), this, SLOT(sl_updatePositionBloc(Bloc*)));
-    connect(controleur, SIGNAL(si_updateCouleurBloc(Bloc*)), this, SLOT(sl_updateCouleurBloc(Bloc*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_blocFormOgreNode(Ogre::SceneNode*)), controleur, SLOT(sl_blocFromOgreNode(Ogre::SceneNode*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_SelectBloc(Bloc*)), controleur, SLOT(sl_selectBloc(Bloc*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_selectSegemnt(Ogre::ManualObject*)), controleur, SLOT(sl_selectSegment(Ogre::ManualObject*)));
 }
 
 void VueMain::sl_creat3Dbloc(Bloc * bloc){
-    m_ControleurOgreWidget->creat3DBloc(bloc);
+    m_ControleurOgreWidget->create3DBloc(bloc);
+}
+
+void VueMain::sl_delete3Dbloc(Bloc * bloc){
+    m_ControleurOgreWidget->delete3DBloc(bloc);
 }
 
 void VueMain::sl_updateDimentionBloc(Bloc * bloc){
@@ -92,6 +94,11 @@ bool VueMain::event(QEvent * e)
 }
 
 /////***** SLOTS ******/////
+
+void VueMain::sl_setTreeBlocModele(ModeleBloc * modeleBloc)
+{
+    ui->treeBlocs->setModel(modeleBloc);
+}
 
 void VueMain::sl_init_cut(ModeleCut *modele){
     /*On désactive le bouton de lancement d'une découpe*/
@@ -389,4 +396,12 @@ void OgreCNC::VueMain::on_etatblocuse_clicked(bool checked)
 void OgreCNC::VueMain::on_distanceVueEclate_editingFinished()
 {
 
+}
+
+void OgreCNC::VueMain::on_etatblocchute_clicked(bool checked)
+{
+    if(!checked)
+        emit si_changeEtatForCurrentBloc(Bloc::UTILISE);
+    else
+        emit si_changeEtatForCurrentBloc(Bloc::CHUTE);
 }

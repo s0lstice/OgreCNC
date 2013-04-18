@@ -19,6 +19,7 @@ namespace OgreCNC {
     class OgreWidget;
     class ModeleCut;
     class ControleurOgreWidget;
+    class ModeleBloc;
 
     class VueMain : public QMainWindow
     {
@@ -66,8 +67,9 @@ namespace OgreCNC {
         void si_newNameForCurrentBloc(const QString &arg1);
         void si_changeEtatForCurrentBloc(Bloc::Etat etat);
 
-    private slots:
+   public  slots:
         void sl_creat3Dbloc(Bloc * bloc);
+        void sl_delete3Dbloc(Bloc * bloc);
         void sl_updateDimentionBloc(Bloc * bloc);
         void sl_updatePositionBloc(Bloc * bloc);
         void sl_updateCouleurBloc(Bloc *bloc);
@@ -92,17 +94,14 @@ namespace OgreCNC {
         void on_distanceVueEclate_valueChanged(int arg1);
         void on_vueEclateCheched_clicked(bool checked);
         void on_blocNom_text_textEdited(const QString &arg1);
-
         void on_etatblocuse_clicked(bool checked);
-
         void on_distanceVueEclate_editingFinished();
+        void on_etatblocchute_clicked(bool checked);
 
-        void on_vueEclateCheched_clicked();
-
-    public slots:
         void sl_selectBloc(Bloc * bloc);
         void sl_selectSegment(Ogre::ManualObject * segment);
         void sl_init_cut(ModeleCut* modele);
+        void sl_setTreeBlocModele(ModeleBloc * modeleBloc);
     };
 }
 #endif // VUEMAIN_H

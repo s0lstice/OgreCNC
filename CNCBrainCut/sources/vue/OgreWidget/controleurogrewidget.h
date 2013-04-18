@@ -84,7 +84,22 @@ namespace OgreCNC {
                 initConnectionsWithWidget();
             }
 
-            int creat3DBloc(Bloc *bloc);
+            /*!
+             * \brief delete3DBloc detruit un bloc 3D et ses enfants
+             * \param bloc est le bloc contenant la bloc 3d à detruire
+             */
+            void delete3DBloc(Bloc * bloc);
+            /*!
+             * \brief delete3DBloc detruit un bloc 3D et ses enfants
+             * \param i_pSceneNode est le SceneNode à detruire
+             */
+            void delete3DBloc(Ogre::SceneNode * i_pSceneNode);
+            /*!
+             * \brief create3DBloc créé un bloc 3d et ses enfants
+             * \param bloc est le bloc contenant le bloc 3d
+             * \return un code d'erreur
+             */
+            int create3DBloc(Bloc *bloc);
             /*!
              * \brief updateDimentionBloc adapte le bloc 3d aux nouvelles dimensions
              * \param bloc le bloc a modifier

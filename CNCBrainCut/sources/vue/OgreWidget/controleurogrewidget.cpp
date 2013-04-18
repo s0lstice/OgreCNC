@@ -1,5 +1,6 @@
 #include "controleurogrewidget.h"
 
+#include "../../modele/constantesapplication.h"
 #include "../../modele/bloc/bloc.h"
 
 using namespace OgreCNC;
@@ -33,40 +34,40 @@ int ControleurOgreWidget::updateDimentionBloc(Bloc * bloc)
     node->scale( scale );
 
     Ogre::MovableObject * segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";01_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";12_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";23_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";30_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";04_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";45_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";51_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";37_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";76_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";62_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";47_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     segment = nodeSegments->getAttachedObject(QString::number(bloc->getId()).toStdString()+";56_segment");
-    changeColorSegment(segment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(segment, constantes::SEGMENT_UNSELECTED); //deselection
 
     m_Vue3D->update();
 
@@ -116,7 +117,43 @@ int ControleurOgreWidget::updatePositionBloc(Bloc * bloc)
     return 0;
 }
 
-int ControleurOgreWidget::creat3DBloc(Bloc * bloc){
+void ControleurOgreWidget::delete3DBloc(Bloc * bloc)
+{
+    Ogre::SceneNode* i_pSceneNode = bloc->getNodeBloc3d();
+    delete3DBloc(i_pSceneNode);
+    bloc->setNodeBloc3d(NULL);
+}
+
+void ControleurOgreWidget::delete3DBloc(Ogre::SceneNode * i_pSceneNode)
+{
+
+
+    if ( !i_pSceneNode )
+    {
+        assert( false );
+        return;
+    }
+
+    // Destroy all the attached objects
+    Ogre::SceneNode::ObjectIterator itObject = i_pSceneNode->getAttachedObjectIterator();
+
+    while ( itObject.hasMoreElements() )
+    {
+        Ogre::MovableObject* pObject = static_cast<Ogre::MovableObject*>(itObject.getNext());
+        i_pSceneNode->getCreator()->destroyMovableObject( pObject );
+    }
+
+    // Recurse to child SceneNodes
+    Ogre::SceneNode::ChildNodeIterator itChild = i_pSceneNode->getChildIterator();
+
+    while ( itChild.hasMoreElements() )
+    {
+        Ogre::SceneNode* pChildNode = static_cast<Ogre::SceneNode*>(itChild.getNext());
+        delete3DBloc( pChildNode );
+    }
+}
+
+int ControleurOgreWidget::create3DBloc(Bloc * bloc){
     if(bloc->getNodeBloc3d() != NULL)
     {
         qWarning() << QObject::tr("[Controleur Ogre] Création d'un boc existant impossible");
@@ -150,71 +187,73 @@ int ControleurOgreWidget::creat3DBloc(Bloc * bloc){
         //front
         //segment 01
         Ogre::ManualObject * blocContour01 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";01_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour01, bloc->getSommet0(), bloc->getSommet1(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour01, bloc->getSommet0(), bloc->getSommet1(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour01);
 
         //segment12
         Ogre::ManualObject * blocContour12 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";12_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour12, bloc->getSommet1(), bloc->getSommet2(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour12, bloc->getSommet1(), bloc->getSommet2(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour12);
 
         //segment23
         Ogre::ManualObject * blocContour23 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";23_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour23, bloc->getSommet2(), bloc->getSommet3(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour23, bloc->getSommet2(), bloc->getSommet3(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour23);
 
         //segment30
         Ogre::ManualObject * blocContour30 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";30_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour30, bloc->getSommet3(), bloc->getSommet0(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour30, bloc->getSommet3(), bloc->getSommet0(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour30);
 
         //left
         //segment04
         Ogre::ManualObject * blocContour04 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";04_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour04, bloc->getSommet0(), bloc->getSommet4(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour04, bloc->getSommet0(), bloc->getSommet4(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour04);
 
         //segment45
         Ogre::ManualObject * blocContour45 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";45_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour45, bloc->getSommet4(), bloc->getSommet5(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour45, bloc->getSommet4(), bloc->getSommet5(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour45);
 
         //segment51
         Ogre::ManualObject * blocContour51 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";51_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour51, bloc->getSommet5(), bloc->getSommet1(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour51, bloc->getSommet5(), bloc->getSommet1(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour51);
 
         //right
         //segment37
         Ogre::ManualObject * blocContour37 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";37_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour37, bloc->getSommet3(), bloc->getSommet7(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour37, bloc->getSommet3(), bloc->getSommet7(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour37);
 
         //segment76
         Ogre::ManualObject * blocContour76 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";76_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour76, bloc->getSommet7(), bloc->getSommet6(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour76, bloc->getSommet7(), bloc->getSommet6(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour76);
 
         //segment62
         Ogre::ManualObject * blocContour62 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";62_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour62, bloc->getSommet6(), bloc->getSommet2(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour62, bloc->getSommet6(), bloc->getSommet2(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour62);
 
         //back
         //segment47
         Ogre::ManualObject * blocContour47 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";47_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour47, bloc->getSommet4(), bloc->getSommet7(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour47, bloc->getSommet4(), bloc->getSommet7(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour47);
 
         //segment56
         Ogre::ManualObject * blocContour56 = m_Vue3D->getSceneManager()->createManualObject(QString::number(bloc->getId()).toStdString()+";56_segment"); //std::to_string(m_id) :: Bug avec certain vection de MinGW : error: 'to_string' is not a member of 'std'
-        beginSegment(blocContour56, bloc->getSommet5(), bloc->getSommet6(), m_BBSize, Ogre::ColourValue::Blue, bloc->getSegmentMatName().toStdString(), false);
+        beginSegment(blocContour56, bloc->getSommet5(), bloc->getSommet6(), m_BBSize, constantes::SEGMENT_UNSELECTED, bloc->getSegmentMatName().toStdString(), false);
         SegmentsNode->attachObject(blocContour56);
 
         node->scale(dimention/100);
         node->setPosition(position);
 
         bloc->setNodeBloc3d(node);
+
+        updateDimentionBloc(bloc); //patch probleme non trouvé
     }
 }
 
@@ -308,87 +347,90 @@ void ControleurOgreWidget::changeColorSegment(Ogre::MovableObject * segment, Ogr
     if(segment != NULL)
     {
         Bloc * bloc = emit si_blocFormOgreNode(segment->getParentSceneNode()->getParentSceneNode());
-        size_t found = segment->getName().find(';');//recherche le separateur
-        if(found!=std::string::npos)
+        if(bloc != NULL)
         {
-            bool Found = true;
-            Ogre::String idSegment = segment->getName().substr(found+1,2);
+            size_t found = segment->getName().find(';');//recherche le separateur
+            if(found!=std::string::npos)
+            {
+                bool Found = true;
+                Ogre::String idSegment = segment->getName().substr(found+1,2);
 
-            //debut
-            Ogre::Vector3 min;
-            switch (idSegment[0]) {
-            case '0':
-                min = bloc->getSommet0();
-                break;
-            case '1':
-                min = bloc->getSommet1();
-                break;
-            case '2':
-                min = bloc->getSommet2();
-                break;
-            case '3':
-                min = bloc->getSommet3();
-                break;
-            case '4':
-                min = bloc->getSommet4();
-                break;
-            case '5':
-                min = bloc->getSommet5();
-                break;
-            case '6':
-                min = bloc->getSommet6();
-                break;
-            case '7':
-                min = bloc->getSommet7();
-                break;
-            default:
-                Found = false;
-                break;
-            }
+                //debut
+                Ogre::Vector3 min;
+                switch (idSegment[0]) {
+                case '0':
+                    min = bloc->getSommet0();
+                    break;
+                case '1':
+                    min = bloc->getSommet1();
+                    break;
+                case '2':
+                    min = bloc->getSommet2();
+                    break;
+                case '3':
+                    min = bloc->getSommet3();
+                    break;
+                case '4':
+                    min = bloc->getSommet4();
+                    break;
+                case '5':
+                    min = bloc->getSommet5();
+                    break;
+                case '6':
+                    min = bloc->getSommet6();
+                    break;
+                case '7':
+                    min = bloc->getSommet7();
+                    break;
+                default:
+                    Found = false;
+                    break;
+                }
 
-            //fin
-            Ogre::Vector3 max;
-            switch (idSegment[1]) {
-            case '0':
-                max = bloc->getSommet0();
-                break;
-            case '1':
-                max = bloc->getSommet1();
-                break;
-            case '2':
-                max = bloc->getSommet2();
-                break;
-            case '3':
-                max = bloc->getSommet3();
-                break;
-            case '4':
-                max = bloc->getSommet4();
-                break;
-            case '5':
-                max = bloc->getSommet5();
-                break;
-            case '6':
-                max = bloc->getSommet6();
-                break;
-            case '7':
-                max = bloc->getSommet7();
-                break;
-            default:
-                Found = false;
-                break;
+                //fin
+                Ogre::Vector3 max;
+                switch (idSegment[1]) {
+                case '0':
+                    max = bloc->getSommet0();
+                    break;
+                case '1':
+                    max = bloc->getSommet1();
+                    break;
+                case '2':
+                    max = bloc->getSommet2();
+                    break;
+                case '3':
+                    max = bloc->getSommet3();
+                    break;
+                case '4':
+                    max = bloc->getSommet4();
+                    break;
+                case '5':
+                    max = bloc->getSommet5();
+                    break;
+                case '6':
+                    max = bloc->getSommet6();
+                    break;
+                case '7':
+                    max = bloc->getSommet7();
+                    break;
+                default:
+                    Found = false;
+                    break;
+                }
+                if(Found)
+                    beginSegment(((Ogre::ManualObject *) segment), min, max, m_BBSize, color, "", true);
+                m_Vue3D->update();
             }
-            if(Found)
-                beginSegment(((Ogre::ManualObject *) segment), min, max, m_BBSize, color, "", true);
-            m_Vue3D->update();
         }
     }
 }
 
 void ControleurOgreWidget::selectSegment(Ogre::ManualObject * segment)
 {
-    changeColorSegment(curentSegment, Ogre::ColourValue::Blue); //deselection
+    changeColorSegment(curentSegment, constantes::SEGMENT_UNSELECTED); //deselection
     curentSegment = segment;
-    changeColorSegment(curentSegment, Ogre::ColourValue::Red); //selection
+    changeColorSegment(curentSegment, constantes::SEGMENT_SELECTED); //selection
 }
 
 void ControleurOgreWidget::selectOgreBloc(Ogre::SceneNode * node){
