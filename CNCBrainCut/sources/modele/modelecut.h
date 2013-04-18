@@ -24,6 +24,7 @@ public:
     decoupe_CM decoupeCM;
     directionDecoupe direction;
     positionPerte posPerte;
+    qreal rayonChauffe;
     qreal distance;
     int nbBlocs;
 private:
@@ -33,7 +34,7 @@ public:
     ModeleCut(QObject * parent);
     ModeleCut(decoupe_CM decCM,
                          directionDecoupe directionDec, positionPerte position,
-                         qreal dist, int nombreBlocs, QObject* parent);
+                         qreal dist, int nombreBlocs, qreal rayon, QObject* parent);
 
 };
 
