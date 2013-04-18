@@ -30,6 +30,11 @@ namespace OgreCNC{
          * \param parent est l'object parent
          */
         ModeleBloc(NodeBloc *rootBloc, QObject *parent);
+
+        Bloc* deleteNodeBloc(NodeBloc* node);
+
+        void deleteBloc(Bloc* bloc);
+
         /*!
          * \brief setRootNode change le noeud root
          * \param rootBloc

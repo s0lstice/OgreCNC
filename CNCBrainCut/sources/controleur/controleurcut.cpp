@@ -1,6 +1,9 @@
 #include "controleurcut.h"
 #include "../modele/modelecut.h"
 #include "controleurmain.h"
+#include "../modele/modelemain.h"
+#include "controleurbloc.h"
+#include "../modele/bloc/nodebloc.h"
 //#include "ui_vuemain.h"
 
 using namespace OgreCNC;
@@ -8,6 +11,38 @@ ControleurCut::ControleurCut(ModeleCut* modele, QObject *parent) : QObject(paren
 {
     m_modeleCut = modele;
     controleurMain = qobject_cast<ControleurMain *>(parent);
+
+    /*Création du noeud correspondant au bloc courant*/
+    if(m_modeleCut->nbFils != 0)
+        noeud = controleurMain->getModeleBlocs()->getModeleBloc()->creatNodeBloc(controleurMain->m_modele->currentBloc,controleurMain->m_modele->currentBloc->getParent());
+
+    /*Création du nombre de blocs fils nécessaires*/
+    Ogre::Vector3 dim(controleurMain->m_modele->currentBloc->getDimension()/m_modeleCut->nbFils);
+    for(int i = 0; i < m_modeleCut->nbFils; i++)
+    {
+        Bloc* blocFils = controleurMain->getModeleBlocs()->getModeleBloc()->creatBloc(dim,controleurMain->m_modele->currentBloc->getPosition()+i,noeud);
+    }
+}
+
+
+void ControleurCut::deleteBlocsCrees(){
+    /*if(noeud->getListeFils() != NULL)
+    {
+        if(m_modeleCut != NULL)
+        {
+            for(int i = 0; i < m_modeleCut->nbFils; i++)
+            {
+                //détruire les blocs fils
+                controleurMain->m_modele->getModeleBloc()->deleteBloc(noeud->getListeFils()->at(i));
+            }
+        }
+    }*/
+    if(noeud != NULL)
+    {
+        /*détruire le noeud*/
+        Bloc* bloc = controleurMain->m_modele->getModeleBloc()->deleteNodeBloc(noeud);
+        controleurMain->m_modele->getModeleBloc()->setBlocCheck(bloc, Qt::Checked);
+    }
 }
 
 void ControleurCut::update_cut(){
@@ -17,17 +52,7 @@ void ControleurCut::update_cut(){
     // Doit-on modifier uniquement les champs réellement modifiés ? Si oui, comment ? Des booléens ? Une valeur transmise par le emit ?
     if(m_modeleCut != NULL)
     {
-        /* COMMENT ON ACCEDE A L'ui ???
-        m_modeleCut->decoupeCM = ;
-        m_modeleCut->decoupeHV = ;
-        m_modeleCut->direction = ;
-        m_modeleCut->distance = ui->
-        m_modeleCut->origineDecoupe[0] = ;
-        m_modeleCut->origineDecoupe[1] = ;
-        m_modeleCut->origineDecoupe[2] = ;
-        m_modeleCut->posPerte = ;
-        m_modeleCut->nbBlocs = ;
-        */
+        //appliquer les modifications sur les blocs, on applique la découpe à partir du modèle
     }
 
 }

@@ -239,6 +239,62 @@ NodeBloc * ModeleBloc::creatNodeBloc(Bloc * bloc, NodeBloc * parent){
     return nodeBloc;
 }
 
+Bloc* ModeleBloc::deleteNodeBloc(NodeBloc* node){
+
+    if(node != NULL && node != m_root)
+    {
+        emit beginResetModel();
+
+        Bloc* bloc = node->getInitialBloc();
+
+        node->getParent()->getListeFils()->append(bloc);
+        bloc->setParent(node->getParent());
+
+        int i = node->getListeFils()->count()-1;
+
+        while((!node->getListeFils()->isEmpty()) && i>=0)
+        {
+            if(node->getListeFils()->at(i)->getType() == Bloc::NODE)
+            {
+                deleteNodeBloc((NodeBloc*)node->getListeFils()->at(i));
+            }
+            else
+            {
+                deleteBloc(node->getListeFils()->at(i));
+            }
+
+            i--;
+        }
+
+        delete node;
+
+        emit endResetModel();
+
+        //DEMANDER L'AFFICHAGE DU BLOC
+
+        return bloc;
+    }
+}
+
+void ModeleBloc::deleteBloc(Bloc* bloc){
+    if(bloc != NULL)
+    {
+        int i = 0;
+
+        while( (bloc->getParent()->getListeFils()->at(i) != bloc) && (i < bloc->getParent()->getListeFils()->count()) )
+        {
+            i++;
+        }
+
+        if(i < bloc->getParent()->getListeFils()->count())
+        {
+            bloc->getParent()->getListeFils()->remove(i);
+
+            delete bloc;
+         }
+    }
+}
+
 void ModeleBloc::SetBlocName(Bloc * bloc, const QString name)
 {
     bloc->setName(name);
@@ -258,7 +314,6 @@ bool ModeleBloc::setData (const QModelIndex &index, const QVariant &value, int r
     {
         //selectBloc(bloc, index);
         setBlocCheck(bloc, Qt::Checked);
-        emit si_selectBloc(bloc);
     }
     return true;
 }

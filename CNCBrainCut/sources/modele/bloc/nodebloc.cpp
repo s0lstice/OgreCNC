@@ -15,7 +15,7 @@ NodeBloc::~NodeBloc()
 {
     //destruction de la liste de fils
     while(!m_listeFils->isEmpty()){
-        disconnect(m_listeFils->back(), 0,0,0); //deconection
+        disconnect(m_listeFils->back(), 0,0,0); //deconnection
         delete m_listeFils->back();
         m_listeFils->pop_back();
     }

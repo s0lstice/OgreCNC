@@ -74,21 +74,10 @@ void ControleurMain::sl_update_cut(){
     }
 }
 
-void ControleurMain::sl_abort_cut(){
-//COMMANTE CAR ui N EST PAS DECLARE
-
-    /*VOIR AVEC MICKAEL : EST-CE QU'ON FAIT ICI LA REACTIVATION/DESACTIVATION DE TOUS LES BOUTONS OU PAS ?*/
-    /*On désactive les boutons d'annulation et de validation*/
-    /*Ui::VueMain* ui = this->m_vue->getUi();
-    ui->validerDecoupe_pushButton->setEnabled(false);
-    ui->annulerDecoupe_pushButton->setEnabled(false);*/
-    /*On réactive le bouton de lancement d'une découpe*/
-    //ui->demarrerDecoupe_pushButton->setEnabled(true);
-    /*On désactive également tous les autres boutons, qui ne sont accessibles que lorsque l'utilisateur démarre une découpe*/
-    /*ui->definitionDecoupeGroupBox->setEnabled(false);
-    ui->modeDecoupeDroit_GroupBox->setEnabled(false);
-    ui->modeDecoupeGauche_GroupBox->setEnabled(false);
-    ui->positionPerteGroupBox->setEnabled(false);*/
+bool ControleurMain::sl_abort_cut(){
+    m_controleurCut->deleteBlocsCrees();
+    m_controleurCut = NULL;
+    return true;
 }
 
 
@@ -99,6 +88,10 @@ void ControleurMain::sl_valid_cut(){
     //m_gestionBloc->m_currentSegment->getName();
     /*On effectue la découpe, à partir des données du modèle de découpe modeleCut*/
     ModeleCut* mCut = m_modele->getModeleCut();
+
+
+    m_controleurCut->deleteBlocsCrees();
+    m_controleurCut = NULL;
 
 
 }

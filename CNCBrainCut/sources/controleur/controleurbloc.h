@@ -35,6 +35,10 @@ namespace OgreCNC {
          */
         void changeNameOfCurrentBloc(const QString &name);
 
+        inline ModeleBloc* getModeleBloc(){
+            return m_modeleBloc;
+        }
+
     signals:
         void si_selectSegment(Ogre::ManualObject * segment);
 
