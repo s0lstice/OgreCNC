@@ -9,6 +9,9 @@
 
 namespace OgreCNC {
     class Bloc;
+    /*!
+     * \brief The ControleurOgreWidget class pour gére l'affichage 3D et dialoguer avec le reste de l'application
+     */
     class ControleurOgreWidget : public QObject
     {
         Q_OBJECT
@@ -121,14 +124,43 @@ namespace OgreCNC {
             int updateCouleurBloc(Bloc * bloc);
 
         signals:
+            /*!
+             * \brief si_blocFormOgreNode demande quel est le Bloc associé au noeud 3d
+             * \param node
+             * \return
+             */
             OgreCNC::Bloc * si_blocFormOgreNode( Ogre::SceneNode * node);
+            /*!
+             * \brief si_SelectBloc indique la selection d'un bloc
+             * \param bloc
+             */
             void si_SelectBloc(Bloc * bloc);
+            /*!
+             * \brief si_selectSegemnt indique la selection d'un segment
+             * \param segment
+             */
             void si_selectSegemnt(Ogre::ManualObject * segment);
 
         public slots:
+            /*!
+             * \brief selectBloc change la couleur des deux blocs, la nouvelle et l'encienne selection
+             * \param bloc
+             */
             void selectBloc(Bloc * bloc);
+            /*!
+             * \brief selectSegment change la couleur des deux segments, la nouvelle et l'encienne selection
+             * \param segment
+             */
             void selectSegment(Ogre::ManualObject *segment);
+            /*!
+             * \brief selectOgreBloc gere la selection d'un bloc 3D
+             * \param node
+             */
             void selectOgreBloc(Ogre::SceneNode * node);
+            /*!
+             * \brief selectOgreSegment gere la selection d'un segment
+             * \param segment
+             */
             void selectOgreSegment(Ogre::ManualObject *segment);
 
     };

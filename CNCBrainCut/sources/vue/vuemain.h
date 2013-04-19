@@ -21,43 +21,73 @@ namespace OgreCNC {
     class ControleurOgreWidget;
     class ModeleBloc;
 
+    /*!
+     * \brief The VueMain class est la vue de l'application
+     */
     class VueMain : public QMainWindow
     {
         Q_OBJECT
 
     public:
+        /*!
+         * \brief VueMain est le constructeur
+         * \param parent
+         */
         explicit VueMain(QWidget *parent = 0);
         ~VueMain();
 
+        /*!
+         * \brief setModele definit le modele
+         * \param modele
+         */
         inline void setModele(ModeleMain * modele){
             modele = modele;
         }
-
+        /*!
+         * \brief setControleur definit le controleur de l'application
+         * \param controleur
+         */
         inline void setControleur(ControleurMain * controleur){
             controleur = controleur;
         }
-
-        inline Ui::VueMain* getUi(){
-            return ui;
-        }
-
+        /*!
+         * \brief griserVoletDecoupe rand inaccessible les fonctions de decoupe
+         */
         void griserVoletDecoupe();
+        /*!
+         * \brief activerVoletDecoupe rand accessible les fonctions de decoupe
+         */
         void activerVoletDecoupe();
 
     private:
+        /*!
+         * \brief controleur est le controleur de l'application
+         */
         ControleurMain * controleur;
+        /*!
+         * \brief modele est le modele principale
+         */
         ModeleMain * modele;
-
-        QMdiArea * mdi;
+        /*!
+         * \brief m_Ogre3d est le Widget 3D
+         */
         OgreWidget * m_Ogre3d;
-
+        /*!
+         * \brief ui est le contenur graphique
+         */
         Ui::VueMain * ui;
-
+        /*!
+         * \brief m_modeleCut est le modele de découpe
+         */
         ModeleCut* m_modeleCut;
-
+        /*!
+         * \brief m_ControleurOgreWidget est le controleur d'ogreWidget
+         */
         ControleurOgreWidget * m_ControleurOgreWidget;
-        bool event(QEvent * e);
-
+        //bool event(QEvent * e);
+        /*!
+         * \brief initConnections intialise les connections
+         */
         void initConnections();
 
     signals:
@@ -65,7 +95,6 @@ namespace OgreCNC {
         void si_valid_cut();
         bool si_abort_cut();
         void si_update_cut();
-        void si_select(int id);
         void si_vueEclate(double distance);
         void si_newNameForCurrentBloc(const QString &arg1);
         void si_changeEtatForCurrentBloc(Bloc::Etat etat);

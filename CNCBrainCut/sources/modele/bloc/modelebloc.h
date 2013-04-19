@@ -10,13 +10,28 @@ namespace OgreCNC{
     class Bloc;
     class ModeleMain;
 
+    /*!
+     * \brief The ModeleBloc class permet la modification des bloc et de l'arbre
+     */
     class ModeleBloc : public QAbstractItemModel
     {
         Q_OBJECT
 
     private:
+        /*!
+         * \brief m_root le noeud racine de l'arbre
+         */
         NodeBloc * m_root;
+        /*!
+         * \brief m_modeleMain le modele principle de l'application
+         */
         ModeleMain * m_modeleMain;
+
+        /*!
+         * \brief deleteBloc supprime le bloc apssé en parametre
+         * \param bloc
+         */
+        void deleteBloc(Bloc* bloc);
 
     public:
         /*!
@@ -30,10 +45,13 @@ namespace OgreCNC{
          * \param parent est l'object parent
          */
         ModeleBloc(NodeBloc *rootBloc, QObject *parent);
-
+        /*!
+         * \brief deleteNodeBloc permet la supression d'un bloc et de ses fils
+         * \param node le noued a supprimer
+         * \return Le bloc initiale
+         */
         Bloc* deleteNodeBloc(NodeBloc* node);
 
-        void deleteBloc(Bloc* bloc);
 
         /*!
          * \brief setRootNode change le noeud root
@@ -172,13 +190,40 @@ namespace OgreCNC{
          */
         void setBlocEtat(Bloc * bloc, Bloc::Etat etat);
     signals:
-        void si_select(Bloc * bloc);
+        /*!
+         * \brief si_ogreDrawBloc est un signal pour demander que le bloc 3D soit redessiné
+         * \param bloc
+         */
         void si_ogreDrawBloc(Bloc * bloc);
+        /*!
+         * \brief si_createBloc est un signal pour indiquer la creation d'un bloc
+         * \param bloc
+         */
         void si_createBloc(Bloc * bloc);
+        /*!
+         * \brief si_selectBloc est un signal pour indiquer la selaction d'un bloc
+         * \param bloc
+         */
         void si_selectBloc(Bloc * bloc);
+        /*!
+         * \brief si_delete3Dbloc est un signal pour demander la supression d'un bloc 3D
+         * \param bloc
+         */
         void si_delete3Dbloc(Bloc * bloc);
+        /*!
+         * \brief si_updateDimensionBloc est un signal pour indiquer que les dimantion du bloc ont changé
+         * \param bloc
+         */
         void si_updateDimensionBloc(Bloc * bloc);
-        void si_updatePostionBloc(Bloc * bloc);
+        /*!
+         * \brief si_updatePositionBloc est un signal pour indiquer que la position du bloc à changé
+         * \param bloc
+         */
+        void si_updatePositionBloc(Bloc * bloc);
+        /*!
+         * \brief si_updateCouleurBloc  est un signal pour indiquer que la couleur du bloc à changé
+         * \param bloc
+         */
         void si_updateCouleurBloc(Bloc* bloc);
     public slots:
 

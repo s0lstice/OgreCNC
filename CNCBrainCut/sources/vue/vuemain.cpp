@@ -45,8 +45,6 @@ VueMain::~VueMain()
 }
 
 void VueMain::initConnections(){
-    //select
-    connect(m_Ogre3d, SIGNAL(si_select(int)), this, SIGNAL(si_select(int)));
     connect(controleur, SIGNAL(si_init_cut(ModeleCut*)), this, SLOT(sl_init_cut(ModeleCut*)));
     connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
     connect(m_ControleurOgreWidget, SIGNAL(si_blocFormOgreNode(Ogre::SceneNode*)), controleur, SLOT(sl_blocFromOgreNode(Ogre::SceneNode*)));
@@ -74,26 +72,26 @@ void VueMain::sl_updateCouleurBloc(Bloc * bloc){
     m_ControleurOgreWidget->updateCouleurBloc(bloc);
 }
 
-bool VueMain::event(QEvent * e)
-{
-    switch(e->type())
-    {
-        // ...
+//bool VueMain::event(QEvent * e)
+//{
+//    switch(e->type())
+//    {
+//        // ...
 
-        case QEvent::WindowActivate :
-            // gained focus
-            break ;
+//        case QEvent::WindowActivate :
+//            // gained focus
+//            break ;
 
-        case QEvent::WindowDeactivate :
-            // lost focus
-        this->showMinimized(); //reduit l'applicatoin pour
-            break ;
-        // ...
-    default:
-        break;
-    } ;
-    return QMainWindow::event(e) ;
-}
+//        case QEvent::WindowDeactivate :
+//            // lost focus
+//        this->showMinimized(); //reduit l'applicatoin pour
+//            break ;
+//        // ...
+//    default:
+//        break;
+//    } ;
+//    return QMainWindow::event(e) ;
+//}
 
 void VueMain::griserVoletDecoupe()
 {

@@ -4,7 +4,7 @@
 #include "../modele/modelemain.h"
 #include "controleurbloc.h"
 #include "../modele/bloc/nodebloc.h"
-//#include "ui_vuemain.h"
+
 
 using namespace OgreCNC;
 ControleurCut::ControleurCut(ModeleCut* modele, QObject *parent) : QObject(parent)
@@ -14,13 +14,13 @@ ControleurCut::ControleurCut(ModeleCut* modele, QObject *parent) : QObject(paren
 
     /*Création du noeud correspondant au bloc courant*/
     if(m_modeleCut->nbFils != 0)
-        noeud = controleurMain->getModeleBlocs()->getModeleBloc()->creatNodeBloc(controleurMain->m_modele->currentBloc,controleurMain->m_modele->currentBloc->getParent());
+        noeud = controleurMain->modeleMain->getModeleBloc()->creatNodeBloc(controleurMain->modeleMain->currentBloc,controleurMain->modeleMain->currentBloc->getParent());
 
     /*Création du nombre de blocs fils nécessaires*/
-    Ogre::Vector3 dim(controleurMain->m_modele->currentBloc->getDimension()/m_modeleCut->nbFils);
+    Ogre::Vector3 dim(controleurMain->modeleMain->currentBloc->getDimension()/m_modeleCut->nbFils);
     for(int i = 0; i < m_modeleCut->nbFils; i++)
     {
-        Bloc* blocFils = controleurMain->getModeleBlocs()->getModeleBloc()->creatBloc(dim,controleurMain->m_modele->currentBloc->getPosition()+i,noeud);
+        Bloc* blocFils = controleurMain->modeleMain->getModeleBloc()->creatBloc(dim,controleurMain->modeleMain->currentBloc->getPosition()+i,noeud);
     }
 }
 
@@ -40,8 +40,8 @@ void ControleurCut::deleteBlocsCrees(){
     if(noeud != NULL)
     {
         /*détruire le noeud*/
-        Bloc* bloc = controleurMain->m_modele->getModeleBloc()->deleteNodeBloc(noeud);
-        controleurMain->m_modele->getModeleBloc()->setBlocCheck(bloc, Qt::Checked);
+        Bloc* bloc = controleurMain->modeleMain->getModeleBloc()->deleteNodeBloc(noeud);
+        controleurMain->modeleMain->getModeleBloc()->setBlocCheck(bloc, Qt::Checked);
     }
 }
 

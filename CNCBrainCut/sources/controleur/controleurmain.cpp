@@ -17,15 +17,15 @@ using namespace OgreCNC;
 ControleurMain::ControleurMain(QWidget *parent) :
     QWidget(parent)
 {
-    m_modele = new ModeleMain(this);
+    modeleMain = new ModeleMain(this);
 
     m_controleurCut = NULL;
 
     initControleurs();
 
     m_vue = new VueMain(this);
-    m_vue->setModele(m_modele);
-    m_modele->setVue(m_vue);
+    m_vue->setModele(modeleMain);
+    modeleMain->setVue(m_vue);
 
     initConnections();
 }
@@ -38,17 +38,17 @@ void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_valid_cut()), this, SLOT(sl_valid_cut()));
     connect(m_vue, SIGNAL(si_newNameForCurrentBloc(QString)), this, SLOT(sl_newNameForCurrentBloc(QString)));
     connect(m_vue, SIGNAL(si_changeEtatForCurrentBloc(Bloc::Etat)), this, SLOT(sl_changeEtatForCurrentBloc(Bloc::Etat)));
-    connect(m_gestionBloc, SIGNAL(si_selectSegment(Ogre::ManualObject*)), m_vue, SLOT(sl_selectSegment(Ogre::ManualObject*)));
+    connect(m_controleurBloc, SIGNAL(si_selectSegment(Ogre::ManualObject*)), m_vue, SLOT(sl_selectSegment(Ogre::ManualObject*)));
 }
 
 void ControleurMain::initControleurs(){
-    m_gestionBloc = new ControleurBloc(this);
-    m_gestionBloc->setModeleBloc(m_modele->getModeleBloc());
+    m_controleurBloc = new ControleurBloc(this);
+    m_controleurBloc->setModeleBloc(modeleMain->getModeleBloc());
 }
 
 /*On traite le signal de début de découpe*/
 void ControleurMain::sl_start_cut(){
-    ModeleCut* mCut = m_modele->getModeleCut();
+    ModeleCut* mCut = modeleMain->getModeleCut();
 
     if(mCut->isInUse == true)
     {
@@ -87,7 +87,7 @@ void ControleurMain::sl_valid_cut(){
     /*On récupère l'arête sélectionnée*/
     //m_gestionBloc->m_currentSegment->getName();
     /*On effectue la découpe, à partir des données du modèle de découpe modeleCut*/
-    ModeleCut* mCut = m_modele->getModeleCut();
+    ModeleCut* mCut = modeleMain->getModeleCut();
 
 
     m_controleurCut->deleteBlocsCrees();
@@ -99,27 +99,27 @@ void ControleurMain::sl_valid_cut(){
 
 //***** SLOTS *****//
 void ControleurMain::sl_selectBloc(Bloc * bloc){
-    m_gestionBloc->selectBloc(bloc);
+    m_controleurBloc->selectBloc(bloc);
 }
 
 void ControleurMain::sl_selectSegment(Ogre::ManualObject * segment){
-    m_gestionBloc->selectSegment(segment);
+    m_controleurBloc->selectSegment(segment);
 }
 
 void ControleurMain::sl_vueEclate(double distance){
-    m_gestionBloc->appliquerVueEclatee(distance, NULL);
+    m_controleurBloc->appliquerVueEclatee(distance, NULL);
     emit si_updateOgreVue();
 }
 
 Bloc * ControleurMain::sl_blocFromOgreNode(Ogre::SceneNode * node){
-    return m_modele->getModeleBloc()->blocFromOgreNode(node);
+    return modeleMain->getModeleBloc()->blocFromOgreNode(node);
 }
 
 void ControleurMain::sl_newNameForCurrentBloc(const QString &arg1){
-    m_modele->getModeleBloc()->SetBlocName(m_modele->currentBloc, arg1);
+    modeleMain->getModeleBloc()->SetBlocName(modeleMain->currentBloc, arg1);
 }
 
 void ControleurMain::sl_changeEtatForCurrentBloc(Bloc::Etat etat)
 {
-    m_modele->getModeleBloc()->setBlocEtat(m_modele->currentBloc, etat);
+    modeleMain->getModeleBloc()->setBlocEtat(modeleMain->currentBloc, etat);
 }

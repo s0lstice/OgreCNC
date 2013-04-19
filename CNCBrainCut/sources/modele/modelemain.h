@@ -15,15 +15,30 @@ namespace OgreCNC{
     class Bloc;
     class ModeleBloc;
 
+    /*!
+     * \brief The ModeleMain class est le modlee principale de l'application
+     */
     class ModeleMain : public QObject
     {
         Q_OBJECT
     public:
+        /*!
+         * \brief ModeleMain le constructeur
+         * \param parent
+         */
         explicit ModeleMain(QObject *parent = 0);
         ~ModeleMain();
 
+        /*!
+         * \brief getModeleCut renvoie le modele de decoupe
+         * \return
+         */
         ModeleCut* getModeleCut();
 
+        /*!
+         * \brief setVue définit la vue utilisé est etablie la connectiona avec
+         * \param vue
+         */
         inline void setVue(VueMain * vue){
             if(m_vue != NULL)
                 disconnect(m_vue, 0,0,0);
@@ -46,11 +61,17 @@ namespace OgreCNC{
             m_modeleBloc->creatBloc(Ogre::Vector3(100,100,100), Ogre::Vector3(0,0,150), nb);
         }
 
-
+        /*!
+         * \brief setControleur definit le controleur principale
+         * \param controleur
+         */
         inline void setControleur(ControleurMain * controleur){
             m_controleur = controleur;
         }
-
+        /*!
+         * \brief getModeleBloc renvoie le modele bloc
+         * \return
+         */
         inline ModeleBloc * getModeleBloc(){
             return m_modeleBloc;
         }
@@ -69,13 +90,29 @@ namespace OgreCNC{
         QModelIndex currentIndex;
 
     private:
+        /*!
+         * \brief m_controleur est le controleur principale
+         */
         ControleurMain * m_controleur;
+        /*!
+         * \brief m_vue est la vue principale
+         */
         VueMain * m_vue;
+        /*!
+         * \brief m_modeleBloc est le modele de bloc
+         */
         ModeleBloc * m_modeleBloc;
+        /*!
+         * \brief m_RootTravailBlocs est la racine de l'arbre des bloc
+         */
         NodeBloc * m_RootTravailBlocs;
-
+        /*!
+         * \brief m_modeleCut est le modele de découpe
+         */
         ModeleCut* m_modeleCut;
-
+        /*!
+         * \brief m_InitialBloc est le bloc initial
+         */
         Bloc * m_InitialBloc;
 
     signals:
