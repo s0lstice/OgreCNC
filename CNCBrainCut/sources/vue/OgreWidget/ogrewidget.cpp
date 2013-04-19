@@ -163,9 +163,23 @@ void OgreWidget::mouseReleaseEvent(QMouseEvent *e)
     }
 }
 
+
+void OgreWidget::wheelEvent(QWheelEvent *e)
+{
+    Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
+
+    ogreCamera->moveRelative(Ogre::Vector3(0, 0, -e->delta() * 0.004f * dist));
+
+    update();
+    emit cameraPositionChanged(ogreCamera->getPosition());
+
+    e->accept();
+}
+
+
 void OgreWidget::moveEvent(QMoveEvent *e)
 {
-    QWidget::moveEvent(e);
+    QGLWidget::moveEvent(e);
     
     if(e->isAccepted() && ogreRenderWindow)
     {
@@ -185,7 +199,7 @@ void OgreWidget::paintEvent(QPaintEvent *e)
 
 void OgreWidget::resizeEvent(QResizeEvent *e)
 {
-    QWidget::resizeEvent(e);
+    QGLWidget::resizeEvent(e);
     
     if(e->isAccepted())
     {
@@ -211,19 +225,7 @@ void OgreWidget::showEvent(QShowEvent *e)
         initOgreSystem();
     }
     
-    QWidget::showEvent(e);
-}
-
-void OgreWidget::wheelEvent(QWheelEvent *e)
-{
-    Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
-
-    ogreCamera->moveRelative(Ogre::Vector3(0, 0, -e->delta() * 0.004f * dist));
-
-    update();
-    emit cameraPositionChanged(ogreCamera->getPosition());
-
-    e->accept();
+    QGLWidget::showEvent(e);
 }
 
 void OgreWidget::initOgreSystem()

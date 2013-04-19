@@ -28,7 +28,7 @@ void ModeleBloc::setRootNode(NodeBloc *rootBloc){
     }
     m_root = rootBloc;
     connect(m_root, SIGNAL(updateDimensionBloc(Bloc*)), this, SIGNAL(si_updateDimensionBloc(Bloc*)));
-    connect(m_root, SIGNAL(updatePostionBloc(Bloc*)), this, SIGNAL(si_updatePostionBloc(Bloc*)));
+    connect(m_root, SIGNAL(updatePostionBloc(Bloc*)), this, SIGNAL(si_updatePositionBloc(Bloc*)));
     connect(m_root, SIGNAL(updateCouleurBloc(Bloc*)), this, SIGNAL(si_updateCouleurBloc(Bloc*)));
 }
 

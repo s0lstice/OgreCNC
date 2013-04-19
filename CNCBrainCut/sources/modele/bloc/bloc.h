@@ -9,6 +9,9 @@ namespace  OgreCNC {
 
     class NodeBloc;
 
+    /*!
+     * \brief The Bloc class definit un bloc
+     */
     class Bloc : public QObject
     {
         Q_OBJECT
@@ -111,12 +114,26 @@ namespace  OgreCNC {
         Ogre::Vector3 m_positionVueEclatee; // position du centre de l'objet dans la vue éclatée
 
     signals:
+        /*!
+         * \brief updateDimensionBloc est le signal qui indique que les dimensions du bloc ont changées
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updateDimensionBloc(Bloc * bloc);
+        /*!
+         * \brief updatePostionBloc est le signal qui indique que la position du bloc à changée
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updatePostionBloc(Bloc * bloc);
+        /*!
+         * \brief updateCouleurBloc est le signal qui indique que la couleur du bloc à changée
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updateCouleurBloc(Bloc * bloc);
 
     public:
-
+        /*!
+         * \brief updateSommets recalcule la position des sommets du bloc en fonction de la position et de la dimension
+         */
         void updateSommets();
 
         /*!
@@ -134,12 +151,6 @@ namespace  OgreCNC {
         Bloc(NodeBloc *parent);
 
         ~Bloc();
-
-//        /*!
-//         * \brief setParent definit un nouveau parent au bloc.
-//         * \param parent
-//         */
-//        inline void setParent(NodeBloc * parent){m_parent = parent;}
 
         /*!
          * \brief getType pour savoir si c'est un Bloc ou un NodeBloc

@@ -5,40 +5,63 @@
 #include "bloc.h"
 
 namespace OgreCNC {
-
+    /*!
+     * \brief The NodeBloc class definit un noeud
+     */
     class NodeBloc : public Bloc
     {
         Q_OBJECT
     private:
-        /*Liste des noeuds fils issus de la découpe du noeud bloc*/
+        /*!
+         * \brief m_listeFils Liste des noeuds fils issus de la découpe du noeud bloc
+         */
         QVector<Bloc*> * m_listeFils;
+        /*!
+         * \brief m_bloc est le bloc initial
+         */
         Bloc * m_bloc; //bloc initial, avant decoupe
 
     signals:
+        /*!
+         * \brief updateDimensionBloc est le signal qui indique que les dimensions du bloc ont changées
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updateDimensionBloc(Bloc * bloc);
+        /*!
+         * \brief updatePostionBloc est le signal qui indique que la position du bloc à changée
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updatePostionBloc(Bloc * bloc);
+        /*!
+         * \brief updateCouleurBloc est le signal qui indique que la couleur du bloc à changée
+         * \param bloc est le bloc qui a ete modifié
+         */
         void updateCouleurBloc(Bloc * bloc);
 
     public:
-        /*Constructeurs*/
-
+        /*!
+         * \brief NodeBloc est le constructeur
+         * \param bloc est le bloc initial
+         * \param parent est le noeud parent. Si ce paremetre est null, le NodeBLoc est rattaché à la racine
+         */
         explicit NodeBloc(Bloc *bloc, NodeBloc * parent = 0);
         ~NodeBloc();
 
         /*Définition des accesseurs aux attributs privés*/
 
         /*Méthodes "Get"*/
+        /*!
+         * \brief getListeFils renvoie la liste des fils
+         * \return
+         */
         inline QVector<Bloc*> * getListeFils()
         {
             return m_listeFils;
         }
-
-        /*Méthodes "Set"*/
-        inline void setListeFils(QVector<Bloc*> * listeFilsNoeud)
-        {
-            m_listeFils = listeFilsNoeud;
-        }
-
+        /*!
+         * \brief append ajout un element au noeud et crée les connections de mise a jour des bloc
+         * \param bloc
+         */
         inline void append(Bloc * bloc){
             bloc->setParent(this);
             m_listeFils->append(bloc);
@@ -47,6 +70,10 @@ namespace OgreCNC {
             connect(bloc, SIGNAL(updateCouleurBloc(Bloc*)), this, SIGNAL(updateCouleurBloc(Bloc*)));
         }
 
+        /*!
+         * \brief remove retir un element du noeud et detruit ses connections
+         * \param bloc
+         */
         inline void remove(Bloc * bloc){
             bloc->setParent(NULL); //met le parent du bloc à null
             for(int i =0; i < m_listeFils->count(); ++i){
@@ -60,6 +87,11 @@ namespace OgreCNC {
 
         }
 
+        /*!
+         * \brief at renvoie l'item à la position donné
+         * \param i
+         * \return
+         */
         inline Bloc * at(int i){
             return m_listeFils->at(i);
         }
@@ -78,7 +110,9 @@ namespace OgreCNC {
         inline void setInitialBloc(Bloc * bloc){
             m_bloc = bloc;
         }
-
+        /*!
+         * \brief updateSommets met a jour les somme du blic initial
+         */
         void updateSommets();
         /*!
          * \brief setEtat change l'etat du bloc initial
@@ -231,11 +265,18 @@ namespace OgreCNC {
          */
         inline Ogre::Vector3 getSommet7(){ return m_bloc->getSommet7();}
 
+        /*!
+         * \brief serialize le NodeBloc
+         * \return
+         */
         QVariantMap serialize();
+        /*!
+         * \brief deserialize le NodeBloc
+         * \param nodeBloc
+         */
         void deserialize(QVariantMap nodeBloc);
-        /*Destructeurs des attributs de type "pointeur" et de la classe elle même*/
+
     private:
-        void destroyListeFils();
 
     };
 

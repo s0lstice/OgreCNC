@@ -28,14 +28,14 @@ void ControleurBloc::setModeleBloc(ModeleBloc * modeleBloc)
 
 void ControleurBloc::selectSegment(Ogre::ManualObject * segment)
 {
-    m_controleur->m_modele->currentSegment = segment;
+    m_controleur->modeleMain->currentSegment = segment;
 
-    emit si_selectSegment(m_controleur->m_modele->currentSegment); //indique la selection d'un segment
+    emit si_selectSegment(m_controleur->modeleMain->currentSegment); //indique la selection d'un segment
 
     //selctionne le bloc si le segemnt ne fait pas partie du bloc courent
-    if(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode() != m_controleur->m_modele->currentBloc->getNodeBloc3d())
+    if(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode() != m_controleur->modeleMain->currentBloc->getNodeBloc3d())
     {
-        selectBloc(m_modeleBloc->blocFromOgreNode(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode()));
+        selectBloc(m_modeleBloc->blocFromOgreNode(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode()));
     }
 }
 
@@ -46,18 +46,18 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
         return;
     }
 
-    if(m_controleur->m_modele->currentBloc  != bloc)
+    if(m_controleur->modeleMain->currentBloc  != bloc)
     {
 
         m_modeleBloc->setBlocCheck(bloc, Qt::Checked);
-        m_controleur->m_modele->currentIndex = index;
+        m_controleur->modeleMain->currentIndex = index;
 
         //deslectione du segment courent s'il n'est pas sur le bloc selectionne
-        if(m_controleur->m_modele->currentSegment != NULL)
-            if(m_modeleBloc->blocFromOgreNode(m_controleur->m_modele->currentSegment->getParentSceneNode()->getParentSceneNode()) != m_controleur->m_modele->currentBloc)
+        if(m_controleur->modeleMain->currentSegment != NULL)
+            if(m_modeleBloc->blocFromOgreNode(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode()) != m_controleur->modeleMain->currentBloc)
             {
-                m_controleur->m_modele->currentSegment = NULL;
-                emit si_selectSegment(m_controleur->m_modele->currentSegment);
+                m_controleur->modeleMain->currentSegment = NULL;
+                emit si_selectSegment(m_controleur->modeleMain->currentSegment);
             }
     }
 }
@@ -165,5 +165,5 @@ Ogre::Vector3 ControleurBloc::calculerConstanteVueEclatee(Bloc* noeudAdeplacer, 
 
 void ControleurBloc::changeNameOfCurrentBloc(const QString &name)
 {
-    m_controleur->m_modele->currentBloc->setName(name);
+    m_controleur->modeleMain->currentBloc->setName(name);
 }
