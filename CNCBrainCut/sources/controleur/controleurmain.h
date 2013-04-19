@@ -33,7 +33,7 @@ namespace OgreCNC {
          */
         ModeleMain * modeleMain;
 
-        inline ControleurBloc * getModeleBlocs(){
+        inline ControleurBloc * getControleurBloc(){
             return m_controleurBloc;
         }
 

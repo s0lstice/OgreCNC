@@ -138,7 +138,7 @@ void ControleurMain::replacerBlocs(NodeBloc* node){
 
 void ControleurMain::sl_vueEclate(double distance){
     /*On replace les blocs à leur position initiale*/
-    replacerBlocs(getModeleBlocs()->getModeleBloc()->getRootNode());
+    replacerBlocs(getControleurBloc()->getModeleBloc()->getRootNode());
     m_controleurBloc->appliquerVueEclatee(distance, NULL);
     emit si_updateOgreVue();
 }
