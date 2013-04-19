@@ -9,6 +9,7 @@
 #include "../modele/modelemain.h"
 #include "OgreWidget/controleurogrewidget.h"
 #include "../modele/bloc/modelebloc.h"
+#include "../modele/bloc/nodebloc.h"
 
 using namespace OgreCNC;
 
@@ -180,6 +181,9 @@ void VueMain::sl_init_cut(ModeleCut *modele){
         }
     }
 
+    /*Rayon de chauffe*/
+    ui->rayon_chauffe_text->setText(QString::number(m_modeleCut->rayonChauffe));
+
     /*Distance de l'origine au point de découpe*/
     ui->distance_text->setText(QString::number(m_modeleCut->distance));
 
@@ -274,17 +278,17 @@ void OgreCNC::VueMain::on_multipleRadioButton_clicked()
                 Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                 if(m_modeleCut->direction == ModeleCut::X)
                 {
-                    m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                    m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                 }
                 else
                 {
                     if(m_modeleCut->direction == ModeleCut::Y)
                     {
-                        m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                     else
                     {
-                        m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                 }
             }
@@ -295,14 +299,14 @@ void OgreCNC::VueMain::on_multipleRadioButton_clicked()
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                         {
-                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                         }
                         else
                         {
                             int i = 0;
-                            while(m_modeleCut->distance * i <= dim[0])
+                            while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                 i++;
 
                             m_modeleCut->nbFils = i;
@@ -312,14 +316,14 @@ void OgreCNC::VueMain::on_multipleRadioButton_clicked()
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[1])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -327,14 +331,14 @@ void OgreCNC::VueMain::on_multipleRadioButton_clicked()
                         }
                         else
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[2])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -373,17 +377,17 @@ void OgreCNC::VueMain::on_directionX_radioButton_clicked()
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                     else
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                     }
                 }
@@ -394,14 +398,14 @@ void OgreCNC::VueMain::on_directionX_radioButton_clicked()
                         Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                         if(m_modeleCut->direction == ModeleCut::X)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[0])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -411,14 +415,14 @@ void OgreCNC::VueMain::on_directionX_radioButton_clicked()
                         {
                             if(m_modeleCut->direction == ModeleCut::Y)
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[1])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -426,14 +430,14 @@ void OgreCNC::VueMain::on_directionX_radioButton_clicked()
                             }
                             else
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[2])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -473,17 +477,17 @@ void OgreCNC::VueMain::on_directionY_radioButton_clicked()
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
                     }
                     else
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
                         }
                     }
                 }
@@ -494,14 +498,14 @@ void OgreCNC::VueMain::on_directionY_radioButton_clicked()
                         Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                         if(m_modeleCut->direction == ModeleCut::X)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[0])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -511,14 +515,14 @@ void OgreCNC::VueMain::on_directionY_radioButton_clicked()
                         {
                             if(m_modeleCut->direction == ModeleCut::Y)
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[1])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -526,14 +530,14 @@ void OgreCNC::VueMain::on_directionY_radioButton_clicked()
                             }
                             else
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[2])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -573,17 +577,17 @@ void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                     else
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                     }
                 }
@@ -594,14 +598,14 @@ void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
                         Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                         if(m_modeleCut->direction == ModeleCut::X)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[0])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -611,14 +615,14 @@ void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
                         {
                             if(m_modeleCut->direction == ModeleCut::Y)
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[1])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -626,14 +630,14 @@ void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
                             }
                             else
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[2])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -700,17 +704,17 @@ void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                     else
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                     }
                 }
@@ -721,14 +725,14 @@ void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
                         Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                         if(m_modeleCut->direction == ModeleCut::X)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[0])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -738,14 +742,14 @@ void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
                         {
                             if(m_modeleCut->direction == ModeleCut::Y)
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[1])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -753,14 +757,14 @@ void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
                             }
                             else
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[2])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -800,17 +804,17 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/m_modeleCut->distance);
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                     }
                     else
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/m_modeleCut->distance);
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
                         }
                     }
                 }
@@ -821,14 +825,14 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
                         Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                         if(m_modeleCut->direction == ModeleCut::X)
                         {
-                            if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[0])
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
                             {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(m_modeleCut->distance * i <= dim[0])
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -838,14 +842,14 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
                         {
                             if(m_modeleCut->direction == ModeleCut::Y)
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[1])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[1])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -853,14 +857,14 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
                             }
                             else
                             {
-                                if(m_modeleCut->distance * m_modeleCut->nbBlocs <= dim[2])
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
                                 {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
                                 }
                                 else
                                 {
                                     int i = 0;
-                                    while(m_modeleCut->distance * i <= dim[2])
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -876,10 +880,47 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
     }
 }
 
+void VueMain::replacerBlocs(NodeBloc* node){
+    /*On replace les blocs dans leur position avant l'application de la vue éclatée*/
+
+    Bloc* bloc;
+    Ogre::Vector3 positionBloc;
+
+    if(node == NULL)
+    {
+        node = modele->getModeleBloc()->getRootNode();
+    }
+
+    //Récupération des fils du noeud bloc
+    QVector<Bloc*> * listeFils = node->getListeFils();
+
+    //On parcourt tous les fils du noeud
+    for(int i = 0; i < listeFils->count(); i++)
+    {
+        bloc = listeFils->data()[i];
+
+        switch(bloc->getType())
+        {
+            case Bloc::BLOC:
+                positionBloc = bloc->getPositionVueEclatee();
+                bloc->setPosition(positionBloc);
+
+            case Bloc::NODE:
+                replacerBlocs((NodeBloc*)bloc);
+        }
+    }
+}
+
 void OgreCNC::VueMain::on_distanceVueEclate_valueChanged(int arg1)
 {
     if(ui->vueEclateCheched->checkState() == Qt::Checked)
+    {
+        /*On replace les blocs à leur position initiale*/
+        replacerBlocs(controleur->getModeleBlocs()->getModeleBloc()->getRootNode());
+
+        /*On applique le nouveau déplacement*/
         emit si_vueEclate(ui->distanceVueEclate->value());
+    }
     else
         emit si_vueEclate(0);
 }
@@ -905,15 +946,19 @@ void OgreCNC::VueMain::on_etatblocuse_clicked(bool checked)
         emit si_changeEtatForCurrentBloc(Bloc::CHUTE);
 }
 
-void OgreCNC::VueMain::on_distanceVueEclate_editingFinished()
-{
-
-}
-
 void OgreCNC::VueMain::on_etatblocchute_clicked(bool checked)
 {
     if(!checked)
         emit si_changeEtatForCurrentBloc(Bloc::UTILISE);
     else
         emit si_changeEtatForCurrentBloc(Bloc::CHUTE);
+}
+
+void OgreCNC::VueMain::on_rayon_chauffe_text_textEdited(const QString &arg1)
+{
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->rayonChauffe = ui->rayon_chauffe_text->text().toFloat();
+    }
+    emit si_update_cut();
 }

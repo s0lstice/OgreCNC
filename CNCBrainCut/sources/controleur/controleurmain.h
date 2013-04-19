@@ -28,10 +28,26 @@ namespace OgreCNC {
          */
         explicit ControleurMain(QWidget *parent = 0);
 
+<<<<<<< HEAD
         /*!
          * \brief modeleMain est le modele principale de l'application
          */
         ModeleMain * modeleMain;
+=======
+        inline ControleurBloc * getModeleBlocs(){
+            return m_gestionBloc;
+        }
+
+        inline ControleurCut * getControleurCut(){
+            return m_controleurCut;
+        }
+
+        inline VueMain * getVue(){
+            return m_vue;
+        }
+
+        ModeleMain * m_modele;
+>>>>>>> ca2fa4ecd01b04124c3869d00039559409fb5047
     private:
         /*!
          * \brief m_vue est la vue principale de l'application

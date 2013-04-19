@@ -58,6 +58,7 @@ namespace OgreCNC {
          * \brief activerVoletDecoupe rand accessible les fonctions de decoupe
          */
         void activerVoletDecoupe();
+        void replacerBlocs(NodeBloc* node);
 
     private:
         /*!
@@ -123,13 +124,14 @@ namespace OgreCNC {
         void on_vueEclateCheched_clicked(bool checked);
         void on_blocNom_text_textEdited(const QString &arg1);
         void on_etatblocuse_clicked(bool checked);
-        void on_distanceVueEclate_editingFinished();
         void on_etatblocchute_clicked(bool checked);
 
         void sl_selectBloc(Bloc * bloc);
         void sl_selectSegment(Ogre::ManualObject * segment);
         void sl_init_cut(ModeleCut* modele);
         void sl_setTreeBlocModele(ModeleBloc * modeleBloc);
+    private slots:
+        void on_rayon_chauffe_text_textEdited(const QString &arg1);
     };
 }
 #endif // VUEMAIN_H

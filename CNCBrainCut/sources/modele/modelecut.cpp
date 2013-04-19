@@ -9,6 +9,7 @@ ModeleCut::ModeleCut(QObject * parent) : QObject(parent)
     isInUse = false;
     distance = 0.0;
     nbBlocs = 0;
+    rayonChauffe = 0;
     decoupeCM = CLASSIQUE;
     nbFils = 2; //pour une découpe classique, on aura forcément 2 fils créés
     direction = X;
@@ -18,7 +19,7 @@ ModeleCut::ModeleCut(QObject * parent) : QObject(parent)
 
 ModeleCut::ModeleCut(decoupe_CM decCM,
                      directionDecoupe directionDec, positionPerte position,
-                     qreal dist, int nombreBlocs, QObject *parent) : QObject(parent)
+                     qreal dist, int nombreBlocs, qreal rayon, QObject *parent) : QObject(parent)
 {
     m_modeleMain = qobject_cast<ModeleMain*>(parent);
     isInUse = false;
@@ -26,6 +27,7 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
     direction = directionDec;
     posPerte = position;
     distance = dist;
+    rayonChauffe = rayon;
     nbBlocs = nombreBlocs;
     if(decoupeCM == CLASSIQUE)
     {
@@ -44,17 +46,17 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                 Ogre::Vector3 dim = m_modeleMain->currentBloc->getDimension();
                 if(direction == X)
                 {
-                    nbFils = floor(dim[0]/distance);
+                    nbFils = floor(dim[0]/(distance+rayonChauffe)) + 1;//+1 pour la chute
                 }
                 else
                 {
                     if(direction == Y)
                     {
-                        nbFils = floor(dim[1]/distance);
+                        nbFils = floor(dim[1]/(distance+rayonChauffe)) + 1;
                     }
                     else
                     {
-                        nbFils = floor(dim[2]/distance);
+                        nbFils = floor(dim[2]/(distance+rayonChauffe)) + 1;
                     }
                 }
             }
@@ -65,14 +67,14 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                     Ogre::Vector3 dim = m_modeleMain->currentBloc->getDimension();
                     if(direction == X)
                     {
-                        if(distance * nbBlocs <= dim[0])
+                        if((distance+rayonChauffe) * nbBlocs <= dim[0])
                         {
-                            nbFils = nbBlocs;
+                            nbFils = nbBlocs + 1;//+1 pour la chute
                         }
                         else
                         {
                             int i = 0;
-                            while(distance * i <= dim[0])
+                            while((distance+rayonChauffe) * i <= dim[0])
                                 i++;
 
                             nbFils = i;
@@ -82,14 +84,14 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                     {
                         if(direction == Y)
                         {
-                            if(distance * nbBlocs <= dim[1])
+                            if((distance+rayonChauffe) * nbBlocs <= dim[1])
                             {
-                                nbFils = nbBlocs;
+                                nbFils = nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(distance * i <= dim[1])
+                                while((distance+rayonChauffe) * i <= dim[1])
                                     i++;
 
                                 nbFils = i;
@@ -97,14 +99,14 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                         }
                         else
                         {
-                            if(distance * nbBlocs <= dim[2])
+                            if((distance+rayonChauffe) * nbBlocs <= dim[2])
                             {
-                                nbFils = nbBlocs;
+                                nbFils = nbBlocs + 1;
                             }
                             else
                             {
                                 int i = 0;
-                                while(distance * i <= dim[2])
+                                while((distance+rayonChauffe) * i <= dim[2])
                                     i++;
 
                                 nbFils = i;
