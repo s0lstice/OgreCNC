@@ -42,6 +42,14 @@ namespace OgreCNC {
         void setModeleBloc(ModeleBloc * modeleBloc);
 
         /*!
+         * \brief getModeleBloc renvoie le modele bloc
+         * \param void
+         * \return (ModeleBloc *) le modele bloc
+         */
+        inline ModeleBloc * getModeleBloc(){return m_modeleBloc;}
+
+
+        /*!
          * \brief selectSegment choisit si le segment passé en parametre doit etre sélectionné, si oui, il se sélectionne
          * \param segment
          */

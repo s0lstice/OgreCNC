@@ -125,7 +125,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
         }
 
         /*On replace tous les blocs*/
-        m_controleur->getVue()->replacerBlocs(node);
+        m_controleur->replacerBlocs(node);
     }
 }
 

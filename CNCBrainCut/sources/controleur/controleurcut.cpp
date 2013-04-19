@@ -40,8 +40,8 @@ void ControleurCut::deleteBlocsCrees(){
     if(noeud != NULL)
     {
         /*détruire le noeud et tous ses fils*/
-        Bloc* bloc = controleurMain->m_modele->getModeleBloc()->deleteNodeBloc(noeud);
-        controleurMain->m_modele->getModeleBloc()->setBlocCheck(bloc, Qt::Checked);
+        Bloc* bloc = controleurMain->modeleMain->getModeleBloc()->deleteNodeBloc(noeud);
+        controleurMain->modeleMain->getModeleBloc()->setBlocCheck(bloc, Qt::Checked);
     }
 }
 
@@ -59,23 +59,23 @@ void ControleurCut::update_cut(){
             if(m_modeleCut->direction == ModeleCut::X)
             {
                 dim[0] = m_modeleCut->distance;
-                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                 fils->setDimension(dim);
             }
             else
             {
                 if(m_modeleCut->direction == ModeleCut::Y)
                 {
-                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
+                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
                     dim[1] = m_modeleCut->distance;
-                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                     fils->setDimension(dim);
                 }
                 else
                 {
-                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
+                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
                     dim[2] = m_modeleCut->distance;
                     fils->setDimension(dim);
                 }
@@ -85,25 +85,25 @@ void ControleurCut::update_cut(){
             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(1);
             if(m_modeleCut->direction == ModeleCut::X)
             {
-                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]-m_modeleCut->distance;
-                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]-m_modeleCut->distance;
+                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                 fils->setDimension(dim);
             }
             else
             {
                 if(m_modeleCut->direction == ModeleCut::Y)
                 {
-                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]-m_modeleCut->distance;
-                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]-m_modeleCut->distance;
+                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                     fils->setDimension(dim);
                 }
                 else
                 {
-                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]-m_modeleCut->distance;
+                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]-m_modeleCut->distance;
                     fils->setDimension(dim);
                 }
             }
@@ -114,9 +114,9 @@ void ControleurCut::update_cut(){
             {
                 if(m_modeleCut->direction == ModeleCut::X)
                 {
-                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
-                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
+                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                     for(int i = 0; i < m_modeleCut->nbFils; i++)
                     {
                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -127,9 +127,9 @@ void ControleurCut::update_cut(){
                 {
                     if(m_modeleCut->direction == ModeleCut::Y)
                     {
-                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
-                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
+                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                         for(int i = 0; i < m_modeleCut->nbFils; i++)
                         {
                             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -138,9 +138,9 @@ void ControleurCut::update_cut(){
                     }
                     else
                     {
-                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
+                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
                         for(int i = 0; i < m_modeleCut->nbFils; i++)
                         {
                             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -155,12 +155,12 @@ void ControleurCut::update_cut(){
                 {
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        if(m_modeleCut->nbFils == controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->distance)
+                        if(m_modeleCut->nbFils == controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->distance)
                         {
                             //IDEM cas 1
-                            dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
-                            dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                            dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                            dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
+                            dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                            dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                             for(int i = 0; i < m_modeleCut->nbFils; i++)
                             {
                                 fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -169,16 +169,16 @@ void ControleurCut::update_cut(){
                         }
                         else
                         {
-                            dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->distance;
-                            dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                            dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                            dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->distance;
+                            dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                            dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                             for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                             {
                                 fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                 fils->setDimension(dim);
                             }
                             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                            dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                            dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                             fils->setDimension(dim);
                         }
                     }
@@ -186,12 +186,12 @@ void ControleurCut::update_cut(){
                     {
                         if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->nbFils == controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->distance)
+                            if(m_modeleCut->nbFils == controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->distance)
                             {
                                 //IDEM cas 1
-                                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                 for(int i = 0; i < m_modeleCut->nbFils; i++)
                                 {
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -200,27 +200,27 @@ void ControleurCut::update_cut(){
                             }
                             else
                             {
-                                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->distance;
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->distance;
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                 for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                 {
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                     fils->setDimension(dim);
                                 }
                                 fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                 fils->setDimension(dim);
                             }
                         }
                         else
                         {
-                            if(m_modeleCut->nbFils == controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->distance)
+                            if(m_modeleCut->nbFils == controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->distance)
                             {
                                 //IDEM cas 1
-                                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
+                                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
                                 for(int i = 0; i < m_modeleCut->nbFils; i++)
                                 {
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -229,16 +229,16 @@ void ControleurCut::update_cut(){
                             }
                             else
                             {
-                                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->distance;
+                                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->distance;
                                 for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                 {
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                     fils->setDimension(dim);
                                 }
                                 fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                 fils->setDimension(dim);
                             }
                         }
@@ -253,9 +253,9 @@ void ControleurCut::update_cut(){
                             if(m_modeleCut->nbFils == m_modeleCut->nbBlocs)
                             {
                                 //IDEM cas 1
-                                dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
-                                dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->nbFils;
+                                dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                 for(int i = 0; i < m_modeleCut->nbFils; i++)
                                 {
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -267,30 +267,30 @@ void ControleurCut::update_cut(){
                                 if(m_modeleCut->nbFils < m_modeleCut->nbBlocs)
                                 {
                                     //IDEM cas 2
-                                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]/m_modeleCut->distance;
-                                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]/m_modeleCut->distance;
+                                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                     for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                     {
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                         fils->setDimension(dim);
                                     }
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                     fils->setDimension(dim);
                                 }
                                 else
                                 {
                                     dim[0] = m_modeleCut->distance;
-                                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                     for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                     {
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                         fils->setDimension(dim);
                                     }
                                     fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                     fils->setDimension(dim);
                                 }
                             }
@@ -302,9 +302,9 @@ void ControleurCut::update_cut(){
                                 if(m_modeleCut->nbFils == m_modeleCut->nbBlocs)
                                 {
                                     //IDEM cas 1
-                                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
-                                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->nbFils;
+                                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                     for(int i = 0; i < m_modeleCut->nbFils; i++)
                                     {
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -316,30 +316,30 @@ void ControleurCut::update_cut(){
                                     if(m_modeleCut->nbFils < m_modeleCut->nbBlocs)
                                     {
                                         //IDEM cas 2
-                                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]/m_modeleCut->distance;
-                                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]/m_modeleCut->distance;
+                                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                         for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                         {
                                             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                             fils->setDimension(dim);
                                         }
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                         fils->setDimension(dim);
                                     }
                                     else
                                     {
-                                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
+                                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
                                         dim[1] = m_modeleCut->distance;
-                                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2];
+                                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2];
                                         for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                         {
                                             fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
                                             fils->setDimension(dim);
                                         }
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                         fils->setDimension(dim);
                                     }
                                 }
@@ -349,9 +349,9 @@ void ControleurCut::update_cut(){
                                 if(m_modeleCut->nbFils == m_modeleCut->nbBlocs)
                                 {
                                     //IDEM cas 1
-                                    dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                    dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                    dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
+                                    dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                    dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                    dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->nbFils;
                                     for(int i = 0; i < m_modeleCut->nbFils; i++)
                                     {
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(i);
@@ -363,9 +363,9 @@ void ControleurCut::update_cut(){
                                     if(m_modeleCut->nbFils < m_modeleCut->nbBlocs)
                                     {
                                         //IDEM cas 2
-                                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
-                                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]/m_modeleCut->distance;
+                                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
+                                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]/m_modeleCut->distance;
                                         for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                         {
 
@@ -373,13 +373,13 @@ void ControleurCut::update_cut(){
                                             fils->setDimension(dim);
                                         }
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                         fils->setDimension(dim);
                                     }
                                     else
                                     {
-                                        dim[0] = controleurMain->m_modele->currentBloc->getDimension()[0];
-                                        dim[1] = controleurMain->m_modele->currentBloc->getDimension()[1];
+                                        dim[0] = controleurMain->modeleMain->currentBloc->getDimension()[0];
+                                        dim[1] = controleurMain->modeleMain->currentBloc->getDimension()[1];
                                         dim[2] = m_modeleCut->distance;
                                         for(int i = 0; i < m_modeleCut->nbFils-1; i++)
                                         {
@@ -387,7 +387,7 @@ void ControleurCut::update_cut(){
                                             fils->setDimension(dim);
                                         }
                                         fils = controleurMain->getControleurCut()->noeud->getListeFils()->at(m_modeleCut->nbFils-1);
-                                        dim[2] = controleurMain->m_modele->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
+                                        dim[2] = controleurMain->modeleMain->currentBloc->getDimension()[2]-(m_modeleCut->distance*(m_modeleCut->nbFils-1));
                                         fils->setDimension(dim);
                                     }
                                 }

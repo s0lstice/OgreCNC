@@ -58,7 +58,7 @@ namespace OgreCNC {
          * \brief activerVoletDecoupe rand accessible les fonctions de decoupe
          */
         void activerVoletDecoupe();
-        void replacerBlocs(NodeBloc* node);
+
 
     private:
         /*!

@@ -8,6 +8,7 @@
 #include "../vue/vuemain.h"
 #include "controleurbloc.h"
 #include "../modele/bloc/bloc.h"
+#include "../modele/bloc/nodebloc.h"
 #include "../modele/modelecut.h"
 #include "controleurcut.h"
 #include "../modele/bloc/modelebloc.h"
@@ -84,7 +85,7 @@ bool ControleurMain::sl_abort_cut(){
 void ControleurMain::sl_valid_cut(){
 
     /*On fait une dernière mise à jour de la découpe, et on libère tout*/
-    ModeleCut* mCut = m_modele->getModeleCut();
+    ModeleCut* mCut = modeleMain->getModeleCut();
 
     mCut->isInUse = false;
 
@@ -104,7 +105,40 @@ void ControleurMain::sl_selectSegment(Ogre::ManualObject * segment){
     m_controleurBloc->selectSegment(segment);
 }
 
+void ControleurMain::replacerBlocs(NodeBloc* node){
+    /*On replace les blocs dans leur position avant l'application de la vue éclatée*/
+
+    Bloc* bloc;
+    Ogre::Vector3 positionBloc;
+
+    if(node == NULL)
+    {
+        node = modeleMain->getModeleBloc()->getRootNode();
+    }
+
+    //Récupération des fils du noeud bloc
+    QVector<Bloc*> * listeFils = node->getListeFils();
+
+    //On parcourt tous les fils du noeud
+    for(int i = 0; i < listeFils->count(); i++)
+    {
+        bloc = listeFils->data()[i];
+
+        switch(bloc->getType())
+        {
+            case Bloc::BLOC:
+                positionBloc = bloc->getPositionVueEclatee();
+                bloc->setPosition(positionBloc);
+
+            case Bloc::NODE:
+                replacerBlocs((NodeBloc*)bloc);
+        }
+    }
+}
+
 void ControleurMain::sl_vueEclate(double distance){
+    /*On replace les blocs à leur position initiale*/
+    replacerBlocs(getModeleBlocs()->getModeleBloc()->getRootNode());
     m_controleurBloc->appliquerVueEclatee(distance, NULL);
     emit si_updateOgreVue();
 }
