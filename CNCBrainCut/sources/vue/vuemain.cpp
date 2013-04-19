@@ -232,6 +232,11 @@ void OgreCNC::VueMain::on_demarrerDecoupe_pushButton_clicked()
 
 void OgreCNC::VueMain::on_validerDecoupe_pushButton_clicked()
 {
+    if(m_modeleCut != NULL)
+    {
+        m_modeleCut->isInUse = false;
+    }
+
     emit si_valid_cut();
 }
 
@@ -269,78 +274,101 @@ void OgreCNC::VueMain::on_multipleRadioButton_clicked()
         m_modeleCut->decoupeCM = ModeleCut::MULTIPLE;
 
         /*On met à jour le nombre de fils à créer*/
-        if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+        if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
         {
-            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+            Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+            if(m_modeleCut->direction == ModeleCut::X)
+            {
+                if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                {
+                    m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                }
+                else
+                    m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+            }
+            else
+            {
+                if(m_modeleCut->direction == ModeleCut::Y)
+                {
+                    if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                    {
+                        m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                    {
+                        m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+            }
         }
-        else
+        else//découpe multiple par définition d'un nombre de blocs et d'une distance
         {
-            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
             {
                 Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                 if(m_modeleCut->direction == ModeleCut::X)
                 {
-                    m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                }
-                else
-                {
-                    if(m_modeleCut->direction == ModeleCut::Y)
+                    if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                     {
-                        m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
+                        m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                     }
                     else
                     {
-                        m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                    }
-                }
-            }
-            else//découpe multiple par définition d'un nombre de blocs et d'une distance
-            {
-                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                {
-                    Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                    if(m_modeleCut->direction == ModeleCut::X)
-                    {
-                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                        {
-                            m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                        }
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                         else
                         {
-                            int i = 0;
-                            while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                            int i = 1;
+                            while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                 i++;
 
                             m_modeleCut->nbFils = i;
                         }
                     }
-                    else
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
                     {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                         {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
+                    }
+                    else
+                    {
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                        {
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                        }
                         else
                         {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
@@ -368,78 +396,101 @@ void OgreCNC::VueMain::on_directionX_radioButton_clicked()
         }
         else//cas d'une découpe multiple
         {
-            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
             {
-                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
             }
-            else
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
             {
-                if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
                 {
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                    }
-                    else
-                    {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                        }
-                    }
-                }
-                else//découpe multiple par définition d'un nombre de blocs et d'une distance
-                {
-                    if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                    {
-                        Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                        if(m_modeleCut->direction == ModeleCut::X)
-                        {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->direction == ModeleCut::Y)
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
                                 }
                             }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
                             else
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -468,78 +519,101 @@ void OgreCNC::VueMain::on_directionY_radioButton_clicked()
         }
         else//cas d'une découpe multiple
         {
-            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
             {
-                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
             }
-            else
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
             {
-                if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
                 {
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
-                    }
-                    else
-                    {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
-                        }
-                    }
-                }
-                else//découpe multiple par définition d'un nombre de blocs et d'une distance
-                {
-                    if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                    {
-                        Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                        if(m_modeleCut->direction == ModeleCut::X)
-                        {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->direction == ModeleCut::Y)
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
                                 }
                             }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
                             else
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -568,78 +642,101 @@ void OgreCNC::VueMain::on_directionZ_radioButton_clicked()
         }
         else//cas d'une découpe multiple
         {
-            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
             {
-                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
             }
-            else
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
             {
-                if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
                 {
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                    }
-                    else
-                    {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                        }
-                    }
-                }
-                else//découpe multiple par définition d'un nombre de blocs et d'une distance
-                {
-                    if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                    {
-                        Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                        if(m_modeleCut->direction == ModeleCut::X)
-                        {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->direction == ModeleCut::Y)
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
                                 }
                             }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
                             else
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -695,78 +792,101 @@ void OgreCNC::VueMain::on_distance_text_textEdited(const QString &arg1)
         }
         else//cas d'une découpe multiple
         {
-            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
             {
-                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
             }
-            else
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
             {
-                if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
                 {
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                    }
-                    else
-                    {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                        }
-                    }
-                }
-                else//découpe multiple par définition d'un nombre de blocs et d'une distance
-                {
-                    if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                    {
-                        Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                        if(m_modeleCut->direction == ModeleCut::X)
-                        {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->direction == ModeleCut::Y)
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
                                 }
                             }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
                             else
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -795,78 +915,101 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
         }
         else//cas d'une découpe multiple
         {
-            if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance == 0)//découpe multiple par définition du nombre de blocs
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
             {
-                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
             }
-            else
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
             {
-                if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
                 {
                     Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
                     if(m_modeleCut->direction == ModeleCut::X)
                     {
-                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                    }
-                    else
-                    {
-                        if(m_modeleCut->direction == ModeleCut::Y)
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
                         {
-                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
                         }
                         else
                         {
-                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1;
-                        }
-                    }
-                }
-                else//découpe multiple par définition d'un nombre de blocs et d'une distance
-                {
-                    if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
-                    {
-                        Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
-                        if(m_modeleCut->direction == ModeleCut::X)
-                        {
-                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[0])
-                            {
-                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                            }
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                             else
                             {
-                                int i = 0;
-                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[0])
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
                                     i++;
 
                                 m_modeleCut->nbFils = i;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
                         {
-                            if(m_modeleCut->direction == ModeleCut::Y)
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[1])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[1])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
                                 }
                             }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
                             else
                             {
-                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs <= dim[2])
-                                {
-                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;
-                                }
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
                                 else
                                 {
-                                    int i = 0;
-                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i <= dim[2])
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
                                         i++;
 
                                     m_modeleCut->nbFils = i;
@@ -961,6 +1104,120 @@ void OgreCNC::VueMain::on_rayon_chauffe_text_textEdited(const QString &arg1)
     if(m_modeleCut != NULL)
     {
         m_modeleCut->rayonChauffe = ui->rayon_chauffe_text->text().toFloat();
+
+        /*On met à jour le nombre de fils à créer*/
+        if(m_modeleCut->decoupeCM == ModeleCut::CLASSIQUE)
+        {
+            m_modeleCut->nbFils = 2;
+        }
+        else//cas d'une découpe multiple
+        {
+            if(m_modeleCut->nbBlocs == 0 && m_modeleCut->distance != 0)//découpe multiple par définition d'une distance
+            {
+                Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                if(m_modeleCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[0])
+                    {
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        m_modeleCut->nbFils = floor(dim[0]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                }
+                else
+                {
+                    if(m_modeleCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[1])
+                        {
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[1]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) * m_modeleCut->distance != dim[2])
+                        {
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            m_modeleCut->nbFils = floor(dim[2]/(m_modeleCut->distance+m_modeleCut->rayonChauffe));
+                    }
+                }
+            }
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
+            {
+                if(m_modeleCut->nbBlocs != 0 && m_modeleCut->distance != 0)
+                {
+                    Ogre::Vector3 dim = m_modeleCut->m_modeleMain->currentBloc->getDimension();
+                    if(m_modeleCut->direction == ModeleCut::X)
+                    {
+                        if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[0])
+                        {
+                            m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[0])
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
+                            else
+                            {
+                                int i = 1;
+                                while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[0])
+                                    i++;
+
+                                m_modeleCut->nbFils = i;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(m_modeleCut->direction == ModeleCut::Y)
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[1])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[1])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[1])
+                                        i++;
+
+                                    m_modeleCut->nbFils = i;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs == dim[2])
+                            {
+                                m_modeleCut->nbFils = m_modeleCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((m_modeleCut->distance+m_modeleCut->rayonChauffe) * m_modeleCut->nbBlocs < dim[2])
+                                    m_modeleCut->nbFils = m_modeleCut->nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((m_modeleCut->distance+m_modeleCut->rayonChauffe) * i < dim[2])
+                                        i++;
+
+                                    m_modeleCut->nbFils = i;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        emit si_update_cut();
     }
-    emit si_update_cut();
 }

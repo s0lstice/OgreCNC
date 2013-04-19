@@ -82,18 +82,15 @@ bool ControleurMain::sl_abort_cut(){
 
 
 void ControleurMain::sl_valid_cut(){
-    /*On récupère le bloc courant*/
-    //m_gestionBloc->m_currentBloc->getId();
-    /*On récupère l'arête sélectionnée*/
-    //m_gestionBloc->m_currentSegment->getName();
-    /*On effectue la découpe, à partir des données du modèle de découpe modeleCut*/
+    /*On fait une dernière mise à jour de la découpe, et on libère tout*/
     ModeleCut* mCut = m_modele->getModeleCut();
 
+    mCut->isInUse = false;
 
-    m_controleurCut->deleteBlocsCrees();
-    m_controleurCut = NULL;
+    m_vue->activerVoletDecoupe();
 
-
+    /*m_controleurCut->deleteBlocsCrees();
+    m_controleurCut = NULL;*/
 }
 
 

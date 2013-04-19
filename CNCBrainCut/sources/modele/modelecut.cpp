@@ -46,17 +46,32 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                 Ogre::Vector3 dim = m_modeleMain->currentBloc->getDimension();
                 if(direction == X)
                 {
-                    nbFils = floor(dim[0]/(distance+rayonChauffe)) + 1;//+1 pour la chute
+                    if(floor(dim[0]/(distance+rayonChauffe)) * distance != dim[0])
+                    {
+                        nbFils = floor(dim[0]/(distance+rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        nbFils = floor(dim[0]/(distance+rayonChauffe));
                 }
                 else
                 {
                     if(direction == Y)
                     {
-                        nbFils = floor(dim[1]/(distance+rayonChauffe)) + 1;
+                        if(floor(dim[1]/(distance+rayonChauffe)) * distance != dim[1])
+                        {
+                            nbFils = floor(dim[1]/(distance+rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            nbFils = floor(dim[1]/(distance+rayonChauffe));
                     }
                     else
                     {
-                        nbFils = floor(dim[2]/(distance+rayonChauffe)) + 1;
+                        if(floor(dim[2]/(distance+rayonChauffe)) * distance != dim[2])
+                        {
+                            nbFils = floor(dim[2]/(distance+rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            nbFils = floor(dim[2]/(distance+rayonChauffe));
                     }
                 }
             }
@@ -67,49 +82,64 @@ ModeleCut::ModeleCut(decoupe_CM decCM,
                     Ogre::Vector3 dim = m_modeleMain->currentBloc->getDimension();
                     if(direction == X)
                     {
-                        if((distance+rayonChauffe) * nbBlocs <= dim[0])
+                        if((distance+rayonChauffe) * nbBlocs == dim[0])
                         {
-                            nbFils = nbBlocs + 1;//+1 pour la chute
+                            nbFils = nbBlocs;
                         }
                         else
                         {
-                            int i = 0;
-                            while((distance+rayonChauffe) * i <= dim[0])
-                                i++;
+                            if((distance+rayonChauffe) * nbBlocs < dim[0])
+                                nbFils = nbBlocs + 1;//+1 pour la chute
+                            else
+                            {
+                                int i = 1;
+                                while((distance+rayonChauffe) * i < dim[0])
+                                    i++;
 
-                            nbFils = i;
+                                nbFils = i;
+                            }
                         }
                     }
                     else
                     {
                         if(direction == Y)
                         {
-                            if((distance+rayonChauffe) * nbBlocs <= dim[1])
+                            if((distance+rayonChauffe) * nbBlocs == dim[1])
                             {
-                                nbFils = nbBlocs + 1;
+                                nbFils = nbBlocs;
                             }
                             else
                             {
-                                int i = 0;
-                                while((distance+rayonChauffe) * i <= dim[1])
-                                    i++;
+                                if((distance+rayonChauffe) * nbBlocs < dim[1])
+                                    nbFils = nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((distance+rayonChauffe) * i < dim[1])
+                                        i++;
 
-                                nbFils = i;
+                                    nbFils = i;
+                                }
                             }
                         }
                         else
                         {
-                            if((distance+rayonChauffe) * nbBlocs <= dim[2])
+                            if((distance+rayonChauffe) * nbBlocs == dim[2])
                             {
-                                nbFils = nbBlocs + 1;
+                                nbFils = nbBlocs;
                             }
                             else
                             {
-                                int i = 0;
-                                while((distance+rayonChauffe) * i <= dim[2])
-                                    i++;
+                                if((distance+rayonChauffe) * nbBlocs < dim[2])
+                                    nbFils = nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((distance+rayonChauffe) * i < dim[2])
+                                        i++;
 
-                                nbFils = i;
+                                    nbFils = i;
+                                }
                             }
                         }
                     }
