@@ -9,6 +9,7 @@
 #include "../modele/modelemain.h"
 #include "OgreWidget/controleurogrewidget.h"
 #include "../modele/bloc/modelebloc.h"
+#include "../modele/bloc/nodebloc.h"
 
 using namespace OgreCNC;
 
@@ -881,10 +882,47 @@ void OgreCNC::VueMain::on_nbBlocs_text_textEdited(const QString &arg1)
     }
 }
 
+void VueMain::replacerBlocs(NodeBloc* node){
+    /*On replace les blocs dans leur position avant l'application de la vue éclatée*/
+
+    Bloc* bloc;
+    Ogre::Vector3 positionBloc;
+
+    if(node == NULL)
+    {
+        node = modele->getModeleBloc()->getRootNode();
+    }
+
+    //Récupération des fils du noeud bloc
+    QVector<Bloc*> * listeFils = node->getListeFils();
+
+    //On parcourt tous les fils du noeud
+    for(int i = 0; i < listeFils->count(); i++)
+    {
+        bloc = listeFils->data()[i];
+
+        switch(bloc->getType())
+        {
+            case Bloc::BLOC:
+                positionBloc = bloc->getPositionVueEclatee();
+                bloc->setPosition(positionBloc);
+
+            case Bloc::NODE:
+                replacerBlocs((NodeBloc*)bloc);
+        }
+    }
+}
+
 void OgreCNC::VueMain::on_distanceVueEclate_valueChanged(int arg1)
 {
     if(ui->vueEclateCheched->checkState() == Qt::Checked)
+    {
+        /*On replace les blocs à leur position initiale*/
+        replacerBlocs(controleur->getModeleBlocs()->getModeleBloc()->getRootNode());
+
+        /*On applique le nouveau déplacement*/
         emit si_vueEclate(ui->distanceVueEclate->value());
+    }
     else
         emit si_vueEclate(0);
 }

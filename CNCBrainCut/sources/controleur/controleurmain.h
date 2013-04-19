@@ -29,6 +29,10 @@ namespace OgreCNC {
             return m_controleurCut;
         }
 
+        inline VueMain * getVue(){
+            return m_vue;
+        }
+
         ModeleMain * m_modele;
     private:
         VueMain * m_vue;

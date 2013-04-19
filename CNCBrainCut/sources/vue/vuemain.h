@@ -43,6 +43,7 @@ namespace OgreCNC {
 
         void griserVoletDecoupe();
         void activerVoletDecoupe();
+        void replacerBlocs(NodeBloc* node);
 
     private:
         ControleurMain * controleur;

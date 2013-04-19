@@ -16,6 +16,7 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)  :
 {
     m_dimension = dimention;
     m_position = position;
+    m_positionVueEclatee = m_position;
 
     m_id = nbBloc++;
     m_name = QString::number(m_id);
@@ -36,6 +37,7 @@ Bloc::Bloc(NodeBloc *parent)
 {
     m_dimension = Ogre::Vector3(0,0,0);
     m_position = Ogre::Vector3(0,0,0);
+    m_positionVueEclatee = m_position;
 
     m_etat = CHUTE;
     m_type = BLOC;

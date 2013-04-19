@@ -70,7 +70,7 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 
     if(eloignement != 0)
     {
-        eloignement = eloignement/100;
+        //eloignement = eloignement/100;
 
         int i;
         Bloc* bloc;
@@ -124,11 +124,8 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
             node = m_modeleBloc->getRootNode();
         }
 
-        /*Si on est dans la position initiale du bloc, on ne bouge pas, sinon on revient à sa position initiale*/
-        if(node->getPosition() != node->getPositionVueEclatee()) //positionVueEclatee contient la position avant éclatement
-        {
-            node->setPosition(node->getPositionVueEclatee());
-        }
+        /*On replace tous les blocs*/
+        m_controleur->getVue()->replacerBlocs(node);
     }
 }
 
