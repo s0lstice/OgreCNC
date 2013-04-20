@@ -111,7 +111,6 @@ void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
                     nouvellePosition[1] = nouvellePosition[1] + positionBloc[1];
                     nouvellePosition[2] = nouvellePosition[2] + positionBloc[2];
                     bloc->setPositionVueEclatee(positionBloc); //on enregistre la position avant éclatement
-                    nodeBloc->setPosition(nouvellePosition[0],nouvellePosition[1],nouvellePosition[2]);
                     //On parcourt ses fils
                     ControleurBloc::appliquerVueEclatee(eloignement, (NodeBloc*)bloc);
             }

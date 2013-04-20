@@ -113,6 +113,7 @@ void ControleurMain::replacerBlocs(NodeBloc* node){
 
     Bloc* bloc;
     Ogre::Vector3 positionBloc;
+    Ogre::SceneNode* nodeBloc;
 
     if(node == NULL)
     {
@@ -126,15 +127,19 @@ void ControleurMain::replacerBlocs(NodeBloc* node){
     for(int i = 0; i < listeFils->count(); i++)
     {
         bloc = listeFils->data()[i];
+        nodeBloc = bloc->getNodeBloc3d();
 
         switch(bloc->getType())
         {
             case Bloc::BLOC:
                 positionBloc = bloc->getPositionVueEclatee();
                 bloc->setPosition(positionBloc);
+                nodeBloc->setPosition(positionBloc);
+                break;
 
             case Bloc::NODE:
                 replacerBlocs((NodeBloc*)bloc);
+                break;
         }
     }
 }
