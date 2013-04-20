@@ -65,7 +65,7 @@
       <bool>false</bool>
      </attribute>
     </widget>
-    <widget class="QPushButton" name="blocSupprimer_pushButton">
+    <widget class="QPushButton" name="blocSupprimer">
      <property name="geometry">
       <rect>
        <x>30</x>

@@ -166,3 +166,8 @@ void ControleurBloc::changeNameOfCurrentBloc(const QString &name)
 {
     m_controleur->modeleMain->currentBloc->setName(name);
 }
+
+void ControleurBloc::deleteCurrentNodeBloc(){
+    if(m_controleur->modeleMain->currentBloc->getType() == Bloc::NODE)
+        m_controleur->modeleMain->getModeleBloc()->deleteNodeBloc(((NodeBloc*) m_controleur->modeleMain->currentBloc));
+}

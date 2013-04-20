@@ -19,6 +19,10 @@ namespace  OgreCNC {
         enum Etat {UTILISE, PERTE, CHUTE};
         enum Type {BLOC, NODE};
 
+        typedef enum _QUERYSTATUS{
+            HIDE,
+            VISIBLE
+        } QueryStatus;
     protected:
         /*Dimensions d'un bloc (en mm) -- le volume n'est pas stocké comme attribut, mais un accesseur spécifique le calculera*/
         /*!
@@ -112,6 +116,8 @@ namespace  OgreCNC {
 
         //Modif Mel
         Ogre::Vector3 m_positionVueEclatee; // position du centre de l'objet dans la vue éclatée
+
+        QueryStatus m_visible;
 
     signals:
         /*!
@@ -349,6 +355,8 @@ namespace  OgreCNC {
          */
         inline Ogre::Vector3 getSommet7(){ return m_sommet7;}
 
+        inline QueryStatus getVisible(){ return m_visible;}
+        inline void setVisible(QueryStatus status){ m_visible = status;}
         /*!
          * \brief serialize le bloc
          * \return

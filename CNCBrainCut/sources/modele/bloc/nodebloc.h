@@ -109,6 +109,7 @@ namespace OgreCNC {
          */
         inline void setInitialBloc(Bloc * bloc){
             m_bloc = bloc;
+            m_nodeBloc3d = m_bloc->getNodeBloc3d();
         }
         /*!
          * \brief updateSommets met a jour les somme du blic initial

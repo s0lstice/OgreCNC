@@ -226,6 +226,7 @@ Bloc* ModeleBloc::creatBloc(Ogre::Vector3 dimension, Ogre::Vector3 position, con
 NodeBloc * ModeleBloc::creatNodeBloc(Bloc * bloc, NodeBloc * parent){
     emit beginResetModel();
 
+    bloc->setVisible(Bloc::HIDE);
     NodeBloc * oldParent = bloc->getParent();
     oldParent->remove(bloc);
 
@@ -234,7 +235,7 @@ NodeBloc * ModeleBloc::creatNodeBloc(Bloc * bloc, NodeBloc * parent){
     qDebug() << QObject::tr("[Gestion des blocs] creation du NodeBloc : %1 et ajour au NodeBloc : %2").arg(nodeBloc->getName()).arg(parent->getName());
 
     emit endResetModel();
-    emit si_delete3Dbloc(bloc);
+    emit si_hide3DBloc(bloc);
 
     return nodeBloc;
 }
@@ -249,29 +250,33 @@ Bloc* ModeleBloc::deleteNodeBloc(NodeBloc* node){
 
         node->getParent()->getListeFils()->append(bloc);
         bloc->setParent(node->getParent());
+        setBlocCheck(bloc, Qt::Checked);
 
-        int i = node->getListeFils()->count()-1;
-
-        while((!node->getListeFils()->isEmpty()) && i>=0)
+        while(!node->getListeFils()->isEmpty())
         {
-            if(node->getListeFils()->at(i)->getType() == Bloc::NODE)
+            Bloc * bloc = node->getListeFils()->back();
+            node->getListeFils()->pop_back();
+            emit si_delete3DBloc(bloc);
+            if(bloc->getType() == Bloc::NODE)
             {
-                deleteNodeBloc((NodeBloc*)node->getListeFils()->at(i));
+                deleteNodeBloc((NodeBloc *)bloc);
             }
             else
             {
-                deleteBloc(node->getListeFils()->at(i));
+                delete bloc;
             }
 
-            i--;
         }
+
+        //supprime le node de la liste du parent
+        node->getParent()->remove(node);
 
         delete node;
 
         emit endResetModel();
 
         //DEMANDER L'AFFICHAGE DU BLOC
-
+        emit si_show3DBloc(bloc);
         return bloc;
     }
 }

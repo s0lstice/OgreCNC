@@ -3,6 +3,8 @@
 #include <QtGui/QX11Info>
 #include <QGLWidget>
 #include <iostream>
+#include "controleurogrewidget.h"
+#include "../vuemain.h"
 
 #include "../../modele/bloc/bloc.h"
 
@@ -23,8 +25,7 @@ ogreCamera(0), oldPos(invalidMousePoint)
 
     initCameraLookAt = Ogre::Vector3(0,0,0);
     initCameraPosition  = Ogre::Vector3(0,0,500.000);
-
-    curentNode = NULL;
+    m_vue = qobject_cast<VueMain *>(parent);
 }
 
 OgreWidget::~OgreWidget()
@@ -112,9 +113,9 @@ void OgreWidget::mouseMoveEvent(QMouseEvent *e)
         Ogre::Real deltaX = pos.x() - oldPos.x();
         Ogre::Real deltaY = pos.y() - oldPos.y();
               
-        Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
+        Ogre::Real dist = (ogreCamera->getPosition() - m_vue->getCurrentBlock()->getNodeBloc3d()->_getDerivedPosition()).length();
 
-        ogreCamera->setPosition(curentNode->_getDerivedPosition());
+        ogreCamera->setPosition(m_vue->getCurrentBlock()->getNodeBloc3d()->_getDerivedPosition());
         ogreCamera->yaw(Ogre::Degree(-deltaX * 0.25f));
         ogreCamera->pitch(Ogre::Degree(-deltaY * 0.25f));
         ogreCamera->moveRelative(Ogre::Vector3(0, 0, dist));
@@ -166,7 +167,7 @@ void OgreWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void OgreWidget::wheelEvent(QWheelEvent *e)
 {
-    Ogre::Real dist = (ogreCamera->getPosition() - curentNode->_getDerivedPosition()).length();
+    Ogre::Real dist = (ogreCamera->getPosition() - m_vue->getCurrentBlock()->getNodeBloc3d()->_getDerivedPosition()).length();
 
     ogreCamera->moveRelative(Ogre::Vector3(0, 0, -e->delta() * 0.004f * dist));
 
@@ -320,6 +321,7 @@ Ogre::MovableObject * OgreWidget::picking(QMouseEvent *e){
     e->posF().y()/(float)height());
     raySceneQuery->setRay(mouseRay);
     raySceneQuery->setSortByDistance(true);
+    //raySceneQuery->setQueryTypeMask(Bloc::VISIBLE);
 
     // exécution de la requête
     Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
@@ -353,9 +355,4 @@ void OgreWidget::selectionObjet(QMouseEvent *e){
             emit si_selectionSegment(((Ogre::ManualObject *)objet));
         else
             emit si_selectionObjet(objet->getParentSceneNode());
-}
-
-void OgreWidget::setCurentNode(Ogre::SceneNode * node)
-{
-    curentNode = node;
 }

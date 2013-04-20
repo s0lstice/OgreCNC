@@ -30,6 +30,8 @@ Bloc::Bloc(Ogre::Vector3 dimention, Ogre::Vector3 position, NodeBloc *parent)  :
     m_faceMatName = constantes::BLOC_CHUTE;
     m_segmentMatName = "BaseWhiteNoLighting";
 
+    m_visible = VISIBLE;
+
     updateSommets();
 }
 
@@ -50,6 +52,8 @@ Bloc::Bloc(NodeBloc *parent)
     m_nodeBloc3d = NULL;
     m_faceMatName = constantes::BLOC_CHUTE;
     m_segmentMatName = "BaseWhiteNoLighting";
+
+    m_visible = VISIBLE;
 
     updateSommets();
 }

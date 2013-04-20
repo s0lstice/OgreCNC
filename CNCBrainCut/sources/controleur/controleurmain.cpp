@@ -37,6 +37,7 @@ void ControleurMain::initConnections(){
     connect(m_vue, SIGNAL(si_update_cut()), this, SLOT(sl_update_cut()));
     connect(m_vue, SIGNAL(si_abort_cut()), this, SLOT(sl_abort_cut()));
     connect(m_vue, SIGNAL(si_valid_cut()), this, SLOT(sl_valid_cut()));
+    connect(m_vue, SIGNAL(si_deleteCurrentNodeBloc()), this, SLOT(sl_deleteCurrentNodeBloc()));
     connect(m_vue, SIGNAL(si_newNameForCurrentBloc(QString)), this, SLOT(sl_newNameForCurrentBloc(QString)));
     connect(m_vue, SIGNAL(si_changeEtatForCurrentBloc(Bloc::Etat)), this, SLOT(sl_changeEtatForCurrentBloc(Bloc::Etat)));
     connect(m_controleurBloc, SIGNAL(si_selectSegment(Ogre::ManualObject*)), m_vue, SLOT(sl_selectSegment(Ogre::ManualObject*)));
@@ -94,9 +95,11 @@ void ControleurMain::sl_valid_cut(){
     /*m_controleurCut->deleteBlocsCrees();
     m_controleurCut = NULL;*/
 }
+void ControleurMain::sl_deleteCurrentNodeBloc()
+{
+    m_controleurBloc->deleteCurrentNodeBloc();
+}
 
-
-//***** SLOTS *****//
 void ControleurMain::sl_selectBloc(Bloc * bloc){
     m_controleurBloc->selectBloc(bloc);
 }
@@ -143,7 +146,7 @@ void ControleurMain::replacerBlocs(NodeBloc* node){
 
 void ControleurMain::sl_vueEclate(double distance){
     /*On replace les blocs à leur position initiale*/
-    replacerBlocs(getModeleBlocs()->getModeleBloc()->getRootNode());
+    replacerBlocs(getControleurBloc()->getModeleBloc()->getRootNode());
     m_controleurBloc->appliquerVueEclatee(distance, NULL);
     emit si_updateOgreVue();
 }

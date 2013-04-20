@@ -5,10 +5,11 @@ using namespace OgreCNC;
 
 NodeBloc::NodeBloc( Bloc * bloc, NodeBloc * parent) : Bloc(parent)
 {
-    m_bloc = bloc;
+    setInitialBloc(bloc);
     m_bloc->setParent(this);
     m_listeFils = new QVector<Bloc*>();
     m_type = Bloc::NODE;
+    m_visible = VISIBLE;
 }
 
 NodeBloc::~NodeBloc()
