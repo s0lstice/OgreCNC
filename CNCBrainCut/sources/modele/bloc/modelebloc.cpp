@@ -249,7 +249,7 @@ Bloc* ModeleBloc::deleteNodeBloc(NodeBloc* node){
 
         Bloc* bloc = node->getInitialBloc();
 
-        node->getParent()->getListeFils()->append(bloc);
+        node->getParent()->append(bloc);
         bloc->setParent(node->getParent());
         setBlocCheck(bloc, Qt::Checked);
 
