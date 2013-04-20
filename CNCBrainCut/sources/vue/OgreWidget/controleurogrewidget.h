@@ -9,22 +9,20 @@
 
 namespace OgreCNC {
     class Bloc;
+    class VueMain;
+
     /*!
      * \brief The ControleurOgreWidget class pour gére l'affichage 3D et dialoguer avec le reste de l'application
      */
     class ControleurOgreWidget : public QObject
     {
         Q_OBJECT
+
         private :
             /*!
              * \brief m_Vue3D est un pointeur sur l'OgreWidget actif
              */
             OgreWidget * m_Vue3D;
-
-            /*!
-             * \brief curentBlock est le bloc courent
-             */
-            Bloc * curentBlock;
 
             /*!
              * \brief curentSegment est le segment selectionné
@@ -43,6 +41,10 @@ namespace OgreCNC {
              * \brief m_BBSize est le rayon des boites englobantes pours les segments
              */
             int m_BBSize;
+            /*!
+             * \brief m_vue la vue principale
+             */
+            VueMain * m_vue;
 
             /*!
              * \brief clearConectionsWithWidget detruit les connections au widget
@@ -71,6 +73,7 @@ namespace OgreCNC {
              */
             void changeColorSegment(Ogre::MovableObject * segment, Ogre::ColourValue color);
         public:
+
             /*!
              * \brief ControleurOgreWidget est le constructeur
              */
@@ -86,17 +89,27 @@ namespace OgreCNC {
                 m_Vue3D = vue3D;
                 initConnectionsWithWidget();
             }
+            /*!
+             * \brief deleteSceneNode detuit la scene passé en parametre
+             * \param i_pSceneNode
+             */
+            void deleteSceneNode(Ogre::SceneNode * i_pSceneNode);
 
             /*!
-             * \brief delete3DBloc detruit un bloc 3D et ses enfants
-             * \param bloc est le bloc contenant la bloc 3d à detruire
+             * \brief delete3DBloc masque un bloc 3D et ses enfants
+             * \param bloc est le bloc contenant la bloc 3d effacer
              */
-            void delete3DBloc(Bloc * bloc);
+            void hide3DBloc(Bloc * bloc);
+            /*!
+             * \brief show3DBloc affiche un bloc 3D et ses enfants
+             * \param bloc est le bloc contenant la bloc 3d afficher
+             */
+            void show3DBloc(Bloc * bloc);
             /*!
              * \brief delete3DBloc detruit un bloc 3D et ses enfants
              * \param i_pSceneNode est le SceneNode à detruire
              */
-            void delete3DBloc(Ogre::SceneNode * i_pSceneNode);
+            void delete3DBloc(Bloc * bloc);
             /*!
              * \brief create3DBloc créé un bloc 3d et ses enfants
              * \param bloc est le bloc contenant le bloc 3d

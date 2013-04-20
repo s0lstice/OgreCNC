@@ -31,7 +31,7 @@ VueMain::VueMain(QWidget *parent) :
     m_ControleurOgreWidget->setWidget(m_Ogre3d);
 
     ui->ogreLayout->addWidget(m_Ogre3d);
-
+    ui->blocSupprimer->setEnabled(false);
     initConnections();
 
     this->showNormal();
@@ -57,8 +57,12 @@ void VueMain::sl_creat3Dbloc(Bloc * bloc){
     m_ControleurOgreWidget->create3DBloc(bloc);
 }
 
-void VueMain::sl_delete3Dbloc(Bloc * bloc){
-    m_ControleurOgreWidget->delete3DBloc(bloc);
+void VueMain::sl_hide3DBloc(Bloc * bloc){
+    m_ControleurOgreWidget->hide3DBloc(bloc);
+}
+
+void VueMain::sl_show3DBloc(Bloc * bloc){
+    m_ControleurOgreWidget->show3DBloc(bloc);
 }
 
 void VueMain::sl_updateDimentionBloc(Bloc * bloc){
@@ -71,6 +75,11 @@ void VueMain::sl_updatePositionBloc(Bloc * bloc){
 
 void VueMain::sl_updateCouleurBloc(Bloc * bloc){
     m_ControleurOgreWidget->updateCouleurBloc(bloc);
+}
+
+void VueMain::sl_delete3DBloc(Bloc * bloc)
+{
+    m_ControleurOgreWidget->delete3DBloc(bloc);
 }
 
 //bool VueMain::event(QEvent * e)
@@ -216,6 +225,12 @@ void VueMain::sl_selectBloc(Bloc * bloc){
     ui->longeurbloc->setText(QString::number(bloc->getDimension().x));
     ui->largeurbloc->setText(QString::number(bloc->getDimension().z));
     ui->hauteurbloc->setText(QString::number(bloc->getDimension().y));
+
+    //active le bouton de supression d'un noeud si c'est un NodeBloc
+    if(bloc->getType() == Bloc::NODE)
+        ui->blocSupprimer->setEnabled((true));
+    else
+        ui->blocSupprimer->setEnabled(false);
 }
 
 void VueMain::sl_selectSegment(Ogre::ManualObject * segment){
@@ -1186,4 +1201,9 @@ void OgreCNC::VueMain::on_rayon_chauffe_text_textEdited(const QString &arg1)
 
         emit si_update_cut();
     }
+}
+
+void OgreCNC::VueMain::on_blocSupprimer_clicked()
+{
+    emit si_deleteCurrentNodeBloc();
 }

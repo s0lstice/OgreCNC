@@ -8,6 +8,7 @@
 namespace OgreCNC {
 
     class Bloc;
+    class VueMain;
 
     /*!
      * \brief The OgreWidget class permet l'integration d'Ogre3D dans un QGLWidget
@@ -45,11 +46,6 @@ namespace OgreCNC {
          * \param bloc
          */
         void createBloc(Bloc * bloc);
-        /*!
-         * \brief setCurentNode change le noeud courent
-         * \param node
-         */
-        void setCurentNode(Ogre::SceneNode * node);
 
     public slots:
         /*!
@@ -191,11 +187,10 @@ namespace OgreCNC {
          * \brief initCameraPosition est la position de la camera
          */
         Ogre::Vector3 initCameraPosition;
-
         /*!
-         * \brief curentNode est le noeud 3d courent
+         * \brief m_vue est le vue principale de l'application
          */
-        Ogre::Node * curentNode;
+        VueMain * m_vue;
     };
 }
 #endif OGREWIDGET_H

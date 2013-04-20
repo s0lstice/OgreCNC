@@ -78,6 +78,10 @@ namespace OgreCNC {
          * \param name
          */
         void changeNameOfCurrentBloc(const QString &name);
+        /*!
+         * \brief deleteCurrentNodeBloc suprime le noeud courent
+         */
+        void deleteCurrentNodeBloc();
 
     signals:
         /*!

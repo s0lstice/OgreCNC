@@ -206,10 +206,20 @@ namespace OgreCNC{
          */
         void si_selectBloc(Bloc * bloc);
         /*!
-         * \brief si_delete3Dbloc est un signal pour demander la supression d'un bloc 3D
+         * \brief si_delete3Dbloc est un signal pour demander le masquage d'un bloc 3D
          * \param bloc
          */
-        void si_delete3Dbloc(Bloc * bloc);
+        void si_hide3DBloc(Bloc * bloc);
+        /*!
+         * \brief si_show3DBloc est un signal pour demander l'affichage d'un bloc 3D
+         * \param bloc
+         */
+        void si_show3DBloc(Bloc * bloc);
+        /*!
+         * \brief si_delete3DBloc est un signal pour demander la supression d'un bloc 3D
+         * \param bloc
+         */
+        void si_delete3DBloc(Bloc * bloc);
         /*!
          * \brief si_updateDimensionBloc est un signal pour indiquer que les dimantion du bloc ont changé
          * \param bloc

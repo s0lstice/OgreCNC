@@ -130,6 +130,10 @@ namespace OgreCNC {
          * \param etat
          */
         void sl_changeEtatForCurrentBloc(Bloc::Etat etat);
+        /*!
+         * \brief si_deleteCurrentNodeBloc demande la supression du noeud courent.
+         */
+        void sl_deleteCurrentNodeBloc();
     };
 
 }

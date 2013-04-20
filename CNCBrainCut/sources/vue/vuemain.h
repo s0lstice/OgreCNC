@@ -59,7 +59,8 @@ namespace OgreCNC {
          */
         void activerVoletDecoupe();
 
-
+        inline Bloc * getCurrentBlock(){return m_currentBlock;}
+        inline void setCurrentBlock(Bloc * bloc){m_currentBlock = bloc;}
     private:
         /*!
          * \brief controleur est le controleur de l'application
@@ -85,11 +86,15 @@ namespace OgreCNC {
          * \brief m_ControleurOgreWidget est le controleur d'ogreWidget
          */
         ControleurOgreWidget * m_ControleurOgreWidget;
-        //bool event(QEvent * e);
         /*!
          * \brief initConnections intialise les connections
          */
         void initConnections();
+
+        /*!
+         * \brief curentBlock est le bloc courent
+         */
+        Bloc * m_currentBlock;
 
     signals:
         void si_start_cut();
@@ -99,13 +104,16 @@ namespace OgreCNC {
         void si_vueEclate(double distance);
         void si_newNameForCurrentBloc(const QString &arg1);
         void si_changeEtatForCurrentBloc(Bloc::Etat etat);
+        void si_deleteCurrentNodeBloc();
 
    public  slots:
         void sl_creat3Dbloc(Bloc * bloc);
-        void sl_delete3Dbloc(Bloc * bloc);
+        void sl_hide3DBloc(Bloc * bloc);
+        void sl_show3DBloc(Bloc * bloc);
         void sl_updateDimentionBloc(Bloc * bloc);
         void sl_updatePositionBloc(Bloc * bloc);
         void sl_updateCouleurBloc(Bloc *bloc);
+        void sl_delete3DBloc(Bloc * bloc);
 
         void on_demarrerDecoupe_pushButton_clicked();
         void on_validerDecoupe_pushButton_clicked();
@@ -132,6 +140,7 @@ namespace OgreCNC {
         void sl_setTreeBlocModele(ModeleBloc * modeleBloc);
     private slots:
         void on_rayon_chauffe_text_textEdited(const QString &arg1);
+        void on_blocSupprimer_clicked();
     };
 }
 #endif // VUEMAIN_H
