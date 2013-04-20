@@ -242,6 +242,7 @@ NodeBloc * ModeleBloc::creatNodeBloc(Bloc * bloc, NodeBloc * parent){
 
 Bloc* ModeleBloc::deleteNodeBloc(NodeBloc* node){
 
+
     if(node != NULL && node != m_root)
     {
         emit beginResetModel();

@@ -121,8 +121,10 @@ int ControleurOgreWidget::updateCouleurBloc(Bloc * bloc)
 }
 
 void ControleurOgreWidget::delete3DBloc(Bloc * bloc){
-    deleteSceneNode(bloc->getNodeBloc3d());
-    bloc->setNodeBloc3d(NULL);
+//    deleteSceneNode(bloc->getNodeBloc3d());
+//    bloc->setNodeBloc3d(NULL);
+    hide3DBloc(bloc);
+    //TODO : corriger cette erreur
 }
 
 int ControleurOgreWidget::updatePositionBloc(Bloc * bloc)
@@ -245,7 +247,6 @@ void ControleurOgreWidget::show3DBloc(Bloc * bloc)
 void ControleurOgreWidget::deleteSceneNode(Ogre::SceneNode * i_pSceneNode)
 {
 
-
     if ( !i_pSceneNode )
     {
         assert( false );
@@ -269,6 +270,9 @@ void ControleurOgreWidget::deleteSceneNode(Ogre::SceneNode * i_pSceneNode)
         Ogre::SceneNode* pChildNode = static_cast<Ogre::SceneNode*>(itChild.getNext());
         deleteSceneNode( pChildNode );
     }
+
+     i_pSceneNode->removeAndDestroyAllChildren();
+
 }
 
 int ControleurOgreWidget::create3DBloc(Bloc * bloc){
