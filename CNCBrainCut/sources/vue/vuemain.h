@@ -59,6 +59,16 @@ namespace OgreCNC {
          */
         void activerVoletDecoupe();
 
+        /*!
+         * \brief getVue retourne la user interface
+         */
+        inline Ui::VueMain * getVue(){return ui;}
+
+        /*!
+         * \brief getControleurMain retourne le controleur principal
+         */
+        inline ControleurMain* getControleurMain(){return controleur;}
+
         inline Bloc * getCurrentBlock(){return m_currentBlock;}
         inline void setCurrentBlock(Bloc * bloc){m_currentBlock = bloc;}
     private:

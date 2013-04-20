@@ -32,7 +32,7 @@ void ControleurBloc::selectSegment(Ogre::ManualObject * segment)
 
     emit si_selectSegment(m_controleur->modeleMain->currentSegment); //indique la selection d'un segment
 
-    //selctionne le bloc si le segemnt ne fait pas partie du bloc courent
+    //selectionne le bloc si le segment ne fait pas partie du bloc courant
     if(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode() != m_controleur->modeleMain->currentBloc->getNodeBloc3d())
     {
         selectBloc(m_modeleBloc->blocFromOgreNode(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode()));
@@ -52,7 +52,7 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
         m_modeleBloc->setBlocCheck(bloc, Qt::Checked);
         m_controleur->modeleMain->currentIndex = index;
 
-        //deslectione du segment courent s'il n'est pas sur le bloc selectionne
+        //deselection du segment courant s'il n'est pas sur le bloc selectionne
         if(m_controleur->modeleMain->currentSegment != NULL)
             if(m_modeleBloc->blocFromOgreNode(m_controleur->modeleMain->currentSegment->getParentSceneNode()->getParentSceneNode()) != m_controleur->modeleMain->currentBloc)
             {
@@ -62,7 +62,7 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
     }
 }
 
-//Modif Mel
+
 /*Cette fonction éloigne tous les blocs d'une distance "eloignement" sur l'axe donné par positionRoot->positionBloc
 * Le bloc racine n'est pas déplacé.
 */
