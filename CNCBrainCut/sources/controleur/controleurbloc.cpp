@@ -68,6 +68,7 @@ void ControleurBloc::selectBloc(Bloc *bloc,const QModelIndex & index){
 */
 void ControleurBloc::appliquerVueEclatee(double eloignement, NodeBloc* node){
 
+    eloignement = eloignement / 100;
     if(eloignement != 0)
     {
         //eloignement = eloignement/100;

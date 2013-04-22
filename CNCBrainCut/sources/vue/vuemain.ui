@@ -89,7 +89,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="menuOnglet">
      <property name="enabled">
@@ -274,7 +274,7 @@
        <rect>
         <x>0</x>
         <y>270</y>
-        <width>181</width>
+        <width>221</width>
         <height>191</height>
        </rect>
       </property>
@@ -320,75 +320,6 @@
         <string>centrée</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="imagePerteGauche">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>60</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../media/Icones/perteGauche.png</normaloff>../../media/Icones/perteGauche.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-      </widget>
-      <widget class="QToolButton" name="imagePerteCentree">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>140</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../media/Icones/perteCentree.png</normaloff>../../media/Icones/perteCentree.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-      </widget>
-      <widget class="QToolButton" name="imagePerteDroite">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>100</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../media/Icones/perteDroite.png</normaloff>../../media/Icones/perteDroite.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_rayonChauffe">
        <property name="geometry">
         <rect>
@@ -410,6 +341,19 @@
          <width>31</width>
          <height>21</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>30</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>cm</string>
        </property>
       </widget>
      </widget>
