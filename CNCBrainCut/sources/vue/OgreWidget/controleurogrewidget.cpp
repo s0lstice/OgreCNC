@@ -121,10 +121,10 @@ int ControleurOgreWidget::updateCouleurBloc(Bloc * bloc)
 }
 
 void ControleurOgreWidget::delete3DBloc(Bloc * bloc){
-//    deleteSceneNode(bloc->getNodeBloc3d());
-//    bloc->setNodeBloc3d(NULL);
+//  deleteSceneNode(bloc->getNodeBloc3d());
+//  bloc->setNodeBloc3d(NULL);
     hide3DBloc(bloc);
-    //TODO : corriger cette erreur
+//  TODO : corriger cette erreur
 }
 
 int ControleurOgreWidget::updatePositionBloc(Bloc * bloc)
@@ -468,7 +468,7 @@ void ControleurOgreWidget::beginSegment(Ogre::ManualObject * segment, Ogre::Vect
         max.z -= 2*BBRayon;
     }
     //position
-    min += Ogre::Vector3(-BBRayon,-BBRayon, -BBRayon);
+    min += Ogre::Vector3(-BBRayon, -BBRayon, -BBRayon);
     max += Ogre::Vector3(+BBRayon, +BBRayon, +BBRayon);
 
     Ogre::SceneNode * node;
