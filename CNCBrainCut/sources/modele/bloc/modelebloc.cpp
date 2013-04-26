@@ -276,7 +276,6 @@ Bloc* ModeleBloc::deleteNodeBloc(NodeBloc* node){
 
         emit endResetModel();
 
-        //DEMANDER L'AFFICHAGE DU BLOC
         emit si_show3DBloc(bloc);
         return bloc;
     }

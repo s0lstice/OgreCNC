@@ -8,7 +8,7 @@ ModeleCut::ModeleCut(QObject * parent) : QObject(parent)
 
     isInUse = false;
     distance = 0.0;
-    nbBlocs = 0;
+    nbBlocs = 2;
     rayonChauffe = 0;
     decoupeCM = CLASSIQUE;
     nbFils = 2; //pour une découpe classique, on aura forcément 2 fils créés

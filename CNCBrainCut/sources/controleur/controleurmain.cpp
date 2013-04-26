@@ -58,6 +58,119 @@ void ControleurMain::sl_start_cut(){
     }
     else
     {
+        /*On met à jour le nombre de fils à créer*/
+        /*if(mCut->decoupeCM == ModeleCut::CLASSIQUE)
+        {
+            mCut->nbFils = 2;
+        }
+        else//cas d'une découpe multiple
+        {
+            if(mCut->nbBlocs == 0 && mCut->distance != 0)//découpe multiple par définition d'une distance
+            {
+                Ogre::Vector3 dim = mCut->m_modeleMain->currentBloc->getDimension();
+                if(mCut->direction == ModeleCut::X)
+                {
+                    if(floor(dim[0]/(mCut->distance+mCut->rayonChauffe)) * mCut->distance != dim[0])
+                    {
+                        mCut->nbFils = floor(dim[0]/(mCut->distance+mCut->rayonChauffe)) + 1; //+1 pour la chute
+                    }
+                    else
+                        mCut->nbFils = floor(dim[0]/(mCut->distance+mCut->rayonChauffe));
+                }
+                else
+                {
+                    if(mCut->direction == ModeleCut::Y)
+                    {
+                        if(floor(dim[1]/(mCut->distance+mCut->rayonChauffe)) * mCut->distance != dim[1])
+                        {
+                            mCut->nbFils = floor(dim[1]/(mCut->distance+mCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            mCut->nbFils = floor(dim[1]/(mCut->distance+mCut->rayonChauffe));
+                    }
+                    else
+                    {
+                        if(floor(dim[2]/(mCut->distance+mCut->rayonChauffe)) * mCut->distance != dim[2])
+                        {
+                            mCut->nbFils = floor(dim[2]/(mCut->distance+mCut->rayonChauffe)) + 1; //+1 pour la chute
+                        }
+                        else
+                            mCut->nbFils = floor(dim[2]/(mCut->distance+mCut->rayonChauffe));
+                    }
+                }
+            }
+            else//découpe multiple par définition d'un nombre de blocs et d'une distance
+            {
+                if(mCut->nbBlocs != 0 && mCut->distance != 0)
+                {
+                    Ogre::Vector3 dim = mCut->m_modeleMain->currentBloc->getDimension();
+                    if(mCut->direction == ModeleCut::X)
+                    {
+                        if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs == dim[0])
+                        {
+                            mCut->nbFils = mCut->nbBlocs;
+                        }
+                        else
+                        {
+                            if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs < dim[0])
+                                mCut->nbFils = mCut->nbBlocs + 1;//+1 pour la chute
+                            else
+                            {
+                                int i = 1;
+                                while((mCut->distance+mCut->rayonChauffe) * i < dim[0])
+                                    i++;
+
+                                mCut->nbFils = i;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(mCut->direction == ModeleCut::Y)
+                        {
+                            if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs == dim[1])
+                            {
+                                mCut->nbFils = mCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs < dim[1])
+                                    mCut->nbFils = mCut->nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((mCut->distance+mCut->rayonChauffe) * i < dim[1])
+                                        i++;
+
+                                    mCut->nbFils = i;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs == dim[2])
+                            {
+                                mCut->nbFils = mCut->nbBlocs;
+                            }
+                            else
+                            {
+                                if((mCut->distance+mCut->rayonChauffe) * mCut->nbBlocs < dim[2])
+                                    mCut->nbFils = mCut->nbBlocs + 1;//+1 pour la chute
+                                else
+                                {
+                                    int i = 1;
+                                    while((mCut->distance+mCut->rayonChauffe) * i < dim[2])
+                                        i++;
+
+                                    mCut->nbFils = i;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+
         /*Initialise le controleurCut à partir de son modeleCut*/
         m_controleurCut = new ControleurCut(mCut,this);
         /*Le modèle est en cours d'utilisation*/
@@ -85,15 +198,12 @@ bool ControleurMain::sl_abort_cut(){
 
 void ControleurMain::sl_valid_cut(){
 
-    /*On fait une dernière mise à jour de la découpe, et on libère tout*/
+    /*On fait une dernière mise à jour de la découpe, et on masque le bloc initial*/
     ModeleCut* mCut = modeleMain->getModeleCut();
 
-    mCut->isInUse = false;
+    m_vue->griserVoletDecoupe();
 
-    m_vue->activerVoletDecoupe();
-
-    /*m_controleurCut->deleteBlocsCrees();
-    m_controleurCut = NULL;*/
+    m_controleurCut = NULL;
 }
 void ControleurMain::sl_deleteCurrentNodeBloc()
 {
