@@ -568,48 +568,54 @@ void ControleurOgreWidget::selectSegment(Ogre::ManualObject * segment)
     curentSegment = segment;
     changeColorSegment(curentSegment, constantes::SEGMENT_SELECTED); //selection
 
-    //modification de l'affichage de la vue : seules deux directions sur 3 peuvent être sélectionnées par l'utilisateur
-    size_t found = curentSegment->getName().find(';'); //recherche le séparateur
-    int sommet1;
-    int sommet2;
-    if(found != std::string::npos)
-    {
-        std::string Sommet1Sommet2 = curentSegment->getName().substr(found+1,2);
+//    if(curentSegment != NULL)
+//    {
+//        //modification de l'affichage de la vue : seules deux directions sur 3 peuvent être sélectionnées par l'utilisateur
+//        size_t found = curentSegment->getName().find(';'); //recherche le séparateur
+//        int sommet1;
+//        int sommet2;
+//        if(found != std::string::npos)
+//        {
+//            std::string Sommet1Sommet2 = curentSegment->getName().substr(found+1,2);
+//            char buf[2];
 
-        sommet1 = atoi((char*)Sommet1Sommet2[0]);
-        sommet2 = atoi((char*)Sommet1Sommet2[1]);
-    }
-    /*if(sommet1 == 0 && sommet2 == 1 || ... autres sommets amenant à la même conclusion)
-    {
-        //a finir !
-        m_vue->getVue()->directionX_radioButton->setEnabled(false);
-        m_vue->getVue()->directionY_radioButton->setEnabled(true);
-        m_vue->getVue()->directionZ_radioButton->setEnabled(true);
+//            sprintf(buf, "%c", Sommet1Sommet2[0]);
+//            sommet1 = atoi(buf);
+//            sprintf(buf, "%c", Sommet1Sommet2[1]);
+//            sommet2 = atoi(buf);
+//        }
+//        /*if(sommet1 == 0 && sommet2 == 1 || ... autres sommets amenant à la même conclusion)
+//        {
+//            //a finir !
+//            m_vue->getVue()->directionX_radioButton->setEnabled(false);
+//            m_vue->getVue()->directionY_radioButton->setEnabled(true);
+//            m_vue->getVue()->directionZ_radioButton->setEnabled(true);
 
-        m_vue->getVue()->directionX_radioButton->setChecked(false);
-        m_vue->getVue()->directionY_radioButton->setChecked(true);
-        m_vue->getVue()->directionZ_radioButton->setChecked(true);
-    }*/
-    /*if(sommet1 == 0 && sommet2 == 1)
-    {
-        m_vue->getVue()->directionX_radioButton->setEnabled(true);
-        m_vue->getVue()->directionY_radioButton->setEnabled(false);
-        m_vue->getVue()->directionZ_radioButton->setEnabled(true);
+//            m_vue->getVue()->directionX_radioButton->setChecked(false);
+//            m_vue->getVue()->directionY_radioButton->setChecked(true);
+//            m_vue->getVue()->directionZ_radioButton->setChecked(true);
+//        }*/
+//        /*if(sommet1 == 0 && sommet2 == 1)
+//        {
+//            m_vue->getVue()->directionX_radioButton->setEnabled(true);
+//            m_vue->getVue()->directionY_radioButton->setEnabled(false);
+//            m_vue->getVue()->directionZ_radioButton->setEnabled(true);
 
-        m_vue->getVue()->directionX_radioButton->setChecked(true);
-        m_vue->getVue()->directionY_radioButton->setChecked(false);
-        m_vue->getVue()->directionZ_radioButton->setChecked(true);
-    }*/
-    /*if(sommet1 == 0 && sommet2 == 1)
-    {
-        m_vue->getVue()->directionX_radioButton->setEnabled(true);
-        m_vue->getVue()->directionY_radioButton->setEnabled(true);
-        m_vue->getVue()->directionZ_radioButton->setEnabled(false);
+//            m_vue->getVue()->directionX_radioButton->setChecked(true);
+//            m_vue->getVue()->directionY_radioButton->setChecked(false);
+//            m_vue->getVue()->directionZ_radioButton->setChecked(true);
+//        }*/
+//        /*if(sommet1 == 0 && sommet2 == 1)
+//        {
+//            m_vue->getVue()->directionX_radioButton->setEnabled(true);
+//            m_vue->getVue()->directionY_radioButton->setEnabled(true);
+//            m_vue->getVue()->directionZ_radioButton->setEnabled(false);
 
-        m_vue->getVue()->directionX_radioButton->setChecked(true);
-        m_vue->getVue()->directionY_radioButton->setChecked(true);
-        m_vue->getVue()->directionZ_radioButton->setChecked(false);
-    }*/
+//            m_vue->getVue()->directionX_radioButton->setChecked(true);
+//            m_vue->getVue()->directionY_radioButton->setChecked(true);
+//            m_vue->getVue()->directionZ_radioButton->setChecked(false);
+//        }*/
+//    }
 }
 
 void ControleurOgreWidget::selectOgreBloc(Ogre::SceneNode * node){

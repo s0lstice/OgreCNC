@@ -50,7 +50,7 @@ void VueMain::initConnections(){
     connect(controleur, SIGNAL(si_updateOgreVue()), m_Ogre3d, SLOT(update()));
     connect(m_ControleurOgreWidget, SIGNAL(si_blocFormOgreNode(Ogre::SceneNode*)), controleur, SLOT(sl_blocFromOgreNode(Ogre::SceneNode*)));
     connect(m_ControleurOgreWidget, SIGNAL(si_SelectBloc(Bloc*)), controleur, SLOT(sl_selectBloc(Bloc*)));
-    connect(m_ControleurOgreWidget, SIGNAL(si_selectSegemnt(Ogre::ManualObject*)), controleur, SLOT(sl_selefctSegment(Ogre::ManualObject*)));
+    connect(m_ControleurOgreWidget, SIGNAL(si_selectSegemnt(Ogre::ManualObject*)), controleur, SLOT(sl_selectSegment(Ogre::ManualObject*)));
 }
 
 void VueMain::sl_creat3Dbloc(Bloc * bloc){
